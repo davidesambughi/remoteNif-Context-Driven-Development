@@ -33,7 +33,7 @@ describe('signUpSchema', () => {
   it('accepts a valid email, strong password, and supported locale', () => {
     const result = signUpSchema.safeParse({
       email: 'user@example.com',
-      password: 'password123',
+      password: 'Password123',
       language: 'en',
     })
     expect(result.success).toBe(true)
@@ -45,7 +45,36 @@ describe('signUpSchema', () => {
   it('rejects a password shorter than 8 characters', () => {
     const result = signUpSchema.safeParse({
       email: 'user@example.com',
-      password: 'short',
+      password: 'Short1',
+      language: 'en',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  // Each strength requirement is validated independently so the user gets
+  // a specific error message rather than a generic "invalid password".
+  it('rejects a password with no uppercase letter', () => {
+    const result = signUpSchema.safeParse({
+      email: 'user@example.com',
+      password: 'password123',
+      language: 'en',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects a password with no lowercase letter', () => {
+    const result = signUpSchema.safeParse({
+      email: 'user@example.com',
+      password: 'PASSWORD123',
+      language: 'en',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects a password with no number', () => {
+    const result = signUpSchema.safeParse({
+      email: 'user@example.com',
+      password: 'PasswordOnly',
       language: 'en',
     })
     expect(result.success).toBe(false)
@@ -55,7 +84,7 @@ describe('signUpSchema', () => {
   it('rejects a malformed email address', () => {
     const result = signUpSchema.safeParse({
       email: 'not-an-email',
-      password: 'password123',
+      password: 'Password123',
       language: 'en',
     })
     expect(result.success).toBe(false)
@@ -67,7 +96,7 @@ describe('signUpSchema', () => {
   it('rejects an unsupported language code', () => {
     const result = signUpSchema.safeParse({
       email: 'user@example.com',
-      password: 'password123',
+      password: 'Password123',
       language: 'it', // Italian — not yet supported
     })
     expect(result.success).toBe(false)
@@ -77,7 +106,7 @@ describe('signUpSchema', () => {
   it.each(['en', 'fr', 'es', 'de'])('accepts language "%s"', (language) => {
     const result = signUpSchema.safeParse({
       email: 'user@example.com',
-      password: 'password123',
+      password: 'Password123',
       language,
     })
     expect(result.success).toBe(true)
@@ -163,20 +192,29 @@ describe('requestPasswordResetSchema', () => {
 // ---------------------------------------------------------------------------
 
 describe('updatePasswordSchema', () => {
-  it('accepts two matching passwords that meet the minimum length', () => {
+  it('accepts two matching passwords that meet all strength requirements', () => {
     const result = updatePasswordSchema.safeParse({
-      password: 'newpassword1',
-      confirmPassword: 'newpassword1',
+      password: 'Newpassword1',
+      confirmPassword: 'Newpassword1',
     })
     expect(result.success).toBe(true)
+  })
+
+  // Strength rules apply to `password` only — `confirmPassword` just needs to match.
+  it('rejects a password that fails the strength requirement', () => {
+    const result = updatePasswordSchema.safeParse({
+      password: 'alllowercase1', // missing uppercase
+      confirmPassword: 'alllowercase1',
+    })
+    expect(result.success).toBe(false)
   })
 
   // The .refine() rule on the schema checks that both fields match.
   // This is the most important rule here — a mismatch must always fail.
   it('rejects mismatched passwords', () => {
     const result = updatePasswordSchema.safeParse({
-      password: 'newpassword1',
-      confirmPassword: 'differentpassword',
+      password: 'Newpassword1',
+      confirmPassword: 'Differentpassword1',
     })
     expect(result.success).toBe(false)
   })
@@ -185,8 +223,8 @@ describe('updatePasswordSchema', () => {
   // This tells the form exactly which field to highlight.
   it('attaches the mismatch error to the confirmPassword field', () => {
     const result = updatePasswordSchema.safeParse({
-      password: 'newpassword1',
-      confirmPassword: 'differentpassword',
+      password: 'Newpassword1',
+      confirmPassword: 'Differentpassword1',
     })
     if (result.success) throw new Error('Expected failure')
     const paths = result.error.issues.map((i) => i.path.join('.'))
@@ -195,8 +233,8 @@ describe('updatePasswordSchema', () => {
 
   it('rejects a password shorter than 8 characters', () => {
     const result = updatePasswordSchema.safeParse({
-      password: 'short',
-      confirmPassword: 'short',
+      password: 'Short1',
+      confirmPassword: 'Short1',
     })
     expect(result.success).toBe(false)
   })

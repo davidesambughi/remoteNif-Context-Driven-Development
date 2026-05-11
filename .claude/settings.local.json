@@ -18,7 +18,8 @@
       "mcp__plugin_playwright_playwright__browser_click",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\\\\app\" -Recurse -Filter \"*.tsx\")",
       "Bash(Select-Object FullName)",
-      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\\\\app\" -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object -ExpandProperty FullName | Sort-Object)"
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\\\\app\" -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object -ExpandProperty FullName | Sort-Object)",
+      "Bash(npx vitest *)"
     ]
   }
 }

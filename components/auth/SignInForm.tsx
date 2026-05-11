@@ -21,12 +21,20 @@ import { Button } from '@/components/ui/button'
 
 interface Props {
   redirectTo?: string
+  initialError?: string
 }
 
-export default function SignInForm({ redirectTo }: Props) {
+export default function SignInForm({ redirectTo, initialError }: Props) {
   const t = useTranslations('auth.signIn')
   const router = useRouter()
-  const [serverError, setServerError] = useState<string | null>(null)
+
+  // Map URL error params (set by auth/confirm redirect) to translated messages
+  const knownErrors: Record<string, string> = {
+    link_expired: t('errors.linkExpired'),
+  }
+  const [serverError, setServerError] = useState<string | null>(
+    initialError ? (knownErrors[initialError] ?? null) : null
+  )
 
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),

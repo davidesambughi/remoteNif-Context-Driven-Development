@@ -86,6 +86,22 @@ Feature 05 — Marketing Homepage.
 
 ---
 
+## Completed (continued)
+
+- **Auth bug fixes (current-issues-auth.md)** ✓
+  - Issue 2: `lib/validations/auth.ts` — extracted `strongPassword` schema (min 8, uppercase, lowercase, digit); applied to `signUpSchema` and `updatePasswordSchema.password`. `confirmPassword` simplified to `min(1)` — only needs to match. `signInSchema` unchanged (any non-empty password allowed at sign-in)
+  - Issue 2: `tests/unit/validations/auth.test.ts` — updated happy-path passwords to `Password123`/`Newpassword1`; added 4 new tests covering missing uppercase, lowercase, number, and strength on updatePassword. 23 tests pass
+  - Issue 4: `app/auth/confirm/route.ts` — early guard detects Supabase `?error=` param and redirects to `/signin?error=link_expired` before attempting OTP exchange
+  - Issue 4: `messages/{en,fr,es,de}.json` — added `auth.signIn.errors.linkExpired`
+  - Issue 4: `app/[locale]/(auth)/signin/page.tsx` — added `error?` to searchParams, passed to `<SignInForm>`
+  - Issue 4: `components/auth/SignInForm.tsx` — added `initialError` prop; initializes `serverError` from URL error param via known-error map
+  - `npm run build` ✓ — `npx vitest run` ✓ (23 tests)
+  - Issue 1 (SMTP + smoke test): FIXED — Resend configured as Supabase Custom SMTP (`smtp.resend.com:465`); smoke test passed (sign-up → `/dashboard` redirect → row in `public.users`). `console.error` lines in `app/actions/auth.ts` (lines 38–39) deferred until production SMTP confirmed stable.
+  - Next.js 16.2.4 layout fix: `app/layout.tsx` now owns `<html>` and `<body>` using `getLocale()` from next-intl/server to preserve `lang={locale}`; `app/[locale]/layout.tsx` drops html/body wrapper, keeps locale validation and `NextIntlClientProvider`. `npm run build` ✓
+  - Issue 3 (white text): FIXED — root cause: `--color-base` in `@theme inline` generated a `text-base { color: var(--bg-base) }` color utility that collided with Tailwind's built-in `text-base` font-size utility on the shadcn Input, making typed text near-white. Fix (two parts): (1) removed `--color-base` from `@theme inline` — `bg-base` shorthand was unused in the codebase; (2) added explicit `input, textarea, select { color: var(--text-primary) }` to `globals.css` base styles for cascade-independence going forward. `npm run build` ✓
+
+---
+
 ## Open Questions
 
 - Q4 — SEO content strategy (keyword clusters, cadence, AI vs human copy) — blocking: no — can decide before launch
@@ -104,6 +120,4 @@ Feature 05 — Marketing Homepage.
 
 ## Session Notes
 
-- Starting from scratch — only the Next.js scaffold exists
-- First task: confirm Supabase project exists and pull env vars before touching schema
-- Feature 01 built 2026-05-09: all foundational config in place, build and lint clean
+

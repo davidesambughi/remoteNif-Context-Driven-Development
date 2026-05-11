@@ -13,7 +13,8 @@
       "signUpLink": "Sign up",
       "errors": {
         "invalidCredentials": "Incorrect email or password",
-        "generic": "Something went wrong. Please try again."
+        "generic": "Something went wrong. Please try again.",
+        "linkExpired": "This link has expired. Please sign in and request a new one."
       }
     },
     "signUp": {

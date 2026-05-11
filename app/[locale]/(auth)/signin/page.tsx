@@ -6,7 +6,7 @@ import SignInForm from '@/components/auth/SignInForm'
 
 interface Props {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ redirectTo?: string }>
+  searchParams: Promise<{ redirectTo?: string; error?: string }>
 }
 
 export default async function SignInPage({ params, searchParams }: Props) {
@@ -20,12 +20,12 @@ export default async function SignInPage({ params, searchParams }: Props) {
     else redirect('/dashboard')
   }
 
-  const { redirectTo } = await searchParams
+  const { redirectTo, error } = await searchParams
   const t = await getTranslations('auth.signIn')
 
   return (
     <AuthCard title={t('title')}>
-      <SignInForm redirectTo={redirectTo} />
+      <SignInForm redirectTo={redirectTo} initialError={error} />
     </AuthCard>
   )
 }

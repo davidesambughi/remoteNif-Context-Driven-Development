@@ -67,16 +67,27 @@ Depends on: 02, 03.
 
 ---
 
-## 05 — Marketing Home
-Build the public homepage.
+## 05a — Marketing Home (Structure)
+Build the public homepage sections in English.
 
 Done when:
 - Hero, trust signals, how-it-works, and FAQ are present.
-- The page is fully localized.
 - No auth is required.
-- Locale detection and manual switching work.
+- Page renders correctly across all locales (content stays in English).
 
 Depends on: 03.
+
+---
+
+## 05b — Marketing Home (Localization)
+Translate the homepage into all four supported locales.
+
+Done when:
+- All homepage copy exists in en, fr, es, de message files.
+- Each locale renders its own translated content.
+- Locale detection and manual switching work end-to-end.
+
+Depends on: 05a.
 
 ---
 
@@ -88,6 +99,9 @@ Done when:
 - Card state reacts to deadline proximity.
 - Tier selection routes to sign up or dashboard as appropriate.
 - Tier info is preserved in the URL.
+
+Notes:
+- Consider splitting: static tier layout and the deadline-proximity logic are independent concerns.
 
 Depends on: 03, 04.
 
@@ -104,6 +118,7 @@ Done when:
 
 Notes:
 - Verify current Stripe and webhook best practices.
+- Consider splitting: checkout session creation and webhook processing + DB record writes are independent concerns.
 
 Depends on: 04, 06.
 
@@ -117,6 +132,9 @@ Done when:
 - All supported order states have a distinct view.
 - Timeline and support contact are included.
 - Delivery estimate copy is shown clearly.
+
+Notes:
+- Consider splitting: dashboard shell + empty/pending state first, then remaining order states separately.
 
 Depends on: 07.
 
@@ -132,6 +150,9 @@ Done when:
 - The POA download link appears after save.
 - Document uploads stay locked until details are complete.
 
+Notes:
+- Consider splitting: the form + data save is one session; PDF generation is a separate concern (see open question Q5 on PDF library).
+
 Depends on: 08.
 
 ---
@@ -145,6 +166,9 @@ Done when:
 - Upload status is visible.
 - Signed POA is accepted without review.
 - POA upload stays locked until personal details are saved.
+
+Notes:
+- Consider splitting: Supabase Storage bucket setup and upload UI are distinct concerns (see open question Q6).
 
 Depends on: 09.
 
@@ -161,6 +185,7 @@ Done when:
 
 Notes:
 - Verify current AI/document review integration approach before implementation.
+- Consider splitting: AI review integration and the escalation + admin notification flow are independent concerns.
 
 Depends on: 10.
 
@@ -174,6 +199,9 @@ Done when:
 - Emails are localized.
 - Emails include deep links back to the dashboard.
 - Password reset email support is in place.
+
+Notes:
+- Consider splitting: order-phase templates and document-phase templates can be built independently.
 
 Depends on: 07, 11.
 
@@ -189,6 +217,7 @@ Done when:
 - Key actions are logged.
 
 Notes:
+- Consider splitting: order list + filter view and order detail + actions are distinct screens.
 - **Proxy redirect for admin/operator routes needs updating.** Currently `proxy.ts` redirects all unauthenticated users (including admins hitting `/admin/*` and operators hitting `/operator/*`) to the customer `/signin` page. Per `user-flows.md` Flow 6d and 6e, they should be redirected to `/admin/signin` and `/operator/signin` respectively. This was deferred from Feature 04 to avoid scope creep. Fix the proxy's redirect logic when building this feature — it requires detecting the route prefix and choosing the correct sign-in destination.
 
 Depends on: 11, 12.
@@ -203,6 +232,9 @@ Done when:
 - Orders can be packaged and submitted.
 - Submitted orders move into an archive view.
 - Operator notification preferences can be updated.
+
+Notes:
+- Consider splitting: queue + packaging logic and the archive view + preferences area are independent concerns.
 
 Depends on: 13.
 
@@ -241,6 +273,9 @@ Done when:
 - Language preference is saved.
 - Account deletion is supported safely.
 
+Notes:
+- Consider splitting: email + password changes and account deletion are higher-risk than language preference and can be scoped separately.
+
 Depends on: 04.
 
 ---
@@ -253,6 +288,9 @@ Done when:
 - Renewal checkout works.
 - Renewal payments extend the relevant expiry.
 - Expired-state messaging and dismissal are handled properly.
+
+Notes:
+- Consider splitting: Stripe renewal checkout + expiry extension and the reminder scheduling + expired-state UI are independent concerns.
 
 Depends on: 15, 16.
 
