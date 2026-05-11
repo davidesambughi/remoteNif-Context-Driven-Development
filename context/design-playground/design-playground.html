@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemoteNIF - Design Playground</title>
+    <style>
+        /* ============================================
+           DESIGN TOKENS - CHANGE THESE TO EXPERIMENT
+           ============================================ */
+        
+        :root {
+            /* PRIMITIVE COLORS — what the color is */
+            --color-eggshell: oklch(95% 0.02 95);
+            --color-burnt-peach: oklch(68% 0.14 40);
+            --color-twilight-indigo: oklch(36% 0.05 285);
+            --color-muted-teal: oklch(74% 0.07 170);
+            --color-apricot-cream: oklch(88% 0.08 75);
+
+            /* BACKGROUNDS — base → surface → elevated → subtle */
+            --bg-base: var(--color-eggshell);
+            --bg-surface: white;
+            --bg-elevated: white;
+            --bg-subtle: var(--color-apricot-cream);
+
+            /* TEXT */
+            --text-primary: var(--color-twilight-indigo);
+            --text-secondary: oklch(55% 0.03 285);
+            --text-muted: oklch(65% 0.02 285);
+            --text-on-accent: white;
+
+            /* BORDERS — subtle → default → strong */
+            --border-default: oklch(85% 0.02 285);
+            --border-subtle: oklch(91% 0.01 285);
+            --border-strong: var(--color-twilight-indigo);
+
+            /* BRAND */
+            --brand-primary: var(--color-burnt-peach);
+            --brand-primary-dim: oklch(78% 0.10 40);
+            --brand-secondary: var(--color-twilight-indigo);
+
+            /* STATUS */
+            --status-success: var(--color-muted-teal);
+            --status-warning: oklch(75% 0.15 70);
+            --status-error: oklch(55% 0.20 25);
+            --status-info: oklch(60% 0.10 250);
+            
+            /* === TYPOGRAPHY TOKENS === */
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+            
+            /* Font sizes (use rem for scalability) */
+            --text-xs: 0.75rem;    /* 12px */
+            --text-sm: 0.875rem;   /* 14px */
+            --text-base: 1rem;     /* 16px */
+            --text-lg: 1.125rem;   /* 18px */
+            --text-xl: 1.25rem;    /* 20px */
+            --text-2xl: 1.5rem;    /* 24px */
+            --text-3xl: 2rem;      /* 32px */
+            --text-4xl: 2.5rem;    /* 40px */
+            
+            /* Font weights */
+            --font-normal: 400;
+            --font-medium: 500;
+            --font-semibold: 600;
+            --font-bold: 700;
+            
+            /* Line heights */
+            --leading-tight: 1.2;
+            --leading-normal: 1.5;
+            --leading-relaxed: 1.6;
+            
+            /* === SPACING TOKENS === */
+            /* Use these for padding, margin, gap */
+            --space-1: 0.25rem;  /* 4px */
+            --space-2: 0.5rem;   /* 8px */
+            --space-3: 0.75rem;  /* 12px */
+            --space-4: 1rem;     /* 16px */
+            --space-5: 1.25rem;  /* 20px */
+            --space-6: 1.5rem;   /* 24px */
+            --space-8: 2rem;     /* 32px */
+            --space-10: 2.5rem;  /* 40px */
+            --space-12: 3rem;    /* 48px */
+            --space-16: 4rem;    /* 64px */
+            
+            /* === BORDER RADIUS TOKENS === */
+            --radius-sm: 0.25rem;   /* 4px */
+            --radius-md: 0.5rem;    /* 8px */
+            --radius-lg: 0.75rem;   /* 12px */
+            --radius-xl: 1rem;      /* 16px */
+            --radius-2xl: 1.5rem;   /* 24px */
+            --radius-full: 9999px;
+            
+            /* === SHADOW TOKENS === */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            
+            /* === TRANSITION TOKENS === */
+            --transition-fast: 150ms ease;
+            --transition-base: 200ms ease;
+            --transition-slow: 300ms ease;
+            --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* === BREAKPOINTS (for reference, use in media queries) === */
+            /* --breakpoint-sm: 640px; */
+            /* --breakpoint-md: 768px; */
+            /* --breakpoint-lg: 1024px; */
+            /* --breakpoint-xl: 1280px; */
+        }
+        
+        /* ============================================
+           BASE STYLES - DON'T CHANGE UNLESS NEEDED
+           ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-base);
+            color: var(--text-primary);
+            line-height: var(--leading-normal);
+            font-size: var(--text-base);
+        }
+        
+        /* ============================================
+           COMPONENT STYLES - USES TOKENS ABOVE
+           ============================================ */
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--bg-base) 0%, var(--bg-subtle) 100%);
+            padding: var(--space-16) var(--space-6) var(--space-12);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: var(--space-12);
+        }
+        
+        .header h1 {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-4);
+            color: var(--text-primary);
+            line-height: var(--leading-tight);
+        }
+        
+        .header h1 .highlight {
+            color: var(--brand-primary);
+        }
+        
+        .header p {
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
+        }
+        
+        .tiers-section {
+            padding: var(--space-12) var(--space-6);
+        }
+        
+        .tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .tier-card {
+            background: var(--bg-surface);
+            border: 2px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8) var(--space-6);
+            transition: all var(--transition-smooth);
+            position: relative;
+        }
+        
+        .tier-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--border-strong);
+        }
+        
+        .tier-card.express {
+            border-color: var(--brand-primary);
+            border-width: 2px;
+        }
+        
+        .tier-card.express::after {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: calc(var(--space-3) * -1);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--brand-primary);
+            color: white;
+            font-size: var(--text-xs);
+            font-weight: var(--font-semibold);
+            padding: var(--space-1) var(--space-4);
+            border-radius: var(--radius-full);
+            letter-spacing: 0.5px;
+        }
+        
+        .tier-name {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-2);
+            color: var(--brand-secondary);
+        }
+        
+        .tier-card.express .tier-name {
+            color: var(--brand-primary);
+        }
+        
+        .tier-price {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-bold);
+            color: var(--brand-secondary);
+            margin-bottom: var(--space-1);
+            letter-spacing: -0.02em;
+        }
+        
+        .tier-card.express .tier-price {
+            color: var(--brand-primary);
+        }
+        
+        .tier-delivery {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-6);
+            border-bottom: 1px solid var(--border-default);
+        }
+        
+        .tier-delivery .highlight-number {
+            color: var(--brand-secondary);
+            font-weight: var(--font-bold);
+        }
+        
+        .tier-card.express .tier-delivery .highlight-number {
+            color: var(--brand-primary);
+        }
+        
+        .tier-features {
+            list-style: none;
+            margin-bottom: var(--space-8);
+        }
+        
+        .tier-features li {
+            padding: var(--space-2) 0;
+            font-size: var(--text-sm);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            color: var(--text-primary);
+        }
+        
+        .tier-features li::before {
+            content: '✓';
+            color: var(--status-success);
+            font-weight: var(--font-bold);
+            font-size: var(--text-lg);
+            flex-shrink: 0;
+        }
+        
+        .tier-card.express .tier-features li::before {
+            color: var(--brand-primary);
+        }
+        
+        .tier-features li .highlight-word {
+            color: var(--brand-secondary);
+            font-weight: var(--font-semibold);
+        }
+        
+        .tier-card.express .tier-features li .highlight-word {
+            color: var(--brand-primary);
+        }
+        
+        .tier-cta {
+            width: 100%;
+            padding: var(--space-4) var(--space-6);
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            border: 2px solid var(--brand-secondary);
+            background: white;
+            color: var(--brand-secondary);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        
+        .tier-cta:hover {
+            background: var(--brand-secondary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .tier-card.express .tier-cta {
+            border-color: var(--brand-primary);
+            background: var(--brand-primary);
+            color: white;
+        }
+        
+        .tier-card.express .tier-cta:hover {
+            background: var(--brand-secondary);
+            border-color: var(--brand-secondary);
+        }
+        
+        .tier-note {
+            margin-top: var(--space-4);
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: var(--leading-relaxed);
+        }
+        
+        .tier-note .highlight-word {
+            color: var(--brand-secondary);
+            font-weight: var(--font-medium);
+        }
+        
+        .tier-card.express .tier-note .highlight-word {
+            color: var(--brand-primary);
+        }
+        
+        /* Token reference panel */
+        .token-panel {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: var(--bg-surface);
+            border: 2px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            font-size: var(--text-xs);
+            max-width: 250px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+        }
+        
+        .token-panel h3 {
+            font-size: var(--text-sm);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-2);
+            color: var(--brand-secondary);
+        }
+        
+        .token-panel p {
+            margin-bottom: var(--space-2);
+            color: var(--text-secondary);
+            line-height: var(--leading-relaxed);
+        }
+        
+        @media (max-width: 768px) {
+            .tiers {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: var(--text-3xl);
+            }
+            
+            .tier-price {
+                font-size: var(--text-3xl);
+            }
+            
+            .token-panel {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="token-panel">
+        <h3>Design Playground</h3>
+        <p>Edit CSS variables at the top of this file to experiment with colors, spacing, typography, etc.</p>
+        <p><strong>Tip:</strong> Open DevTools and edit :root variables live!</p>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <div class="header">
+                <h1>When do you need your <span class="highlight">NIF</span>?</h1>
+                <p>Choose the tier that matches your timeline</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tiers-section">
+        <div class="tiers">
+            <!-- Essential Tier -->
+            <div class="tier-card">
+                <div class="tier-name">Essential</div>
+                <div class="tier-price">€79</div>
+                <div class="tier-delivery">Application submitted within <span class="highlight-number">5 business days</span></div>
+                <ul class="tier-features">
+                    <li><span class="highlight-word">NIF number</span> issued by Finanças</li>
+                    <li>No fiscal representation included</li>
+                    <li>Email support</li>
+                    <li>Document review within <span class="highlight-word">4 hours</span></li>
+                </ul>
+                <button class="tier-cta">Select Essential</button>
+                <div class="tier-note">Best for <span class="highlight-word">EU citizens</span> who don't need fiscal representation</div>
+            </div>
+
+            <!-- Standard Tier -->
+            <div class="tier-card">
+                <div class="tier-name">Standard</div>
+                <div class="tier-price">€129</div>
+                <div class="tier-delivery">Application submitted within <span class="highlight-number">5 business days</span></div>
+                <ul class="tier-features">
+                    <li><span class="highlight-word">NIF number</span> issued by Finanças</li>
+                    <li><span class="highlight-word">12 months</span> fiscal representation</li>
+                    <li>Priority email support</li>
+                    <li>Document review within <span class="highlight-word">4 hours</span></li>
+                    <li>Post-NIF guidance email</li>
+                </ul>
+                <button class="tier-cta">Select Standard</button>
+                <div class="tier-note">Recommended for <span class="highlight-word">property buyers</span> and <span class="highlight-word">visa applicants</span></div>
+            </div>
+
+            <!-- Express Tier -->
+            <div class="tier-card express">
+                <div class="tier-name">Express</div>
+                <div class="tier-price">€179</div>
+                <div class="tier-delivery">Application submitted within <span class="highlight-number">48 hours</span> of document approval</div>
+                <ul class="tier-features">
+                    <li><span class="highlight-word">NIF number</span> issued by Finanças</li>
+                    <li><span class="highlight-word">12 months</span> fiscal representation</li>
+                    <li>Priority email support</li>
+                    <li>Document review within <span class="highlight-word">2 hours</span></li>
+                    <li>Post-NIF guidance email</li>
+                    <li><span class="highlight-word">Guaranteed 48h submission</span></li>
+                </ul>
+                <button class="tier-cta">Select Express</button>
+                <div class="tier-note">For <span class="highlight-word">urgent deadlines</span> (property closing, visa appointments)</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

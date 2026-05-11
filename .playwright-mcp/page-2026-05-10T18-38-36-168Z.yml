@@ -1,0 +1,25 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - paragraph [ref=e4]: RemoteNIF
+    - generic [ref=e5]:
+      - heading "Sign in" [level=1] [ref=e6]
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - text: Email
+          - textbox "Email" [ref=e9]: wrong@example.com
+        - generic [ref=e10]:
+          - text: Password
+          - textbox "Password" [ref=e11]: wrongpassword
+        - paragraph [ref=e28]: Incorrect email or password
+        - button "Sign in" [ref=e12]
+      - generic [ref=e13]:
+        - paragraph [ref=e14]:
+          - link "Forgot your password?" [ref=e15] [cursor=pointer]:
+            - /url: /reset-password
+        - paragraph [ref=e16]:
+          - text: Don't have an account?
+          - link "Sign up" [ref=e17] [cursor=pointer]:
+            - /url: /signup
+  - button "Open Next.js Dev Tools" [ref=e23] [cursor=pointer]:
+    - img [ref=e24]
+  - alert [ref=e27]

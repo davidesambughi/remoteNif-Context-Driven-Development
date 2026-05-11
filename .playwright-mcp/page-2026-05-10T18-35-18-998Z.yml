@@ -1,0 +1,17 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - paragraph [ref=e4]: RemoteNIF
+    - generic [ref=e5]:
+      - heading "Reset your password" [level=1] [ref=e6]
+      - paragraph [ref=e7]: This link is invalid or has expired. Please request a new one.
+      - generic [ref=e8]:
+        - paragraph [ref=e9]: Enter your email and we'll send you a reset link.
+        - generic [ref=e10]:
+          - text: Email
+          - textbox "Email" [ref=e11]
+        - button "Send reset link" [ref=e12]
+      - paragraph [ref=e13]:
+        - link "Back to sign in" [ref=e14] [cursor=pointer]:
+          - /url: /signin
+  - button "Open Next.js Dev Tools" [ref=e20] [cursor=pointer]:
+    - img [ref=e21]

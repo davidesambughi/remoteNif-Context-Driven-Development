@@ -1,0 +1,217 @@
+/* ============================================
+   DESIGN TOKENS
+   Paste this entire file to share your token system with LLMs.
+
+   Two-layer structure:
+   1. Primitive colors — what the color IS (named after the color)
+   2. Semantic tokens  — what the color DOES (named after the role)
+
+   To retheme: reassign semantic tokens only.
+   To change a palette color: update the primitive — all semantic usages follow.
+   ============================================ */
+
+:root {
+   /* ==========================================
+       PRIMITIVE COLORS
+       Raw values. Named after the color, not the role.
+       Don't use these directly in components — use semantic tokens below.
+       ========================================== */
+   --color-white: oklch(100% 0 0);
+   --color-slate-50: oklch(98% 0.006 264);
+   --color-slate-100: oklch(96% 0.008 264);
+   --color-slate-200: oklch(92% 0.01 264);
+   --color-slate-500: oklch(62% 0.02 264);
+   --color-slate-700: oklch(45% 0.03 264);
+   --color-slate-950: oklch(22% 0.04 264);
+
+   --color-blue-600: oklch(60% 0.16 250);
+   --color-blue-100: oklch(93% 0.04 250);
+   --color-indigo-600: oklch(55% 0.18 275);
+
+   --color-emerald-500: oklch(70% 0.14 165);
+   --color-amber-500: oklch(78% 0.13 75);
+   --color-rose-600: oklch(62% 0.18 25);
+   --color-sky-500: oklch(72% 0.11 230);
+
+
+   /* ==========================================
+       BACKGROUNDS — surface elevation model
+       base → surface → elevated → subtle
+       ========================================== */
+   --bg-base: var(--color-slate-50);
+   /* Page / canvas — outermost layer */
+   --bg-surface: var(--color-white);
+   /* Cards, panels — one level above base */
+   --bg-elevated: var(--color-white);
+   /* Modals, dropdowns, popovers */
+   --bg-subtle: var(--color-blue-100);
+   /* Muted sections, tags, code blocks */
+
+
+   /* ==========================================
+       TEXT
+       ========================================== */
+   --text-primary: var(--color-slate-950);
+   /* Headings, main body copy */
+   --text-secondary: var(--color-slate-700);
+   /* Supporting text, labels */
+   --text-muted: var(--color-slate-500);
+   /* Placeholders, captions, disabled */
+   --text-on-accent: var(--color-white);
+   /* Text / icons on a colored background */
+
+
+   /* ==========================================
+       BORDERS — emphasis scale
+       subtle → default → strong
+       ========================================== */
+   --border-default: var(--color-slate-200);
+   /* Standard card and input borders */
+   --border-subtle: var(--color-slate-100);
+   /* Light dividers, section separators */
+   --border-strong: var(--color-slate-950);
+   /* Emphasis borders, focused elements */
+
+
+   /* ==========================================
+       BRAND
+       primary     = main CTAs and key highlights
+       primary-dim = muted version for hover states and subtle backgrounds
+       secondary   = supporting accents and secondary hierarchy
+       ========================================== */
+   --brand-primary: var(--color-blue-600);
+   --brand-primary-dim: var(--color-blue-100);
+   --brand-secondary: var(--color-indigo-600);
+
+
+   /* ==========================================
+       STATUS
+       ========================================== */
+   --status-success: var(--color-emerald-500);
+   --status-warning: var(--color-amber-500);
+   --status-error: var(--color-rose-600);
+   --status-info: var(--color-sky-500);
+
+
+   /* ==========================================
+       TYPOGRAPHY
+       ========================================== */
+   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+   --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+
+   --text-xs: 0.75rem;
+   /* 12px */
+   --text-sm: 0.875rem;
+   /* 14px */
+   --text-base: 1rem;
+   /* 16px */
+   --text-lg: 1.125rem;
+   /* 18px */
+   --text-xl: 1.25rem;
+   /* 20px */
+   --text-2xl: 1.5rem;
+   /* 24px */
+   --text-3xl: 2rem;
+   /* 32px */
+   --text-4xl: 2.5rem;
+   /* 40px */
+
+   --font-normal: 400;
+   --font-medium: 500;
+   --font-semibold: 600;
+   --font-bold: 700;
+
+   --leading-tight: 1.2;
+   --leading-normal: 1.5;
+   --leading-relaxed: 1.6;
+
+
+   /* ==========================================
+       SPACING — 8px grid
+       ========================================== */
+   --space-1: 0.25rem;
+   /* 4px */
+   --space-2: 0.5rem;
+   /* 8px */
+   --space-3: 0.75rem;
+   /* 12px */
+   --space-4: 1rem;
+   /* 16px */
+   --space-5: 1.25rem;
+   /* 20px */
+   --space-6: 1.5rem;
+   /* 24px */
+   --space-8: 2rem;
+   /* 32px */
+   --space-10: 2.5rem;
+   /* 40px */
+   --space-12: 3rem;
+   /* 48px */
+   --space-16: 4rem;
+   /* 64px */
+
+
+   /* ==========================================
+       BORDER RADIUS — increases with surface depth
+       ========================================== */
+   --radius-sm: 0.375rem;
+   /* 6px  — inline elements, badges */
+   --radius-md: 0.5rem;
+   /* 8px  — inputs, small components */
+   --radius-lg: 0.75rem;
+   /* 12px — cards, panels */
+   --radius-xl: 1rem;
+   /* 16px — large cards */
+   --radius-2xl: 1.5rem;
+   /* 24px — modals, sheets */
+   --radius-full: 9999px;
+   /* Pills, avatars */
+
+
+   /* ==========================================
+       SHADOWS — elevation hierarchy
+       ========================================== */
+   --shadow-sm: 0 1px 2px 0 oklch(0% 0 0 / 0.05);
+   --shadow-md: 0 4px 6px -1px oklch(0% 0 0 / 0.07), 0 2px 4px -2px oklch(0% 0 0 / 0.05);
+   --shadow-lg: 0 10px 15px -3px oklch(0% 0 0 / 0.08), 0 4px 6px -4px oklch(0% 0 0 / 0.05);
+   --shadow-xl: 0 20px 25px -5px oklch(0% 0 0 / 0.10), 0 8px 10px -6px oklch(0% 0 0 / 0.05);
+
+
+   /* ==========================================
+       TRANSITIONS
+       ========================================== */
+   --transition-fast: 150ms ease;
+   --transition-base: 200ms ease;
+   --transition-slow: 300ms ease;
+   --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ============================================
+   LLM USAGE GUIDE
+   ============================================
+
+   TOKEN NAMING CONVENTION:
+   --bg-*          Backgrounds  (base → surface → elevated → subtle)
+   --text-*         Text roles   (primary → secondary → muted → on-accent)
+   --border-*       Borders      (subtle → default → strong)
+   --brand-*         Brand colors (primary, primary-dim, secondary)
+   --status-*       States       (success, warning, error, info)
+
+   TWO-LAYER PATTERN:
+   Change semantic mapping to retheme without touching components:
+     --brand-primary: var(--color-burnt-peach);   ← change this line only
+   Change a primitive to adjust its color across all usages:
+     --color-burnt-peach: oklch(68% 0.14 40);     ← change this line only
+
+   COLOR FORMAT — OKLCH:
+   oklch(L% C H)
+   L = lightness  0–100%     (perceptually uniform — 50% always looks mid)
+   C = chroma     0–0.37     (0 = grey, higher = more saturated)
+   H = hue angle  0–360      (0/360 red · 120 green · 240 blue · 30 orange · 300 purple)
+
+   RULES:
+   - Keep all colors in OKLCH
+   - Never use raw hex or Tailwind color classes in components — token names only
+   - Semantic tokens reference primitives with var() — never raw values directly
+   ============================================ */
