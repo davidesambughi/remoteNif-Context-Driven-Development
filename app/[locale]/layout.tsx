@@ -42,7 +42,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       lang={locale}
       className={`${inter.variable} ${jetbrainsMono.variable}`}
     >
-      <body>
+      <body className="bg-background text-foreground">
         {/* NextIntlClientProvider is required in next-intl v4 for any client component using useTranslations */}
         <NextIntlClientProvider>
           {children}

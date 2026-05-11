@@ -36,6 +36,7 @@ export async function signUp(input: unknown): Promise<ActionResult> {
   })
 
   if (error) {
+    console.error('[signUp] Supabase error:', error.message, error.status)
     // Intentionally surfaced per user-flows.md Flow 2 — showing "email in use" is a
     // deliberate UX choice for the checkout funnel, not an accidental enumeration leak.
     if (error.message.includes('User already registered')) {
@@ -48,6 +49,7 @@ export async function signUp(input: unknown): Promise<ActionResult> {
   if (!data.session) {
     return { success: false, error: 'Please confirm your email before continuing.' }
   }
+  
 
   return { success: true }
 }

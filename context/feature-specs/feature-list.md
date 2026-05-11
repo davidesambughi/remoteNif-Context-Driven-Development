@@ -61,6 +61,7 @@ Done when:
 
 Notes:
 - Verify current Supabase auth patterns before implementation.
+- **Email confirmation is currently disabled in Supabase (required for MVP checkout flow).** This is intentional but a security tradeoff — without it, users can register with an email they don't own. Before launch, add a non-blocking email verification step: allow sign-up and payment immediately, but require a verified email before the order is submitted to the Portuguese tax authority (Feature 09 or 10). This avoids legal/GDPR risk without breaking the checkout funnel.
 
 Depends on: 02, 03.
 

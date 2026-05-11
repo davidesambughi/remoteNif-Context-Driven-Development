@@ -8,6 +8,8 @@
    ============================================ */
 
 :root {
+  color-scheme: light;
+
   /* ==========================================
       PRIMITIVE COLORS
       Raw values. Named after the color, not the role.
@@ -261,8 +263,8 @@
   --color-info: var(--status-info);
 
   /* Fonts */
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-family-sans: var(--font-sans);
+  --font-family-mono: var(--font-mono);
 }
 
 /* ==========================================
