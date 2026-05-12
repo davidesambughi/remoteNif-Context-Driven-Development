@@ -4,6 +4,8 @@ Ordered by dependency. Finish each feature before starting the next.
 Each feature file lives next to this one as `NN-feature-name.md`.  
 If a detail depends on current framework/library behavior, verify it against the latest docs during implementation.
 
+**Component rule:** prefer shadcn/ui for all interactive elements (buttons, links styled as buttons, accordions, forms). Use custom markup only for purely display elements with no user interaction.
+
 ---
 
 ## 01 — Foundation
@@ -150,6 +152,26 @@ Notes:
 
 - Design decision required before implementation: how should infeasible tiers render? (greyed out, warning badge, disabled CTA?) Provide a reference or decision before writing the spec.
 - `TierConfig.deliveryDescription` in `lib/pricing.ts` is a hardcoded English string — replace with a translation key before rendering it in UI.
+
+Depends on: 06a.
+
+---
+
+## 06c — Marketing Button Audit
+
+Replace custom-styled link/anchor CTAs in existing marketing components with shadcn `Button asChild`.
+
+Done when:
+
+- `HeroSection` "Get Started" and "Learn More" use `Button asChild` with `Link` / `<a>`.
+- `MarketingHeader` "Sign In" uses `Button asChild` with `Link`.
+- All interactive elements in marketing components have a visible focus ring via shadcn's built-in `focus-visible:ring`.
+- No new functionality added — visual appearance stays the same.
+
+Notes:
+
+- `StepCard` divs in `HowItWorksSection` are display-only — do not change them.
+- Do not change shadcn component source files in `components/ui/`.
 
 Depends on: 06a.
 

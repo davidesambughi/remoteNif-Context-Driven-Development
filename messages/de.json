@@ -121,5 +121,51 @@
       "q5": "Was ändert sich im Juli 2026?",
       "a5": "Das portugiesische Gesetz ändert sich am 1. Juli 2026: Nicht-EU-Bürger ohne portugiesische Steuerpflichten sind nicht mehr gesetzlich verpflichtet, einen steuerlichen Vertreter zu benennen. Wir werden unsere Pakete und Preise entsprechend aktualisieren. Standard- und Express-Kunden werden im Voraus informiert."
     }
+  },
+  "pricing": {
+    "hero": {
+      "headline": "Wann benötigen Sie Ihre NIF?",
+      "subheadline": "Transparente Festpreise für Ihre portugiesische Steueridentifikationsnummer. Keine versteckten Verwaltungsgebühren."
+    },
+    "tiers": {
+      "essential": {
+        "name": "Essential",
+        "subtitle": "Nur NIF, ohne Steuervertretung",
+        "features": {
+          "delivery": "Lieferung in 5 Werktagen",
+          "nif": "NIF-Nummer",
+          "noFiscalRep": "Keine Steuervertretung"
+        },
+        "cta": "Essential holen"
+      },
+      "standard": {
+        "name": "Standard",
+        "subtitle": "NIF + 12 Monate Steuervertretung",
+        "features": {
+          "delivery": "Lieferung in 5 Werktagen",
+          "nif": "NIF-Nummer",
+          "fiscalRep": "12 Monate Steuervertretung"
+        },
+        "cta": "Standard holen"
+      },
+      "express": {
+        "name": "Express",
+        "badge": "Schnellste",
+        "subtitle": "Schnelleinreichung innerhalb von 48 Stunden",
+        "features": {
+          "submission": "Antrag in 48h eingereicht",
+          "nif": "NIF-Nummer",
+          "fiscalRep": "12 Monate Steuervertretung",
+          "priority": "Prioritätsbearbeitung"
+        },
+        "cta": "Express holen"
+      }
+    },
+    "includes": {
+      "title": "Alle Pakete beinhalten:",
+      "aiReview": "KI-Dokumentenprüfung",
+      "adminVerification": "Admin-Verifizierung",
+      "emailSupport": "Prioritäts-E-Mail-Support"
+    }
   }
 }

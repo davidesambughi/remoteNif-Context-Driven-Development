@@ -121,5 +121,51 @@
       "q5": "What changes in July 2026?",
       "a5": "Portugal's law changes on July 1, 2026: non-EU residents with no Portuguese tax obligations will no longer be legally required to appoint a fiscal representative. We will update our tiers and pricing to reflect this. Standard and Express customers will be notified in advance."
     }
+  },
+  "pricing": {
+    "hero": {
+      "headline": "When do you need your NIF?",
+      "subheadline": "Transparent, flat-rate pricing for your Portuguese tax identification number. No hidden administrative fees."
+    },
+    "tiers": {
+      "essential": {
+        "name": "Essential",
+        "subtitle": "NIF only, no fiscal representation",
+        "features": {
+          "delivery": "5 business days delivery",
+          "nif": "NIF number",
+          "noFiscalRep": "No fiscal representation"
+        },
+        "cta": "Get Essential"
+      },
+      "standard": {
+        "name": "Standard",
+        "subtitle": "NIF + 12 months fiscal representation",
+        "features": {
+          "delivery": "5 business days delivery",
+          "nif": "NIF number",
+          "fiscalRep": "12 months fiscal rep"
+        },
+        "cta": "Get Standard"
+      },
+      "express": {
+        "name": "Express",
+        "badge": "Fastest",
+        "subtitle": "Fast-track submission within 48 hours",
+        "features": {
+          "submission": "Application submitted in 48h",
+          "nif": "NIF number",
+          "fiscalRep": "12 months fiscal rep",
+          "priority": "Priority processing"
+        },
+        "cta": "Get Express"
+      }
+    },
+    "includes": {
+      "title": "All tiers include:",
+      "aiReview": "AI document review",
+      "adminVerification": "Admin verification",
+      "emailSupport": "Priority email support"
+    }
   }
 }

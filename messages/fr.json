@@ -121,5 +121,51 @@
       "q5": "Qu'est-ce qui change en juillet 2026 ?",
       "a5": "La loi portugaise change le 1er juillet 2026 : les résidents hors UE sans obligations fiscales au Portugal ne seront plus légalement tenus de nommer un représentant fiscal. Nous mettrons à jour nos forfaits et tarifs en conséquence. Les clients Standard et Express seront prévenus à l'avance."
     }
+  },
+  "pricing": {
+    "hero": {
+      "headline": "Quand avez-vous besoin de votre NIF ?",
+      "subheadline": "Des tarifs fixes et transparents pour votre numéro d'identification fiscale portugais. Aucun frais administratif caché."
+    },
+    "tiers": {
+      "essential": {
+        "name": "Essentiel",
+        "subtitle": "NIF uniquement, sans représentation fiscale",
+        "features": {
+          "delivery": "Livraison en 5 jours ouvrables",
+          "nif": "Numéro NIF",
+          "noFiscalRep": "Sans représentation fiscale"
+        },
+        "cta": "Obtenir Essentiel"
+      },
+      "standard": {
+        "name": "Standard",
+        "subtitle": "NIF + 12 mois de représentation fiscale",
+        "features": {
+          "delivery": "Livraison en 5 jours ouvrables",
+          "nif": "Numéro NIF",
+          "fiscalRep": "12 mois de représentation fiscale"
+        },
+        "cta": "Obtenir Standard"
+      },
+      "express": {
+        "name": "Express",
+        "badge": "Le plus rapide",
+        "subtitle": "Soumission rapide en moins de 48 heures",
+        "features": {
+          "submission": "Demande soumise en 48h",
+          "nif": "Numéro NIF",
+          "fiscalRep": "12 mois de représentation fiscale",
+          "priority": "Traitement prioritaire"
+        },
+        "cta": "Obtenir Express"
+      }
+    },
+    "includes": {
+      "title": "Tous les forfaits incluent :",
+      "aiReview": "Vérification IA des documents",
+      "adminVerification": "Vérification administrative",
+      "emailSupport": "Support e-mail prioritaire"
+    }
   }
 }

@@ -121,5 +121,51 @@
       "q5": "¿Qué cambia en julio de 2026?",
       "a5": "La ley portuguesa cambia el 1 de julio de 2026: los residentes de fuera de la UE sin obligaciones fiscales en Portugal ya no estarán legalmente obligados a nombrar un representante fiscal. Actualizaremos nuestros planes y precios en consecuencia. Los clientes Estándar y Express serán notificados con antelación."
     }
+  },
+  "pricing": {
+    "hero": {
+      "headline": "¿Cuándo necesitas tu NIF?",
+      "subheadline": "Precios fijos y transparentes para tu número de identificación fiscal portugués. Sin tarifas administrativas ocultas."
+    },
+    "tiers": {
+      "essential": {
+        "name": "Esencial",
+        "subtitle": "Solo NIF, sin representación fiscal",
+        "features": {
+          "delivery": "Entrega en 5 días hábiles",
+          "nif": "Número de NIF",
+          "noFiscalRep": "Sin representación fiscal"
+        },
+        "cta": "Obtener Esencial"
+      },
+      "standard": {
+        "name": "Estándar",
+        "subtitle": "NIF + 12 meses de representación fiscal",
+        "features": {
+          "delivery": "Entrega en 5 días hábiles",
+          "nif": "Número de NIF",
+          "fiscalRep": "12 meses de representación fiscal"
+        },
+        "cta": "Obtener Estándar"
+      },
+      "express": {
+        "name": "Express",
+        "badge": "Más rápido",
+        "subtitle": "Envío urgente en menos de 48 horas",
+        "features": {
+          "submission": "Solicitud enviada en 48h",
+          "nif": "Número de NIF",
+          "fiscalRep": "12 meses de representación fiscal",
+          "priority": "Procesamiento prioritario"
+        },
+        "cta": "Obtener Express"
+      }
+    },
+    "includes": {
+      "title": "Todos los planes incluyen:",
+      "aiReview": "Revisión de documentos con IA",
+      "adminVerification": "Verificación administrativa",
+      "emailSupport": "Soporte por email prioritario"
+    }
   }
 }
