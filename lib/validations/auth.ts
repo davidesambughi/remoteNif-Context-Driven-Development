@@ -1,4 +1,8 @@
 import { z } from 'zod'
+import { routing } from '@/i18n/routing'
+
+// Single source of truth — locale values come from the routing config, not a duplicated literal array
+const localeEnum = z.enum(routing.locales as unknown as [string, ...string[]])
 
 // Strong password: 8+ chars, upper, lower, digit. No special-char requirement —
 // avoids UX friction without meaningful security loss at this level.
@@ -11,7 +15,7 @@ const strongPassword = z.string()
 export const signUpSchema = z.object({
   email: z.string().email(),
   password: strongPassword,
-  language: z.enum(['en', 'fr', 'es', 'de']),
+  language: localeEnum,
 })
 
 // Sign-in intentionally accepts any non-empty password — user may have an older account.
@@ -22,7 +26,7 @@ export const signInSchema = z.object({
 
 export const requestPasswordResetSchema = z.object({
   email: z.string().email(),
-  locale: z.enum(['en', 'fr', 'es', 'de']),
+  locale: localeEnum,
 })
 
 export const updatePasswordSchema = z

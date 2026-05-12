@@ -104,20 +104,33 @@ Depends on: 05b.
 
 ---
 
-## 06 — Pricing Page
-Build the pricing page and tier selection flow.
+## 06a — Pricing Page (Structure)
+Build the static pricing page and tier selection routing.
 
 Done when:
-- Three pricing tiers are shown clearly.
-- Card state reacts to deadline proximity.
-- Tier selection routes to sign up or dashboard as appropriate.
-- Tier info is preserved in the URL.
-
-Notes:
-- Consider splitting: static tier layout and the deadline-proximity logic are independent concerns.
-- All new user-facing copy uses next-intl translation keys; add to all four locale files.
+- Three pricing tiers are shown clearly with prices, features, and delivery times.
+- Tier selection routes to signup (unauthenticated) or dashboard (authenticated) as appropriate.
+- Tier info is preserved in the URL (e.g. `?tier=standard`).
+- All copy uses next-intl translation keys; added to all four locale files.
 
 Depends on: 03, 04.
+
+---
+
+## 06b — Pricing Page (Deadline Proximity Logic)
+Add deadline-awareness to the pricing tier cards.
+
+Done when:
+- User can input or select their required NIF deadline.
+- Card state reflects tier feasibility based on the selected deadline.
+- Tiers that cannot meet the deadline are visually de-emphasised or flagged.
+- Logic reads delivery time constants from `lib/pricing.ts`.
+
+Notes:
+- Design decision required before implementation: how should infeasible tiers render? (greyed out, warning badge, disabled CTA?) Provide a reference or decision before writing the spec.
+- `TierConfig.deliveryDescription` in `lib/pricing.ts` is a hardcoded English string — replace with a translation key before rendering it in UI.
+
+Depends on: 06a.
 
 ---
 
@@ -134,6 +147,7 @@ Notes:
 - Verify current Stripe and webhook best practices.
 - Consider splitting: checkout session creation and webhook processing + DB record writes are independent concerns.
 - All new user-facing copy (confirmation page, error states) uses next-intl translation keys; add to all four locale files.
+- When creating `app/actions/checkout.ts`, move `ActionResult<T>` from `app/actions/auth.ts` to `lib/types.ts` so all action files share it.
 
 Depends on: 04, 06.
 
@@ -300,6 +314,7 @@ Done when:
 Notes:
 - Consider splitting: email + password changes and account deletion are higher-risk than language preference and can be scoped separately.
 - All new user-facing copy uses next-intl translation keys; add to all four locale files.
+- This feature adds more auth-adjacent forms — evaluate whether a shared form hook is worth introducing to reduce the structural repetition across auth form components.
 
 Depends on: 04.
 
