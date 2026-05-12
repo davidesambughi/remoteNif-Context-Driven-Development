@@ -1,17 +1,23 @@
 import { use } from 'react'
-import { useTranslations } from 'next-intl'
 import { setRequestLocale } from 'next-intl/server'
+import { HeroSection } from '@/components/marketing/HeroSection'
+import { HowItWorksSection } from '@/components/marketing/HowItWorksSection'
+import { FAQSection } from '@/components/marketing/FAQSection'
+import type { Locale } from '@/i18n/routing'
 
-// Placeholder — replaced entirely by Feature 05 (Homepage)
 export default function HomePage({
   params,
 }: {
-  params: Promise<{ locale: string }>
+  params: Promise<{ locale: Locale }>
 }) {
   const { locale } = use(params)
   setRequestLocale(locale)
 
-  const t = useTranslations('common')
-
-  return <p>{t('appName')}</p>
+  return (
+    <>
+      <HeroSection />
+      <HowItWorksSection />
+      <FAQSection />
+    </>
+  )
 }

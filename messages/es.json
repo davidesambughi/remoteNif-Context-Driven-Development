@@ -1,6 +1,17 @@
 {
   "common": {
-    "appName": "RemoteNIF"
+    "appName": "RemoteNIF",
+    "nav": {
+      "signIn": "Iniciar sesión",
+      "getStarted": "Empezar"
+    },
+    "footer": {
+      "copyright": "© 2026 RemoteNIF Portugal. Tramitación de NIF segura y transparente.",
+      "pricing": "Precios",
+      "process": "Proceso",
+      "terms": "Términos de servicio",
+      "privacy": "Política de privacidad"
+    }
   },
   "auth": {
     "signIn": {
@@ -65,6 +76,49 @@
           "invalidCredentials": "Invalid operator credentials"
         }
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "headline": "Obtén tu NIF Portugués Online — Rápido, Transparente, Fiable",
+      "subheadline": "Sin cargos ocultos. Sin sorpresas. Elige el plan que se adapta a tu plazo. Comienza tu camino portugués con confianza.",
+      "cta": "Empezar",
+      "learnMore": "Saber más",
+      "stat1Value": "Desde €79",
+      "stat1Label": "Precios transparentes",
+      "stat2Value": "5 días",
+      "stat2Label": "Entrega estándar",
+      "stat3Value": "48h",
+      "stat3Label": "Opción Express",
+      "stat4Value": "Cero",
+      "stat4Label": "Cargos ocultos"
+    },
+    "howItWorks": {
+      "title": "Un Proceso Transparente en 3 Pasos",
+      "subtitle": "Obtener tu identificación fiscal portuguesa no tiene por qué ser un laberinto. Hemos simplificado la complejidad en tres etapas claras.",
+      "step1Number": "01",
+      "step1Title": "Elige Tu Plan",
+      "step1Description": "Selecciona entre Esencial, Estándar o Express según tu plazo. Los precios son claros desde el principio — sin sorpresas.",
+      "step2Number": "02",
+      "step2Title": "Sube Tus Documentos",
+      "step2Description": "Sube tu pasaporte y comprobante de domicilio. Nuestro sistema los revisa automáticamente para evitar retrasos.",
+      "step3Number": "03",
+      "step3Title": "Recibe Tu NIF",
+      "step3Description": "Tu número NIF se entrega en tu panel de control seguro. Úsalo para compras de propiedades, cuentas bancarias y más."
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "subtitle": "Todo lo que necesitas saber sobre el proceso.",
+      "q1": "¿Cuánto tiempo tarda el proceso?",
+      "a1": "Los pedidos Estándar tardan entre 5 y 10 días hábiles desde la aprobación de documentos. Los pedidos Express se presentan a la Finanças en un plazo de 48 horas tras la aprobación. El tiempo de procesamiento de la Finanças tras la presentación está fuera de nuestro control.",
+      "q2": "¿Necesito estar en Portugal?",
+      "a2": "No. Todo el proceso es remoto. Actuamos como tu representante fiscal en Portugal y presentamos la solicitud a la Finanças en tu nombre.",
+      "q3": "¿Qué documentos se requieren?",
+      "a3": "Necesitas un pasaporte válido y un comprobante de domicilio con fecha de menos de 3 meses (factura de suministros, extracto bancario o contrato de alquiler). No se aceptan facturas de teléfono ni televisión.",
+      "q4": "¿Necesito un representante fiscal?",
+      "a4": "Los residentes de fuera de la UE necesitan actualmente un representante fiscal autorizado para solicitar un NIF. Está incluido en los planes Estándar y Express. Los ciudadanos de la UE pueden solicitarlo sin representante usando nuestro plan Esencial.",
+      "q5": "¿Qué cambia en julio de 2026?",
+      "a5": "La ley portuguesa cambia el 1 de julio de 2026: los residentes de fuera de la UE sin obligaciones fiscales en Portugal ya no estarán legalmente obligados a nombrar un representante fiscal. Actualizaremos nuestros planes y precios en consecuencia. Los clientes Estándar y Express serán notificados con antelación."
     }
   }
 }

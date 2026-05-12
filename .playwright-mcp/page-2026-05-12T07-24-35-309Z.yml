@@ -1,0 +1,89 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "RemoteNIF" [ref=e5] [cursor=pointer]:
+          - /url: /fr
+        - link "Sign In" [ref=e6] [cursor=pointer]:
+          - /url: /fr/signin
+    - main [ref=e7]:
+      - generic [ref=e9]:
+        - heading "Get Your Portuguese NIF Online — Fast, Transparent, Reliable" [level=1] [ref=e10]
+        - paragraph [ref=e11]: No hidden fees. No surprises. Choose the tier that fits your deadline. Start your Portuguese journey with confidence and bureaucratic ease.
+        - link "Get Started" [ref=e12] [cursor=pointer]:
+          - /url: /fr/pricing
+        - link "Learn More" [ref=e13] [cursor=pointer]:
+          - /url: "#how-it-works"
+        - generic [ref=e14]:
+          - generic [ref=e15]:
+            - generic [ref=e16]: From €79
+            - generic [ref=e17]: Transparent pricing
+          - generic [ref=e18]:
+            - generic [ref=e19]: 5 days
+            - generic [ref=e20]: Standard delivery
+          - generic [ref=e21]:
+            - generic [ref=e22]: 48h
+            - generic [ref=e23]: Express option
+          - generic [ref=e24]:
+            - generic [ref=e25]: Zero
+            - generic [ref=e26]: Hidden fees
+      - generic [ref=e28]:
+        - heading "A Transparent 3-Step Process" [level=2] [ref=e29]
+        - paragraph [ref=e30]: Getting your Portuguese tax identification shouldn't be a maze. We've distilled the complexity into three simple stages.
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e33]: "01"
+            - heading "Choose Your Tier" [level=3] [ref=e34]
+            - paragraph [ref=e35]: Select between Essential, Standard, or Express based on your deadline. Prices are clear upfront — no surprises.
+          - generic [ref=e36]:
+            - generic [ref=e37]: "02"
+            - heading "Upload Your Documents" [level=3] [ref=e38]
+            - paragraph [ref=e39]: Upload your passport and proof of address. Our system reviews them automatically so there are no delays.
+          - generic [ref=e40]:
+            - generic [ref=e41]: "03"
+            - heading "Receive Your NIF" [level=3] [ref=e42]
+            - paragraph [ref=e43]: Your NIF number is delivered to your secure dashboard. Use it for property purchases, bank accounts, and more.
+      - generic [ref=e45]:
+        - heading "Frequently Asked Questions" [level=2] [ref=e46]
+        - paragraph [ref=e47]: Everything you need to know about the process.
+        - generic [ref=e48]:
+          - heading "How long does the process take?" [level=3] [ref=e50]:
+            - button "How long does the process take?" [ref=e51]:
+              - text: How long does the process take?
+              - img [ref=e52]
+          - heading "Do I need to be in Portugal?" [level=3] [ref=e55]:
+            - button "Do I need to be in Portugal?" [ref=e56]:
+              - text: Do I need to be in Portugal?
+              - img [ref=e57]
+          - heading "What documents are required?" [level=3] [ref=e60]:
+            - button "What documents are required?" [ref=e61]:
+              - text: What documents are required?
+              - img [ref=e62]
+          - heading "Do I need a fiscal representative?" [level=3] [ref=e65]:
+            - button "Do I need a fiscal representative?" [ref=e66]:
+              - text: Do I need a fiscal representative?
+              - img [ref=e67]
+          - heading "What changes in July 2026?" [level=3] [ref=e70]:
+            - button "What changes in July 2026?" [ref=e71]:
+              - text: What changes in July 2026?
+              - img [ref=e72]
+    - contentinfo [ref=e74]:
+      - generic [ref=e75]:
+        - paragraph [ref=e76]: RemoteNIF
+        - paragraph [ref=e77]: © 2024 RemoteNIF Portugal. Secure & Transparent NIF Processing.
+        - navigation "Footer navigation" [ref=e78]:
+          - link "Pricing" [ref=e79] [cursor=pointer]:
+            - /url: /fr/pricing
+          - link "Process" [ref=e80] [cursor=pointer]:
+            - /url: "#how-it-works"
+          - link "Terms of Service" [ref=e81] [cursor=pointer]:
+            - /url: "#"
+          - link "Privacy Policy" [ref=e82] [cursor=pointer]:
+            - /url: "#"
+        - combobox "Select language" [ref=e84] [cursor=pointer]:
+          - option "English"
+          - option "Français" [selected]
+          - option "Español"
+          - option "Deutsch"
+  - button "Open Next.js Dev Tools" [ref=e90] [cursor=pointer]:
+    - img [ref=e91]

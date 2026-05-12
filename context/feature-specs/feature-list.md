@@ -296,6 +296,25 @@ Depends on: 15, 16.
 
 ---
 
+## 19 — UI Polish & High Fidelity
+Do a full visual pass across all screens once every feature is structurally complete.
+
+Done when:
+- Typography, spacing, and visual hierarchy are consistent across all pages.
+- All screens have been reviewed at mobile, tablet, and desktop breakpoints.
+- Interaction states (hover, focus, disabled, loading) are polished on every interactive element.
+- The homepage, pricing page, and dashboard — the three highest-traffic screens — have been reviewed against the approved high-fidelity designs.
+- No raw Tailwind color classes or hardcoded values remain anywhere in the codebase.
+
+Notes:
+- This is the only feature where touching multiple screens in one session is acceptable — coherence across screens is the goal.
+- Do not redesign structure or add new sections here — polish only. Structural changes belong in the feature they affect.
+- A high-fidelity mockup or design reference should be provided before starting this feature.
+
+Depends on: 18 (all features complete).
+
+---
+
 ## Notes
 
 - Feature 17 can be built in parallel with 08–16 after auth is ready.

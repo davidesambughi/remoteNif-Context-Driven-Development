@@ -8,75 +8,40 @@
 
 ## Current Phase
 
-Active development. Features 01–04 complete. Auth flows fully implemented.
+Active development. Features 01–05a complete.
 
 ---
 
 ## Current Goal
 
-Feature 05 — Marketing Homepage.
+Feature 06 — Pricing Page.
 
 ---
 
 ## Completed
 
-- Context documentation (project-overview, user-flows, ui-context, architecture-context, tech-spec, code-standards, ai-workflow-rules)
-- Architecture decisions Q1–Q3 resolved (see project-overview.md appendix)
-- Low-fidelity mockup (saved locally, not in repo)
+- Context documentation complete (all 8 context files). Architecture decisions Q1–Q3 resolved (see `project-overview.md` appendix).
+
 - **Feature 01 — Dev Environment** ✓
-  - `tsconfig.json`: added `noUncheckedIndexedAccess` and `noImplicitReturns`
-  - `eslint.config.mjs`: added `no-explicit-any` (error), `no-unused-vars`, `no-console` rules
-  - `zod` installed
-  - `lib/env.ts`: Zod env schema, dev-only fallback, exports `env` and `Env`
-  - `lib/pricing.ts`: `TIERS`, `TIER_ORDER`, `RENEWAL_PRICE_EUR_CENTS` constants
-  - `.env.local`: created with `NEXT_PUBLIC_APP_URL` and `NODE_ENV`; all other vars commented as placeholders
-  - `globals.css` `@theme inline` block verified complete
-  - `npm run build` ✓ — `npm run lint` ✓
+  TypeScript strict mode (`noUncheckedIndexedAccess`, `noImplicitReturns`), ESLint (`no-explicit-any`, `no-unused-vars`, `no-console`), `lib/env.ts` (Zod env schema), `lib/pricing.ts` (`TIERS`, `TIER_ORDER`, `RENEWAL_PRICE_EUR_CENTS`), `globals.css` design tokens complete.
+
 - **Feature 02 — Database Schema** ✓
-  - Installed: `drizzle-orm`, `drizzle-kit`, `postgres`, `@supabase/supabase-js`, `@supabase/ssr`, `dotenv`
-  - `drizzle.config.ts`: loads `.env.local` via dotenv, points to `lib/db/schema.ts`
-  - `lib/db/schema.ts`: all 7 tables, 9 enums, all indexes, `SelectX`/`InsertX` exports
-  - `lib/db/index.ts`: exports `db` (Drizzle instance)
-  - `lib/db/queries.ts`: empty placeholder
-  - `lib/supabase/client.ts`, `server.ts`, `admin.ts`: three Supabase client factories
-  - `package.json`: added `db:generate`, `db:migrate`, `db:studio` scripts
-  - Env vars renamed: `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_SECRET_KEY`
-  - `DATABASE_URL` added to `.env.local` (direct Supabase connection)
-  - Migration `0000_whole_triathlon.sql` generated and applied — all 7 tables live in Supabase
-  - `npm run build` ✓
+  Installed: `drizzle-orm`, `drizzle-kit`, `postgres`, `@supabase/supabase-js`, `@supabase/ssr`. All 7 tables + 9 enums in `lib/db/schema.ts`, 3 Supabase client factories, `db:generate/migrate/studio` scripts. Migration `0000_whole_triathlon.sql` applied. Env vars: `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_SECRET_KEY`.
+
 - **Feature 03 — i18n Routing + Proxy** ✓
+  `next-intl` installed. `i18n/routing.ts` (locales `[en,fr,es,de]`, defaultLocale `en`, `as-needed` prefix), `i18n/request.ts`, `i18n/navigation.ts` (locale-aware Link/router). `proxy.ts`: next-intl middleware + Supabase session guard for `/dashboard`, `/admin`, `/operator`. `app/layout.tsx` owns `<html>`/`<body>` via `getLocale()`; `app/[locale]/layout.tsx` handles locale validation + `NextIntlClientProvider`.
+
 - **Feature 04 — Auth Flows** ✓
-  - `npm run db:migrate` applied `0001_handle_new_user` trigger (reads `raw_user_meta_data.language`, inserts into `public.users` with `role='customer'`)
-  - shadcn/ui initialized via manual `components.json` + `lib/utils.ts`; `npx shadcn add button input form label card` installed components
-  - `globals.css`: shadcn CSS var mapping block added; `@theme inline` updated to resolve `bg-primary` to brand color (Tailwind v4 convention)
-  - `lib/supabase/proxy.ts`: `updateSession()` — `getClaims()` returns `{ claims, header, signature }` not `{ user }` (spec inaccuracy corrected); uses `claims.sub` for user ID
-  - `proxy.ts`: updated to call `updateSession()` and use `hasValidSession` from `getClaims()` result
-  - `lib/validations/auth.ts`: four Zod schemas + inferred types
-  - `lib/db/queries.ts`: `getUserById`, `getUserByEmail`
-  - `lib/auth/session.ts`: `getCurrentUser`, `requireAuth`, `requireRole`
-  - `lib/auth/permissions.ts`: `isAdmin`, `isOperator`, `isCustomer`
-  - `app/actions/auth.ts`: `signUp`, `signIn`, `adminSignIn`, `operatorSignIn`, `signOut`, `requestPasswordReset`, `updatePassword`; shared `_signInWithRole` helper
-  - `app/auth/confirm/route.ts`: OTP token exchange for password recovery
-  - Auth routes: `/signin`, `/signup`, `/reset-password`, `/new-password` (under `(auth)` layout), `/admin/signin`, `/operator/signin` (own shells)
-  - Form components: `SignUpForm`, `SignInForm`, `RequestPasswordResetForm`, `NewPasswordForm`, `InternalSignInForm`
-  - `components/auth/AuthCard.tsx`: shared card shell
-  - i18n keys added under `auth` namespace in all four locale files
-  - `.env.local`: placeholder values added for Stripe, Resend, Gemini, CRON vars so `next build` passes
-  - `npm run build` ✓ — 7 auth routes generated
-  - Installed: `next-intl`
-  - `i18n/routing.ts`: `defineRouting` — locales `[en, fr, es, de]`, defaultLocale `en`, localePrefix `as-needed`
-  - `i18n/request.ts`: `getRequestConfig` (v4: awaits `requestLocale` Promise, uses `hasLocale`, returns `messages`)
-  - `i18n/navigation.ts`: `createNavigation` exports — locale-aware `Link`, `redirect`, `usePathname`, `useRouter`, `getPathname`
-  - `messages/en.json`, `fr.json`, `es.json`, `de.json`: created with `common.appName` placeholder
-  - `next.config.ts`: wrapped with `createNextIntlPlugin('./i18n/request.ts')`
-  - `globals.css`: font tokens updated to reference `var(--font-inter)` and `var(--font-jetbrains-mono)`
-  - `app/layout.tsx`: pass-through only (`return children`)
-  - `app/[locale]/layout.tsx`: renders `<html lang={locale}>`, loads Inter + JetBrains Mono via `next/font/google`, `NextIntlClientProvider`, `generateStaticParams`, locale validation, `setRequestLocale`
-  - `app/page.tsx`: deleted
-  - `app/[locale]/(marketing)/page.tsx`: minimal placeholder rendering `t('common.appName')`
-  - `proxy.ts`: next-intl `createMiddleware` + Supabase session cookie guard for `/dashboard`, `/admin`, `/operator`
-  - Smoke tested: `/` → `lang="en"` RemoteNIF ✓ — `/fr` → `lang="fr"` RemoteNIF ✓
-  - `npm run build` ✓ — 4 locale routes generated, proxy registered
+  shadcn/ui initialized (`button`, `input`, `form`, `label`, `card`). Migration `0001` applies new-user trigger (inserts into `public.users` with `role='customer'`). All auth actions in `app/actions/auth.ts` (`signUp`, `signIn`, `adminSignIn`, `operatorSignIn`, `signOut`, `requestPasswordReset`, `updatePassword`). Routes: `/signin`, `/signup`, `/reset-password`, `/new-password`, `/admin/signin`, `/operator/signin`. Session helpers: `lib/auth/session.ts` (`getCurrentUser`, `requireAuth`, `requireRole`), `lib/auth/permissions.ts`. `lib/supabase/proxy.ts`: `updateSession()` uses `getClaims()` → `{ claims, header, signature }` (not `{ user }`) — `claims.sub` for user ID. `auth` i18n namespace in all 4 locale files.
+
+- **Auth Bug Fixes** ✓
+  `strongPassword` schema (min 8, uppercase, lowercase, digit) applied to signUp + updatePassword. Link-expired guard in `app/auth/confirm/route.ts` (detects `?error=` before OTP exchange). Resend configured as Supabase Custom SMTP (`smtp.resend.com:465`). White-text bug fixed: removed `--color-base` from `@theme inline` (was colliding with Tailwind's `text-base` font-size utility); added `input, textarea, select { color: var(--text-primary) }` to `globals.css`. 23 Vitest tests pass.
+
+- **Feature 05a — Marketing Home (Structure)** ✓
+  Marketing layout (`app/[locale]/(marketing)/layout.tsx`) with sticky header clearance (`pt-14`). `MarketingHeader` (brand + globe/locale switcher + Sign In), `MarketingFooter` (copyright + nav links + switcher), `LanguageSwitcher` (`"use client"`, globe icon + uppercase locale label, transparent native select overlay). Homepage sections: `HeroSection` (headline, "Get Started" → `/pricing`, "Learn More" → `#how-it-works`, 2×2 stats grid), `HowItWorksSection` (3 numbered step cards, `id="how-it-works"`), `FAQSection` (5-item shadcn Accordion). shadcn `accordion` installed. `home`, `common.nav`, `common.footer` i18n namespaces added to all 4 locale files (English content in all — translations in 05b).
+
+- **Feature 05b — Marketing Home (Localization)** ✓
+  `messages/fr.json`, `es.json`, `de.json` translated for `home` and `common` namespaces. Copyright year fixed to 2026 in all four locale files. `i18n/types.ts` added with next-intl v4 `AppConfig` declaration (`Locale` + `Messages` types) — enables compile-time key validation for all future translation work. `app/[locale]/(marketing)/page.tsx` and `LanguageSwitcher.tsx` updated to use the `Locale` type union (required by the stricter types AppConfig introduced).
 
 ---
 
@@ -86,38 +51,21 @@ Feature 05 — Marketing Homepage.
 
 ---
 
-## Completed (continued)
-
-- **Auth bug fixes (current-issues-auth.md)** ✓
-  - Issue 2: `lib/validations/auth.ts` — extracted `strongPassword` schema (min 8, uppercase, lowercase, digit); applied to `signUpSchema` and `updatePasswordSchema.password`. `confirmPassword` simplified to `min(1)` — only needs to match. `signInSchema` unchanged (any non-empty password allowed at sign-in)
-  - Issue 2: `tests/unit/validations/auth.test.ts` — updated happy-path passwords to `Password123`/`Newpassword1`; added 4 new tests covering missing uppercase, lowercase, number, and strength on updatePassword. 23 tests pass
-  - Issue 4: `app/auth/confirm/route.ts` — early guard detects Supabase `?error=` param and redirects to `/signin?error=link_expired` before attempting OTP exchange
-  - Issue 4: `messages/{en,fr,es,de}.json` — added `auth.signIn.errors.linkExpired`
-  - Issue 4: `app/[locale]/(auth)/signin/page.tsx` — added `error?` to searchParams, passed to `<SignInForm>`
-  - Issue 4: `components/auth/SignInForm.tsx` — added `initialError` prop; initializes `serverError` from URL error param via known-error map
-  - `npm run build` ✓ — `npx vitest run` ✓ (23 tests)
-  - Issue 1 (SMTP + smoke test): FIXED — Resend configured as Supabase Custom SMTP (`smtp.resend.com:465`); smoke test passed (sign-up → `/dashboard` redirect → row in `public.users`). `console.error` lines in `app/actions/auth.ts` (lines 38–39) deferred until production SMTP confirmed stable.
-  - Next.js 16.2.4 layout fix: `app/layout.tsx` now owns `<html>` and `<body>` using `getLocale()` from next-intl/server to preserve `lang={locale}`; `app/[locale]/layout.tsx` drops html/body wrapper, keeps locale validation and `NextIntlClientProvider`. `npm run build` ✓
-  - Issue 3 (white text): FIXED — root cause: `--color-base` in `@theme inline` generated a `text-base { color: var(--bg-base) }` color utility that collided with Tailwind's built-in `text-base` font-size utility on the shadcn Input, making typed text near-white. Fix (two parts): (1) removed `--color-base` from `@theme inline` — `bg-base` shorthand was unused in the codebase; (2) added explicit `input, textarea, select { color: var(--text-primary) }` to `globals.css` base styles for cascade-independence going forward. `npm run build` ✓
-
----
-
 ## Open Questions
 
-- Q4 — SEO content strategy (keyword clusters, cadence, AI vs human copy) — blocking: no — can decide before launch
-- Q5 — PDF library for POA generation (Feature 09): options are `pdf-lib` (low-level, no React), `@react-pdf/renderer` (React-based). Decision affects the implementation pattern — must be resolved before writing the Feature 09 spec. Blocking: yes, for Feature 09.
-- Q6 — Supabase Storage bucket setup (Feature 10): at least one private `documents` bucket with access rules is required before document upload can work. Must be covered explicitly in the Feature 10 spec. Blocking: yes, for Feature 10.
+- Q4 — SEO content strategy (keyword clusters, cadence, AI vs human copy) — blocking: no — can decide before launch.
+- Q5 — PDF library for POA generation (Feature 09): options are `pdf-lib` (low-level) or `@react-pdf/renderer` (React-based). Must resolve before writing the Feature 09 spec. Blocking: yes, for Feature 09.
+- Q6 — Supabase Storage bucket setup (Feature 10): private `documents` bucket with access rules required before document upload. Must be covered in the Feature 10 spec. Blocking: yes, for Feature 10.
 
 ---
 
 ## Architecture Decisions
 
-- Q1: Deadline selector and tier cards are one screen, not two steps — reduces friction
-- Q2: Document review is async with badge state progression (Uploading → Reviewing → Approved); 30s timeout → manual review fallback
-- Q3: Fiscal rep renewal uses a new Stripe Checkout session per renewal email — no card storage needed at this stage
+- Q1: Deadline selector and tier cards are one screen, not two steps — reduces friction.
+- Q2: Document review is async with badge state progression (Uploading → Reviewing → Approved); 30s timeout → manual review fallback.
+- Q3: Fiscal rep renewal uses a new Stripe Checkout session per renewal email — no card storage at this stage.
 
 ---
 
 ## Session Notes
-
 

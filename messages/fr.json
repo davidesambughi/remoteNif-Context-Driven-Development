@@ -1,6 +1,17 @@
 {
   "common": {
-    "appName": "RemoteNIF"
+    "appName": "RemoteNIF",
+    "nav": {
+      "signIn": "Se connecter",
+      "getStarted": "Commencer"
+    },
+    "footer": {
+      "copyright": "© 2026 RemoteNIF Portugal. Traitement NIF sécurisé et transparent.",
+      "pricing": "Tarifs",
+      "process": "Processus",
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité"
+    }
   },
   "auth": {
     "signIn": {
@@ -65,6 +76,49 @@
           "invalidCredentials": "Invalid operator credentials"
         }
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "headline": "Obtenez Votre NIF Portugais en Ligne — Rapide, Transparent, Fiable",
+      "subheadline": "Aucun frais caché. Aucune surprise. Choisissez le forfait adapté à votre délai. Commencez votre parcours portugais avec confiance.",
+      "cta": "Commencer",
+      "learnMore": "En savoir plus",
+      "stat1Value": "Dès €79",
+      "stat1Label": "Prix transparents",
+      "stat2Value": "5 jours",
+      "stat2Label": "Livraison standard",
+      "stat3Value": "48h",
+      "stat3Label": "Option Express",
+      "stat4Value": "Zéro",
+      "stat4Label": "Frais cachés"
+    },
+    "howItWorks": {
+      "title": "Un Processus Transparent en 3 Étapes",
+      "subtitle": "Obtenir votre identification fiscale portugaise ne devrait pas être un labyrinthe. Nous avons simplifié la complexité en trois étapes claires.",
+      "step1Number": "01",
+      "step1Title": "Choisissez Votre Forfait",
+      "step1Description": "Choisissez entre Essentiel, Standard ou Express selon votre délai. Les tarifs sont clairs dès le départ — aucune surprise.",
+      "step2Number": "02",
+      "step2Title": "Téléversez Vos Documents",
+      "step2Description": "Téléversez votre passeport et justificatif de domicile. Notre système les vérifie automatiquement pour éviter tout retard.",
+      "step3Number": "03",
+      "step3Title": "Recevez Votre NIF",
+      "step3Description": "Votre numéro NIF est livré sur votre tableau de bord sécurisé. Utilisez-le pour vos achats immobiliers, comptes bancaires et plus encore."
+    },
+    "faq": {
+      "title": "Foire Aux Questions",
+      "subtitle": "Tout ce que vous devez savoir sur le processus.",
+      "q1": "Combien de temps prend le processus ?",
+      "a1": "Les commandes Standard prennent 5 à 10 jours ouvrables à partir de l'approbation des documents. Les commandes Express sont soumises à la Finanças dans les 48 heures suivant l'approbation. Le délai de traitement par la Finanças après soumission est hors de notre contrôle.",
+      "q2": "Dois-je être au Portugal ?",
+      "a2": "Non. L'ensemble du processus est à distance. Nous agissons comme votre représentant fiscal au Portugal et soumettons la demande à la Finanças en votre nom.",
+      "q3": "Quels documents sont requis ?",
+      "a3": "Vous avez besoin d'un passeport valide et d'un justificatif de domicile datant de moins de 3 mois (facture d'énergie, relevé bancaire ou contrat de location). Les factures de téléphone et de télévision ne sont pas acceptées.",
+      "q4": "Ai-je besoin d'un représentant fiscal ?",
+      "a4": "Les résidents hors UE ont actuellement besoin d'un représentant fiscal agréé pour demander un NIF. Il est inclus dans les forfaits Standard et Express. Les citoyens de l'UE peuvent faire la demande sans représentant via notre forfait Essentiel.",
+      "q5": "Qu'est-ce qui change en juillet 2026 ?",
+      "a5": "La loi portugaise change le 1er juillet 2026 : les résidents hors UE sans obligations fiscales au Portugal ne seront plus légalement tenus de nommer un représentant fiscal. Nous mettrons à jour nos forfaits et tarifs en conséquence. Les clients Standard et Express seront prévenus à l'avance."
     }
   }
 }

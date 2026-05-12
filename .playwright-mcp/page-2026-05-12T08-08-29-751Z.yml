@@ -1,0 +1,101 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "RemoteNIF" [ref=e5] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e6]:
+          - generic [ref=e7] [cursor=pointer]:
+            - img
+            - generic: en
+            - combobox "Select language" [ref=e8]:
+              - option "English" [selected]
+              - option "Français"
+              - option "Español"
+              - option "Deutsch"
+          - link "Sign In" [ref=e9] [cursor=pointer]:
+            - /url: /signin
+    - main [ref=e10]:
+      - generic [ref=e12]:
+        - heading "Get Your Portuguese NIF Online — Fast, Transparent, Reliable" [level=1] [ref=e13]
+        - paragraph [ref=e14]: No hidden fees. No surprises. Choose the tier that fits your deadline. Start your Portuguese journey with confidence and bureaucratic ease.
+        - link "Get Started" [ref=e15] [cursor=pointer]:
+          - /url: /pricing
+        - link "Learn More" [ref=e16] [cursor=pointer]:
+          - /url: "#how-it-works"
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - generic [ref=e19]: From €79
+            - generic [ref=e20]: Transparent pricing
+          - generic [ref=e21]:
+            - generic [ref=e22]: 5 days
+            - generic [ref=e23]: Standard delivery
+          - generic [ref=e24]:
+            - generic [ref=e25]: 48h
+            - generic [ref=e26]: Express option
+          - generic [ref=e27]:
+            - generic [ref=e28]: Zero
+            - generic [ref=e29]: Hidden fees
+      - generic [ref=e31]:
+        - heading "A Transparent 3-Step Process" [level=2] [ref=e32]
+        - paragraph [ref=e33]: Getting your Portuguese tax identification shouldn't be a maze. We've distilled the complexity into three simple stages.
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: "01"
+            - heading "Choose Your Tier" [level=3] [ref=e37]
+            - paragraph [ref=e38]: Select between Essential, Standard, or Express based on your deadline. Prices are clear upfront — no surprises.
+          - generic [ref=e39]:
+            - generic [ref=e40]: "02"
+            - heading "Upload Your Documents" [level=3] [ref=e41]
+            - paragraph [ref=e42]: Upload your passport and proof of address. Our system reviews them automatically so there are no delays.
+          - generic [ref=e43]:
+            - generic [ref=e44]: "03"
+            - heading "Receive Your NIF" [level=3] [ref=e45]
+            - paragraph [ref=e46]: Your NIF number is delivered to your secure dashboard. Use it for property purchases, bank accounts, and more.
+      - generic [ref=e48]:
+        - heading "Frequently Asked Questions" [level=2] [ref=e49]
+        - paragraph [ref=e50]: Everything you need to know about the process.
+        - generic [ref=e51]:
+          - heading "How long does the process take?" [level=3] [ref=e53]:
+            - button "How long does the process take?" [ref=e54]:
+              - text: How long does the process take?
+              - img [ref=e55]
+          - heading "Do I need to be in Portugal?" [level=3] [ref=e58]:
+            - button "Do I need to be in Portugal?" [ref=e59]:
+              - text: Do I need to be in Portugal?
+              - img [ref=e60]
+          - heading "What documents are required?" [level=3] [ref=e63]:
+            - button "What documents are required?" [ref=e64]:
+              - text: What documents are required?
+              - img [ref=e65]
+          - heading "Do I need a fiscal representative?" [level=3] [ref=e68]:
+            - button "Do I need a fiscal representative?" [ref=e69]:
+              - text: Do I need a fiscal representative?
+              - img [ref=e70]
+          - heading "What changes in July 2026?" [level=3] [ref=e73]:
+            - button "What changes in July 2026?" [ref=e74]:
+              - text: What changes in July 2026?
+              - img [ref=e75]
+    - contentinfo [ref=e77]:
+      - generic [ref=e78]:
+        - paragraph [ref=e79]: RemoteNIF
+        - paragraph [ref=e80]: © 2026 RemoteNIF Portugal. Secure & Transparent NIF Processing.
+        - navigation "Footer navigation" [ref=e81]:
+          - link "Pricing" [ref=e82] [cursor=pointer]:
+            - /url: /pricing
+          - link "Process" [ref=e83] [cursor=pointer]:
+            - /url: "#how-it-works"
+          - link "Terms of Service" [ref=e84] [cursor=pointer]:
+            - /url: "#"
+          - link "Privacy Policy" [ref=e85] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e87] [cursor=pointer]:
+          - img
+          - generic: en
+          - combobox "Select language" [ref=e88]:
+            - option "English" [selected]
+            - option "Français"
+            - option "Español"
+            - option "Deutsch"
+  - button "Open Next.js Dev Tools" [ref=e94] [cursor=pointer]:
+    - img [ref=e95]

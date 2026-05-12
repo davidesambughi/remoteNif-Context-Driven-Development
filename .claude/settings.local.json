@@ -19,7 +19,11 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\\\\app\" -Recurse -Filter \"*.tsx\")",
       "Bash(Select-Object FullName)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\\\\app\" -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object -ExpandProperty FullName | Sort-Object)",
-      "Bash(npx vitest *)"
+      "Bash(npx vitest *)",
+      "Bash(node *)",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_select_option",
+      "mcp__plugin_playwright_playwright__browser_evaluate"
     ]
   }
 }

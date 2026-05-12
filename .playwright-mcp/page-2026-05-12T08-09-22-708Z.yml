@@ -1,0 +1,102 @@
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e94] [cursor=pointer]:
+    - img [ref=e95]
+  - alert [ref=e98]: Obtenez Votre NIF Portugais en Ligne — Rapide, Transparent, Fiable
+  - generic [ref=e99]:
+    - banner [ref=e100]:
+      - generic [ref=e101]:
+        - link "RemoteNIF" [ref=e102] [cursor=pointer]:
+          - /url: /fr
+        - generic [ref=e103]:
+          - generic [ref=e104] [cursor=pointer]:
+            - img
+            - generic: fr
+            - combobox "Select language" [ref=e105]:
+              - option "English"
+              - option "Français" [selected]
+              - option "Español"
+              - option "Deutsch"
+          - link "Se connecter" [ref=e106] [cursor=pointer]:
+            - /url: /fr/signin
+    - main [ref=e107]:
+      - generic [ref=e109]:
+        - heading "Obtenez Votre NIF Portugais en Ligne — Rapide, Transparent, Fiable" [level=1] [ref=e110]
+        - paragraph [ref=e111]: Aucun frais caché. Aucune surprise. Choisissez le forfait adapté à votre délai. Commencez votre parcours portugais avec confiance.
+        - link "Commencer" [ref=e112] [cursor=pointer]:
+          - /url: /fr/pricing
+        - link "En savoir plus" [ref=e113] [cursor=pointer]:
+          - /url: "#how-it-works"
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - generic [ref=e116]: Dès €79
+            - generic [ref=e117]: Prix transparents
+          - generic [ref=e118]:
+            - generic [ref=e119]: 5 jours
+            - generic [ref=e120]: Livraison standard
+          - generic [ref=e121]:
+            - generic [ref=e122]: 48h
+            - generic [ref=e123]: Option Express
+          - generic [ref=e124]:
+            - generic [ref=e125]: Zéro
+            - generic [ref=e126]: Frais cachés
+      - generic [ref=e128]:
+        - heading "Un Processus Transparent en 3 Étapes" [level=2] [ref=e129]
+        - paragraph [ref=e130]: Obtenir votre identification fiscale portugaise ne devrait pas être un labyrinthe. Nous avons simplifié la complexité en trois étapes claires.
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - generic [ref=e133]: "01"
+            - heading "Choisissez Votre Forfait" [level=3] [ref=e134]
+            - paragraph [ref=e135]: Choisissez entre Essentiel, Standard ou Express selon votre délai. Les tarifs sont clairs dès le départ — aucune surprise.
+          - generic [ref=e136]:
+            - generic [ref=e137]: "02"
+            - heading "Téléversez Vos Documents" [level=3] [ref=e138]
+            - paragraph [ref=e139]: Téléversez votre passeport et justificatif de domicile. Notre système les vérifie automatiquement pour éviter tout retard.
+          - generic [ref=e140]:
+            - generic [ref=e141]: "03"
+            - heading "Recevez Votre NIF" [level=3] [ref=e142]
+            - paragraph [ref=e143]: Votre numéro NIF est livré sur votre tableau de bord sécurisé. Utilisez-le pour vos achats immobiliers, comptes bancaires et plus encore.
+      - generic [ref=e145]:
+        - heading "Foire Aux Questions" [level=2] [ref=e146]
+        - paragraph [ref=e147]: Tout ce que vous devez savoir sur le processus.
+        - generic [ref=e148]:
+          - heading "Combien de temps prend le processus ?" [level=3] [ref=e150]:
+            - button "Combien de temps prend le processus ?" [ref=e151]:
+              - text: Combien de temps prend le processus ?
+              - img [ref=e152]
+          - heading "Dois-je être au Portugal ?" [level=3] [ref=e155]:
+            - button "Dois-je être au Portugal ?" [ref=e156]:
+              - text: Dois-je être au Portugal ?
+              - img [ref=e157]
+          - heading "Quels documents sont requis ?" [level=3] [ref=e160]:
+            - button "Quels documents sont requis ?" [ref=e161]:
+              - text: Quels documents sont requis ?
+              - img [ref=e162]
+          - heading "Ai-je besoin d'un représentant fiscal ?" [level=3] [ref=e165]:
+            - button "Ai-je besoin d'un représentant fiscal ?" [ref=e166]:
+              - text: Ai-je besoin d'un représentant fiscal ?
+              - img [ref=e167]
+          - heading "Qu'est-ce qui change en juillet 2026 ?" [level=3] [ref=e170]:
+            - button "Qu'est-ce qui change en juillet 2026 ?" [ref=e171]:
+              - text: Qu'est-ce qui change en juillet 2026 ?
+              - img [ref=e172]
+    - contentinfo [ref=e174]:
+      - generic [ref=e175]:
+        - paragraph [ref=e176]: RemoteNIF
+        - paragraph [ref=e177]: © 2026 RemoteNIF Portugal. Traitement NIF sécurisé et transparent.
+        - navigation "Footer navigation" [ref=e178]:
+          - link "Tarifs" [ref=e179] [cursor=pointer]:
+            - /url: /fr/pricing
+          - link "Processus" [ref=e180] [cursor=pointer]:
+            - /url: "#how-it-works"
+          - link "Conditions d'utilisation" [ref=e181] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e182] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e184] [cursor=pointer]:
+          - img
+          - generic: fr
+          - combobox "Select language" [ref=e185]:
+            - option "English"
+            - option "Français" [selected]
+            - option "Español"
+            - option "Deutsch"

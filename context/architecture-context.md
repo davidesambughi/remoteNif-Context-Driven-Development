@@ -300,26 +300,35 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus) {
   - Function renamed from `middleware()` to `proxy()`
   - Same functionality, clearer naming
 
-**Example:**
+**Example (reflects actual implementation):**
 ```typescript
 // proxy.ts
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import createMiddleware from 'next-intl/middleware'
+import { NextRequest, NextResponse } from 'next/server'
+import { routing } from './i18n/routing'
+import { updateSession } from './lib/supabase/proxy'
 
-export function proxy(request: NextRequest) {
-  // Auth check for protected routes
-  if (request.nextUrl.pathname.startsWith('/dashboard')) {
-    const token = request.cookies.get('sb-access-token')
-    if (!token) {
-      return NextResponse.redirect(new URL('/signin', request.url))
-    }
+const handleI18n = createMiddleware(routing)
+const PROTECTED = /\/(dashboard|admin|operator)(\/|$)/
+
+export default async function proxy(request: NextRequest) {
+  // updateSession calls getClaims() — returns { claims, header, signature }, not { user }
+  // hasValidSession is derived from claims.sub, not a cookie regex
+  const { response: supabaseResponse, hasValidSession } = await updateSession(request)
+
+  if (PROTECTED.test(request.nextUrl.pathname) && !hasValidSession) {
+    // redirect to /signin (locale-aware) — see actual proxy.ts for full redirect logic
+    return NextResponse.redirect(new URL('/signin', request.url))
   }
-  
-  return NextResponse.next()
+
+  // Run next-intl locale routing and copy Supabase cookies onto the response
+  const i18nResponse = handleI18n(request)
+  supabaseResponse.cookies.getAll().forEach((c) => i18nResponse.cookies.set(c.name, c.value, c))
+  return i18nResponse
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/admin/:path*', '/operator/:path*']
+  matcher: '/((?!api|_next|_vercel|.*\\..*).*)',
 }
 ```
 
