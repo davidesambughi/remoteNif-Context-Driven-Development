@@ -91,6 +91,19 @@ Depends on: 05a.
 
 ---
 
+## 05c — Auth i18n Fixes
+Fix five i18n defects in the auth layer deferred from Feature 04: locale-unaware router and link imports in client form components, hardcoded English error strings in two Server Actions, and untranslated `auth` namespace in fr/es/de message files.
+
+Done when:
+- All auth form components use `useRouter` and `Link` from `@/i18n/navigation`.
+- `signUp` and `updatePassword` Server Actions return translation keys, not raw strings.
+- `auth` namespace is fully translated in `fr.json`, `es.json`, `de.json`.
+- Post-auth redirects land on the correct locale URL on all four locales.
+
+Depends on: 05b.
+
+---
+
 ## 06 — Pricing Page
 Build the pricing page and tier selection flow.
 
@@ -102,6 +115,7 @@ Done when:
 
 Notes:
 - Consider splitting: static tier layout and the deadline-proximity logic are independent concerns.
+- All new user-facing copy uses next-intl translation keys; add to all four locale files.
 
 Depends on: 03, 04.
 
@@ -119,6 +133,7 @@ Done when:
 Notes:
 - Verify current Stripe and webhook best practices.
 - Consider splitting: checkout session creation and webhook processing + DB record writes are independent concerns.
+- All new user-facing copy (confirmation page, error states) uses next-intl translation keys; add to all four locale files.
 
 Depends on: 04, 06.
 
@@ -135,6 +150,8 @@ Done when:
 
 Notes:
 - Consider splitting: dashboard shell + empty/pending state first, then remaining order states separately.
+- All new user-facing copy uses next-intl translation keys; add to all four locale files.
+- Add `loading.tsx` to the dashboard route — this is the first page with real async data fetching, so it is the right place to introduce loading states. Continue adding `loading.tsx` to each new route from Feature 09 onward.
 
 Depends on: 07.
 
@@ -152,6 +169,7 @@ Done when:
 
 Notes:
 - Consider splitting: the form + data save is one session; PDF generation is a separate concern (see open question Q5 on PDF library).
+- All new user-facing copy (form labels, validation messages, status copy) uses next-intl translation keys; add to all four locale files.
 
 Depends on: 08.
 
@@ -169,6 +187,7 @@ Done when:
 
 Notes:
 - Consider splitting: Supabase Storage bucket setup and upload UI are distinct concerns (see open question Q6).
+- All new user-facing copy (upload slot labels, status messages, file validation errors) uses next-intl translation keys; add to all four locale files.
 
 Depends on: 09.
 
@@ -186,6 +205,7 @@ Done when:
 Notes:
 - Verify current AI/document review integration approach before implementation.
 - Consider splitting: AI review integration and the escalation + admin notification flow are independent concerns.
+- AI flag reasons shown to customers must use next-intl translation keys — do not surface raw AI output as user-facing copy.
 
 Depends on: 10.
 
@@ -249,6 +269,9 @@ Done when:
 - Delivery updates the dashboard state.
 - Delivery timestamps and expiry dates are recorded correctly.
 
+Notes:
+- All new user-facing copy uses next-intl translation keys; add to all four locale files.
+
 Depends on: 14.
 
 ---
@@ -259,6 +282,7 @@ Add the delivery-phase email flow.
 Done when:
 - NIF delivery emails are sent.
 - A follow-up guide email is scheduled after delivery.
+- Emails are sent in the customer's stored language preference.
 
 Depends on: 15.
 
@@ -275,6 +299,7 @@ Done when:
 
 Notes:
 - Consider splitting: email + password changes and account deletion are higher-risk than language preference and can be scoped separately.
+- All new user-facing copy uses next-intl translation keys; add to all four locale files.
 
 Depends on: 04.
 
@@ -291,12 +316,33 @@ Done when:
 
 Notes:
 - Consider splitting: Stripe renewal checkout + expiry extension and the reminder scheduling + expired-state UI are independent concerns.
+- All new user-facing copy (renewal banner, expiry messaging) uses next-intl translation keys; renewal emails sent in the customer's stored language preference.
 
 Depends on: 15, 16.
 
 ---
 
-## 19 — UI Polish & High Fidelity
+## 19 — SEO & Metadata
+Add per-page metadata, structured data, sitemap, and robots.txt.
+
+Done when:
+- Every public page has a `title` and `description` in the root language (English).
+- Open Graph tags are present on all public-facing pages.
+- JSON-LD structured data is added where relevant (homepage, pricing page).
+- `sitemap.ts` and `robots.ts` are generated dynamically.
+- Canonical URLs are correct across all locales.
+- `metadataBase` resolves correctly in production.
+
+Notes:
+- Resolves open question Q4 (SEO content strategy).
+- Locale variants of metadata (translated titles/descriptions) are a stretch goal — English is sufficient for launch.
+- Do not add per-page metadata before this feature — the base template in root layout is enough until here.
+
+Depends on: 18 (all pages must exist to write meaningful metadata).
+
+---
+
+## 20 — UI Polish & High Fidelity
 Do a full visual pass across all screens once every feature is structurally complete.
 
 Done when:
@@ -305,13 +351,14 @@ Done when:
 - Interaction states (hover, focus, disabled, loading) are polished on every interactive element.
 - The homepage, pricing page, and dashboard — the three highest-traffic screens — have been reviewed against the approved high-fidelity designs.
 - No raw Tailwind color classes or hardcoded values remain anywhere in the codebase.
+- No hardcoded string literals in any component — all user-facing text goes through next-intl.
 
 Notes:
 - This is the only feature where touching multiple screens in one session is acceptable — coherence across screens is the goal.
 - Do not redesign structure or add new sections here — polish only. Structural changes belong in the feature they affect.
 - A high-fidelity mockup or design reference should be provided before starting this feature.
 
-Depends on: 18 (all features complete).
+Depends on: 19 (all features complete).
 
 ---
 

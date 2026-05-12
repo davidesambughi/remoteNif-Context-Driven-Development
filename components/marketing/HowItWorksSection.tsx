@@ -34,7 +34,7 @@ export function HowItWorksSection() {
   return (
     <section id="how-it-works" className="bg-[var(--bg-base)] px-4 py-12">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-2xl font-[number:var(--font-bold)] text-[var(--text-primary)]">
+        <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-[var(--text-primary)]">
           {t('title')}
         </h2>
         <p className="mt-2 text-[length:var(--text-sm)] text-[var(--text-secondary)]">

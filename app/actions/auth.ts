@@ -47,7 +47,7 @@ export async function signUp(input: unknown): Promise<ActionResult> {
 
   // Guard against Supabase still having email confirmation enabled (should be off after P1)
   if (!data.session) {
-    return { success: false, error: 'Please confirm your email before continuing.' }
+    return { success: false, error: 'auth.signUp.errors.emailConfirmationRequired' }
   }
   
 
@@ -161,7 +161,7 @@ export async function updatePassword(input: unknown): Promise<ActionResult> {
   const supabase = await createClient()
 
   const { error } = await supabase.auth.updateUser({ password })
-  if (error) return { success: false, error: error.message }
+  if (error) return { success: false, error: 'auth.newPassword.errors.generic' }
 
   return { success: true }
 }

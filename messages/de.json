@@ -15,65 +15,66 @@
   },
   "auth": {
     "signIn": {
-      "title": "Sign in",
-      "email": "Email",
-      "password": "Password",
-      "submit": "Sign in",
-      "forgotPassword": "Forgot your password?",
-      "noAccount": "Don't have an account?",
-      "signUpLink": "Sign up",
+      "title": "Anmelden",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "submit": "Anmelden",
+      "forgotPassword": "Passwort vergessen?",
+      "noAccount": "Noch kein Konto?",
+      "signUpLink": "Registrieren",
       "errors": {
-        "invalidCredentials": "Incorrect email or password",
-        "generic": "Something went wrong. Please try again.",
-        "linkExpired": "This link has expired. Please sign in and request a new one."
+        "invalidCredentials": "E-Mail-Adresse oder Passwort falsch",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+        "linkExpired": "Dieser Link ist abgelaufen. Bitte melde dich an und fordere einen neuen an."
       }
     },
     "signUp": {
-      "title": "Create your account",
-      "email": "Email",
-      "password": "Password",
-      "submit": "Create account",
-      "hasAccount": "Already have an account?",
-      "signInLink": "Sign in",
+      "title": "Konto erstellen",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "submit": "Konto erstellen",
+      "hasAccount": "Bereits ein Konto?",
+      "signInLink": "Anmelden",
       "errors": {
-        "emailInUse": "An account with this email already exists.",
-        "generic": "Something went wrong. Please try again."
+        "emailInUse": "Ein Konto mit dieser E-Mail-Adresse existiert bereits.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+        "emailConfirmationRequired": "E-Mail-Bestätigung erforderlich. Bitte prüfe deinen Posteingang."
       }
     },
     "resetPassword": {
-      "title": "Reset your password",
-      "description": "Enter your email and we'll send you a reset link.",
-      "email": "Email",
-      "submit": "Send reset link",
-      "backToSignIn": "Back to sign in",
-      "successMessage": "If an account exists for this email, you'll receive a reset link shortly.",
+      "title": "Passwort zurücksetzen",
+      "description": "Gib deine E-Mail-Adresse ein und wir senden dir einen Reset-Link.",
+      "email": "E-Mail-Adresse",
+      "submit": "Reset-Link senden",
+      "backToSignIn": "Zurück zur Anmeldung",
+      "successMessage": "Wenn für diese E-Mail-Adresse ein Konto existiert, erhältst du in Kürze einen Reset-Link.",
       "errors": {
-        "linkInvalid": "This link is invalid or has expired. Please request a new one."
+        "linkInvalid": "Dieser Link ist ungültig oder abgelaufen. Bitte fordere einen neuen an."
       }
     },
     "newPassword": {
-      "title": "Set new password",
-      "password": "New password",
-      "confirmPassword": "Confirm new password",
-      "submit": "Update password",
+      "title": "Neues Passwort festlegen",
+      "password": "Neues Passwort",
+      "confirmPassword": "Neues Passwort bestätigen",
+      "submit": "Passwort aktualisieren",
       "errors": {
-        "passwordMismatch": "Passwords don't match",
-        "generic": "Something went wrong. Please try again."
+        "passwordMismatch": "Passwörter stimmen nicht überein",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
       }
     },
     "admin": {
       "signIn": {
-        "title": "Admin sign in",
+        "title": "Admin-Anmeldung",
         "errors": {
-          "invalidCredentials": "Invalid admin credentials"
+          "invalidCredentials": "Ungültige Admin-Anmeldedaten"
         }
       }
     },
     "operator": {
       "signIn": {
-        "title": "Operator sign in",
+        "title": "Operator-Anmeldung",
         "errors": {
-          "invalidCredentials": "Invalid operator credentials"
+          "invalidCredentials": "Ungültige Operator-Anmeldedaten"
         }
       }
     }

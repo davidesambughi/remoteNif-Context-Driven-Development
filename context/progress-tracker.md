@@ -8,7 +8,7 @@
 
 ## Current Phase
 
-Active development. Features 01–05a complete.
+Active development. Features 01–05c complete.
 
 ---
 
@@ -42,6 +42,9 @@ Feature 06 — Pricing Page.
 
 - **Feature 05b — Marketing Home (Localization)** ✓
   `messages/fr.json`, `es.json`, `de.json` translated for `home` and `common` namespaces. Copyright year fixed to 2026 in all four locale files. `i18n/types.ts` added with next-intl v4 `AppConfig` declaration (`Locale` + `Messages` types) — enables compile-time key validation for all future translation work. `app/[locale]/(marketing)/page.tsx` and `LanguageSwitcher.tsx` updated to use the `Locale` type union (required by the stricter types AppConfig introduced).
+
+- **Feature 05c — Auth i18n Fixes** ✓
+  `useRouter` and `Link` imports corrected in all five auth form components (`SignUpForm`, `SignInForm`, `RequestPasswordResetForm`, `NewPasswordForm`, `InternalSignInForm`) — now use `@/i18n/navigation` instead of `next/navigation`/`next/link`. Hardcoded English error string in `signUp` action replaced with `'auth.signUp.errors.emailConfirmationRequired'`; raw `error.message` in `updatePassword` replaced with `'auth.newPassword.errors.generic'`. `auth` namespace fully translated in `fr.json`, `es.json`, `de.json`. New key `auth.signUp.errors.emailConfirmationRequired` added to all four locale files. Design token violations fixed in `MarketingHeader`, `MarketingFooter`, `LanguageSwitcher`, `HeroSection`, `HowItWorksSection`, `FAQSection`. Hardcoded `RemoteNIF` literals replaced with `{t('appName')}` in `AuthCard`, `MarketingHeader`, `MarketingFooter`.
 
 ---
 

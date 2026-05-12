@@ -1,15 +1,19 @@
+import { getTranslations } from 'next-intl/server'
+
 interface AuthCardProps {
   title: string
   children: React.ReactNode
 }
 
 // Shared card shell used on all auth pages: app name above, titled card below.
-export default function AuthCard({ title, children }: AuthCardProps) {
+export default async function AuthCard({ title, children }: AuthCardProps) {
+  const t = await getTranslations('common')
+
   return (
     <div className="w-full max-w-[400px]">
       {/* App name */}
       <p className="text-center text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-[var(--text-primary)] mb-[length:var(--space-6)]">
-        RemoteNIF
+        {t('appName')}
       </p>
 
       {/* Card */}

@@ -23,7 +23,10 @@
       "Bash(node *)",
       "mcp__plugin_playwright_playwright__browser_snapshot",
       "mcp__plugin_playwright_playwright__browser_select_option",
-      "mcp__plugin_playwright_playwright__browser_evaluate"
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\" -Recurse -Depth 2)",
+      "Bash(Format-Table -HideTableHeaders)",
+      "Bash(python3)"
     ]
   }
 }

@@ -25,7 +25,7 @@ export function HeroSection() {
   return (
     <section className="bg-[var(--bg-surface)] px-4 pt-10 pb-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-[number:var(--font-bold)] leading-[var(--leading-tight)] text-[var(--text-primary)]">
+        <h1 className="text-[length:var(--text-3xl)] md:text-[length:var(--text-4xl)] font-[number:var(--font-bold)] leading-[var(--leading-tight)] text-[var(--text-primary)]">
           {t('headline')}
         </h1>
 

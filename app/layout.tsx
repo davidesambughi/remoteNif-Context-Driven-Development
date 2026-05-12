@@ -1,6 +1,19 @@
+import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import '@/app/globals.css'
+
+// Base metadata — individual pages override title via the template.
+// metadataBase is required for absolute OG/canonical URLs.
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://remotenif.com'),
+  title: {
+    template: '%s | RemoteNIF',
+    default: 'RemoteNIF — Get Your Portuguese NIF Online',
+  },
+  description:
+    'Fast, transparent, and fully remote Portuguese NIF application. No hidden fees. Choose Essential, Standard, or Express.',
+}
 
 const inter = Inter({
   variable: '--font-inter',

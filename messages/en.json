@@ -37,7 +37,8 @@
       "signInLink": "Sign in",
       "errors": {
         "emailInUse": "An account with this email already exists.",
-        "generic": "Something went wrong. Please try again."
+        "generic": "Something went wrong. Please try again.",
+        "emailConfirmationRequired": "Email confirmation is required. Please check your inbox."
       }
     },
     "resetPassword": {

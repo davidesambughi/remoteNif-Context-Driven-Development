@@ -15,65 +15,66 @@
   },
   "auth": {
     "signIn": {
-      "title": "Sign in",
-      "email": "Email",
-      "password": "Password",
-      "submit": "Sign in",
-      "forgotPassword": "Forgot your password?",
-      "noAccount": "Don't have an account?",
-      "signUpLink": "Sign up",
+      "title": "Se connecter",
+      "email": "Adresse e-mail",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "noAccount": "Pas encore de compte ?",
+      "signUpLink": "S'inscrire",
       "errors": {
-        "invalidCredentials": "Incorrect email or password",
-        "generic": "Something went wrong. Please try again.",
-        "linkExpired": "This link has expired. Please sign in and request a new one."
+        "invalidCredentials": "E-mail ou mot de passe incorrect",
+        "generic": "Une erreur est survenue. Veuillez réessayer.",
+        "linkExpired": "Ce lien a expiré. Veuillez vous connecter et en demander un nouveau."
       }
     },
     "signUp": {
-      "title": "Create your account",
-      "email": "Email",
-      "password": "Password",
-      "submit": "Create account",
-      "hasAccount": "Already have an account?",
-      "signInLink": "Sign in",
+      "title": "Créer votre compte",
+      "email": "Adresse e-mail",
+      "password": "Mot de passe",
+      "submit": "Créer un compte",
+      "hasAccount": "Déjà un compte ?",
+      "signInLink": "Se connecter",
       "errors": {
-        "emailInUse": "An account with this email already exists.",
-        "generic": "Something went wrong. Please try again."
+        "emailInUse": "Un compte avec cette adresse e-mail existe déjà.",
+        "generic": "Une erreur est survenue. Veuillez réessayer.",
+        "emailConfirmationRequired": "Une confirmation par e-mail est requise. Veuillez vérifier votre boîte de réception."
       }
     },
     "resetPassword": {
-      "title": "Reset your password",
-      "description": "Enter your email and we'll send you a reset link.",
-      "email": "Email",
-      "submit": "Send reset link",
-      "backToSignIn": "Back to sign in",
-      "successMessage": "If an account exists for this email, you'll receive a reset link shortly.",
+      "title": "Réinitialiser votre mot de passe",
+      "description": "Saisissez votre e-mail et nous vous enverrons un lien de réinitialisation.",
+      "email": "Adresse e-mail",
+      "submit": "Envoyer le lien de réinitialisation",
+      "backToSignIn": "Retour à la connexion",
+      "successMessage": "Si un compte existe pour cet e-mail, vous recevrez un lien de réinitialisation sous peu.",
       "errors": {
-        "linkInvalid": "This link is invalid or has expired. Please request a new one."
+        "linkInvalid": "Ce lien est invalide ou a expiré. Veuillez en demander un nouveau."
       }
     },
     "newPassword": {
-      "title": "Set new password",
-      "password": "New password",
-      "confirmPassword": "Confirm new password",
-      "submit": "Update password",
+      "title": "Définir un nouveau mot de passe",
+      "password": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le nouveau mot de passe",
+      "submit": "Mettre à jour le mot de passe",
       "errors": {
-        "passwordMismatch": "Passwords don't match",
-        "generic": "Something went wrong. Please try again."
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "generic": "Une erreur est survenue. Veuillez réessayer."
       }
     },
     "admin": {
       "signIn": {
-        "title": "Admin sign in",
+        "title": "Connexion administrateur",
         "errors": {
-          "invalidCredentials": "Invalid admin credentials"
+          "invalidCredentials": "Identifiants administrateur invalides"
         }
       }
     },
     "operator": {
       "signIn": {
-        "title": "Operator sign in",
+        "title": "Connexion opérateur",
         "errors": {
-          "invalidCredentials": "Invalid operator credentials"
+          "invalidCredentials": "Identifiants opérateur invalides"
         }
       }
     }

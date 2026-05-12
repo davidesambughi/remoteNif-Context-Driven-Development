@@ -15,65 +15,66 @@
   },
   "auth": {
     "signIn": {
-      "title": "Sign in",
-      "email": "Email",
-      "password": "Password",
-      "submit": "Sign in",
-      "forgotPassword": "Forgot your password?",
-      "noAccount": "Don't have an account?",
-      "signUpLink": "Sign up",
+      "title": "Iniciar sesión",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "noAccount": "¿No tienes cuenta?",
+      "signUpLink": "Regístrate",
       "errors": {
-        "invalidCredentials": "Incorrect email or password",
-        "generic": "Something went wrong. Please try again.",
-        "linkExpired": "This link has expired. Please sign in and request a new one."
+        "invalidCredentials": "Correo electrónico o contraseña incorrectos",
+        "generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
+        "linkExpired": "Este enlace ha caducado. Inicia sesión y solicita uno nuevo."
       }
     },
     "signUp": {
-      "title": "Create your account",
-      "email": "Email",
-      "password": "Password",
-      "submit": "Create account",
-      "hasAccount": "Already have an account?",
-      "signInLink": "Sign in",
+      "title": "Crear tu cuenta",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Crear cuenta",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "signInLink": "Iniciar sesión",
       "errors": {
-        "emailInUse": "An account with this email already exists.",
-        "generic": "Something went wrong. Please try again."
+        "emailInUse": "Ya existe una cuenta con este correo electrónico.",
+        "generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
+        "emailConfirmationRequired": "Se requiere confirmación por correo. Por favor, revisa tu bandeja de entrada."
       }
     },
     "resetPassword": {
-      "title": "Reset your password",
-      "description": "Enter your email and we'll send you a reset link.",
-      "email": "Email",
-      "submit": "Send reset link",
-      "backToSignIn": "Back to sign in",
-      "successMessage": "If an account exists for this email, you'll receive a reset link shortly.",
+      "title": "Restablecer contraseña",
+      "description": "Introduce tu correo y te enviaremos un enlace de restablecimiento.",
+      "email": "Correo electrónico",
+      "submit": "Enviar enlace de restablecimiento",
+      "backToSignIn": "Volver al inicio de sesión",
+      "successMessage": "Si existe una cuenta para este correo, recibirás un enlace de restablecimiento en breve.",
       "errors": {
-        "linkInvalid": "This link is invalid or has expired. Please request a new one."
+        "linkInvalid": "Este enlace no es válido o ha caducado. Solicita uno nuevo."
       }
     },
     "newPassword": {
-      "title": "Set new password",
-      "password": "New password",
-      "confirmPassword": "Confirm new password",
-      "submit": "Update password",
+      "title": "Establecer nueva contraseña",
+      "password": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "submit": "Actualizar contraseña",
       "errors": {
-        "passwordMismatch": "Passwords don't match",
-        "generic": "Something went wrong. Please try again."
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
       }
     },
     "admin": {
       "signIn": {
-        "title": "Admin sign in",
+        "title": "Inicio de sesión de administrador",
         "errors": {
-          "invalidCredentials": "Invalid admin credentials"
+          "invalidCredentials": "Credenciales de administrador no válidas"
         }
       }
     },
     "operator": {
       "signIn": {
-        "title": "Operator sign in",
+        "title": "Inicio de sesión de operador",
         "errors": {
-          "invalidCredentials": "Invalid operator credentials"
+          "invalidCredentials": "Credenciales de operador no válidas"
         }
       }
     }
