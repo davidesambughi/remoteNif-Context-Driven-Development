@@ -170,14 +170,54 @@
   },
   "checkout": {
     "errors": {
-      "generic": "Unable to create checkout session. Please try again.",
-      "unauthorized": "You must be signed in to checkout."
+      "generic": "No se ha podido crear la sesión de pago. Por favor, inténtalo de nuevo.",
+      "unauthorized": "Debes iniciar sesión para realizar el pago."
     }
   },
   "dashboard": {
-    "checkoutSuccess": {
-      "title": "¡Pago con éxito!",
-      "description": "Estamos preparando tu espacio."
+    "title": "Tu Panel de Control",
+    "orderInfo": "Solicitud: {tier} • ID: {id}",
+    "emptyState": {
+      "title": "No hay solicitudes activas",
+      "description": "No tienes ninguna solicitud de NIF activa. Inicia una para obtener tu número de identificación fiscal portugués.",
+      "buttonLabel": "Ver precios y comenzar"
+    },
+    "pending": {
+      "title": "Acción requerida: Sube tus documentos",
+      "description": "Tu pago se ha realizado correctamente. Por favor, completa tus datos personales y sube los documentos requeridos para iniciar el proceso de solicitud.",
+      "orderIdLabel": "ID del pedido",
+      "tierLabel": "Plan",
+      "actionButton": "Comenzar subida de documentos"
+    },
+    "timeline": {
+      "upload": "Subir",
+      "review": "Revisión",
+      "approved": "Aprobado",
+      "submitted": "Enviado",
+      "delivered": "Entregado"
+    },
+    "states": {
+      "underReview": {
+        "title": "Documentos en revisión",
+        "description": "Nuestro equipo está verificando tus documentos. Te notificaremos una vez que la revisión se haya completado."
+      },
+      "approved": {
+        "title": "Documentos aprobados",
+        "description": "Tus documentos han sido verificados. Ahora estamos preparando tu solicitud para enviarla a la Autoridad Tributaria Portuguesa.",
+        "expressNotice": "Plan Express: Tu solicitud será enviada en un plazo de 48 horas."
+      },
+      "submitted": {
+        "title": "Solicitud enviada",
+        "description": "Tu solicitud ha sido enviada a Finanças. Estamos esperando a que emitan tu número NIF. Esto suele tardar entre 5 y 10 días hábiles."
+      },
+      "delivered": {
+        "title": "¡NIF entregado!",
+        "description": "¡Felicidades! Tu número de identificación fiscal portugués ha sido emitido con éxito.",
+        "nifLabel": "Tu número NIF"
+      }
+    },
+    "support": {
+      "needHelp": "¿Necesitas ayuda con tu solicitud?"
     }
   }
 }

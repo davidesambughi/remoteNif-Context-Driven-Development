@@ -170,14 +170,54 @@
   },
   "checkout": {
     "errors": {
-      "generic": "Unable to create checkout session. Please try again.",
-      "unauthorized": "You must be signed in to checkout."
+      "generic": "Checkout-Sitzung konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+      "unauthorized": "Sie müssen angemeldet sein, um den Checkout durchzuführen."
     }
   },
   "dashboard": {
-    "checkoutSuccess": {
-      "title": "Zahlung erfolgreich!",
-      "description": "Wir bereiten Ihren Arbeitsbereich vor."
+    "title": "Ihr Dashboard",
+    "orderInfo": "Antrag: {tier} • ID: {id}",
+    "emptyState": {
+      "title": "Keine aktiven Anträge",
+      "description": "Sie haben keine aktiven NIF-Anträge. Starten Sie einen, um Ihre portugiesische Steuernummer zu erhalten.",
+      "buttonLabel": "Preise ansehen & starten"
+    },
+    "pending": {
+      "title": "Aktion erforderlich: Dokumente hochladen",
+      "description": "Ihre Zahlung war erfolgreich. Bitte vervollständigen Sie Ihre persönlichen Daten und laden Sie die erforderlichen Dokumente hoch, um den Antragsprozess zu starten.",
+      "orderIdLabel": "Bestell-ID",
+      "tierLabel": "Paket",
+      "actionButton": "Dokument-Upload starten"
+    },
+    "timeline": {
+      "upload": "Hochladen",
+      "review": "Prüfung",
+      "approved": "Genehmigt",
+      "submitted": "Eingereicht",
+      "delivered": "Geliefert"
+    },
+    "states": {
+      "underReview": {
+        "title": "Dokumente in Prüfung",
+        "description": "Unser Team prüft derzeit Ihre Dokumente. Wir benachrichtigen Sie, sobald die Prüfung abgeschlossen ist."
+      },
+      "approved": {
+        "title": "Dokumente genehmigt",
+        "description": "Ihre Dokumente sind verifiziert. Wir bereiten nun Ihren Antrag für die Einreichung bei der portugiesischen Finanzbehörde vor.",
+        "expressNotice": "Express-Paket: Ihr Antrag wird innerhalb von 48 Stunden eingereicht."
+      },
+      "submitted": {
+        "title": "Antrag eingereicht",
+        "description": "Ihr Antrag wurde bei der Finanças eingereicht. Wir warten darauf, dass Ihre NIF-Nummer ausgestellt wird. Dies dauert in der Regel 5-10 Werktage."
+      },
+      "delivered": {
+        "title": "NIF geliefert!",
+        "description": "Herzlichen Glückwunsch! Ihre portugiesische Steuernummer wurde erfolgreich ausgestellt.",
+        "nifLabel": "Ihre NIF-Nummer"
+      }
+    },
+    "support": {
+      "needHelp": "Benötigen Sie Hilfe bei Ihrem Antrag?"
     }
   }
 }

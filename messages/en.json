@@ -175,9 +175,49 @@
     }
   },
   "dashboard": {
-    "checkoutSuccess": {
-      "title": "Payment Successful!",
-      "description": "We are preparing your workspace."
+    "title": "Your Dashboard",
+    "orderInfo": "Application: {tier} • ID: {id}",
+    "emptyState": {
+      "title": "No Active Applications",
+      "description": "You don't have any active NIF applications. Start one to get your Portuguese Tax Number.",
+      "buttonLabel": "View Pricing & Start"
+    },
+    "pending": {
+      "title": "Action Required: Upload Documents",
+      "description": "Your payment was successful. Please complete your personal details and upload the required documents to begin the application process.",
+      "orderIdLabel": "Order ID",
+      "tierLabel": "Tier",
+      "actionButton": "Start Document Upload"
+    },
+    "timeline": {
+      "upload": "Upload",
+      "review": "Review",
+      "approved": "Approved",
+      "submitted": "Submitted",
+      "delivered": "Delivered"
+    },
+    "states": {
+      "underReview": {
+        "title": "Documents Under Review",
+        "description": "Our team is currently verifying your documents. We'll notify you once the review is complete."
+      },
+      "approved": {
+        "title": "Documents Approved",
+        "description": "Your documents are verified. We are now preparing your application for submission to the Portuguese Tax Authority.",
+        "expressNotice": "Express Tier: Your application will be submitted within 48 hours."
+      },
+      "submitted": {
+        "title": "Application Submitted",
+        "description": "Your application has been submitted to Finanças. We are waiting for them to issue your NIF number. This usually takes 5-10 business days."
+      },
+      "delivered": {
+        "title": "NIF Delivered!",
+        "description": "Congratulations! Your Portuguese Tax Identification Number has been successfully issued.",
+        "nifLabel": "Your NIF Number"
+      }
+    },
+    "support": {
+      "needHelp": "Need help with your application?"
     }
   }
 }

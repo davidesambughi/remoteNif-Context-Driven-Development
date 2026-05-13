@@ -14,7 +14,7 @@ Active development. Features 01–07b complete.
 
 ## Current Goal
 
-Feature 08 — Dashboard Shell.
+Feature 08b — Dashboard Order States & Timeline.
 
 ---
 
@@ -57,6 +57,14 @@ Feature 08 — Dashboard Shell.
 
 - **Feature 07b — Checkout Webhook** ✓
   `lib/stripe/webhooks.ts` built with `handleCheckoutSessionCompleted` logic. Uses `db.transaction()` to insert a new `Order` (status: `documents_pending`) and `Payment` simultaneously. Includes idempotency check via `payments.stripeCheckoutSessionId`. `app/api/webhooks/stripe/route.ts` built to capture the raw body with `request.text()` and verify the `Stripe-Signature` header according to 2026 App Router best practices. Added a basic dashboard shell at `app/[locale]/(dashboard)/dashboard/page.tsx` to handle the `success_url` redirect (`?session_id=...`), displaying a success message. Updated `messages/*.json` with `dashboard.checkoutSuccess` keys. `npm run build` passes.
+
+- **Feature 08a — Dashboard Shell & Pending State** ✓
+  shadcn `skeleton` installed. `lib/db/queries.ts` updated with `getUserActiveOrder(userId)` (fetch latest order by user ID). `app/[locale]/(dashboard)/dashboard/loading.tsx` implemented with skeleton layout for streaming. Dashboard page (`app/[locale]/(dashboard)/dashboard/page.tsx`) rebuilt as RSC fetching active order. Support for `!order` (empty state) and `order.status === 'documents_pending'` (pending view using shadcn `Card`). Previous `checkoutSuccess` placeholder removed. `dashboard` i18n namespace expanded in all 4 locale files with keys for titles, descriptions, and empty states. `npm run build` passes.
+
+---
+
+- **Feature 08b — Dashboard Order States & Timeline** ✓
+  `OrderTimeline` RSC built to visualize the 5-step application process using shadcn-aligned design tokens. Dashboard page updated with specific views for `under_review`, `approved` (with tier-specific Express notice), `submitted` (with delivery estimates), and `delivered` (prominent NIF display). Support contact link added to the dashboard. Translations for all states and timeline steps added to all 4 locale files. `npm run build` passes.
 
 ---
 

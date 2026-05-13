@@ -200,24 +200,45 @@ Depends on: 07a.
 
 ---
 
-## 08 — Customer Dashboard
+## 08a — Dashboard Shell & Pending State
 
-Build the authenticated customer dashboard shell.
+Build the authenticated customer dashboard shell, data fetching, and the initial pending state.
 
 Done when:
 
-- Dashboard shows the correct state for each order status.
-- All supported order states have a distinct view.
-- Timeline and support contact are included.
-- Delivery estimate copy is shown clearly.
+- Route `app/[locale]/(dashboard)/dashboard/page.tsx` fetches the current user's active order.
+- `loading.tsx` is added to the dashboard route.
+- Dashboard shell (layout wrapper) is implemented with responsive container.
+- If order status is `documents_pending`, it shows the initial prompt to complete details and upload documents.
+- Basic order info (tier) is displayed.
 
 Notes:
 
-- Consider splitting: dashboard shell + empty/pending state first, then remaining order states separately.
+- This is the first page with real async data fetching, so it is the right place to introduce loading states. Continue adding `loading.tsx` to each new route from Feature 09 onward.
 - All new user-facing copy uses next-intl translation keys; add to all four locale files.
-- Add `loading.tsx` to the dashboard route — this is the first page with real async data fetching, so it is the right place to introduce loading states. Continue adding `loading.tsx` to each new route from Feature 09 onward.
+- The actual personal details form and document upload UI will be built in Features 09 and 10. For now, just build the shell and placeholder prompt.
 
 Depends on: 07.
+
+---
+
+## 08b — Dashboard Order States & Timeline
+
+Implement the visual timeline and all post-upload order states.
+
+Done when:
+
+- Visual timeline component correctly maps the order status to progress steps.
+- All supported order states (`documents_under_review`, `documents_approved`, `submitted`, `delivered`) have a distinct view.
+- Support contact link is included.
+- Delivery estimate copy is shown clearly for the `submitted` state.
+- NIF number is shown prominently for the `delivered` state.
+
+Notes:
+
+- All new user-facing copy uses next-intl translation keys; add to all four locale files.
+
+Depends on: 08a.
 
 ---
 

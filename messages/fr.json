@@ -170,14 +170,54 @@
   },
   "checkout": {
     "errors": {
-      "generic": "Unable to create checkout session. Please try again.",
-      "unauthorized": "You must be signed in to checkout."
+      "generic": "Impossible de créer la session de paiement. Veuillez réessayer.",
+      "unauthorized": "Vous devez être connecté pour passer à la caisse."
     }
   },
   "dashboard": {
-    "checkoutSuccess": {
-      "title": "Paiement réussi !",
-      "description": "Nous préparons votre espace."
+    "title": "Votre Tableau de Bord",
+    "orderInfo": "Demande : {tier} • ID : {id}",
+    "emptyState": {
+      "title": "Aucune demande active",
+      "description": "Vous n'avez aucune demande de NIF active. Commencez-en une pour obtenir votre numéro fiscal portugais.",
+      "buttonLabel": "Voir les tarifs et commencer"
+    },
+    "pending": {
+      "title": "Action requise : Téléversez vos documents",
+      "description": "Votre paiement a été effectué avec succès. Veuillez compléter vos informations personnelles et téléverser les documents requis pour commencer le processus de demande.",
+      "orderIdLabel": "ID de commande",
+      "tierLabel": "Forfait",
+      "actionButton": "Commencer le téléversement"
+    },
+    "timeline": {
+      "upload": "Téléverser",
+      "review": "Révision",
+      "approved": "Approuvé",
+      "submitted": "Soumis",
+      "delivered": "Livré"
+    },
+    "states": {
+      "underReview": {
+        "title": "Documents en cours de révision",
+        "description": "Notre équipe vérifie actuellement vos documents. Nous vous informerons une fois la révision terminée."
+      },
+      "approved": {
+        "title": "Documents approuvés",
+        "description": "Vos documents sont vérifiés. Nous préparons maintenant votre demande pour la soumission à l'Autorité Fiscale Portugaise.",
+        "expressNotice": "Forfait Express : Votre demande sera soumise dans les 48 heures."
+      },
+      "submitted": {
+        "title": "Demande soumise",
+        "description": "Votre demande a été soumise à la Finanças. Nous attendons qu'ils délivrent votre numéro NIF. Cela prend généralement 5 à 10 jours ouvrables."
+      },
+      "delivered": {
+        "title": "NIF livré !",
+        "description": "Félicitations ! Votre numéro d'identification fiscale portugais a été délivré avec succès.",
+        "nifLabel": "Votre numéro NIF"
+      }
+    },
+    "support": {
+      "needHelp": "Besoin d'aide avec votre demande ?"
     }
   }
 }
