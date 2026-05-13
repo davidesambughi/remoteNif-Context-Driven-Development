@@ -41,6 +41,7 @@ export default async function PricingPage() {
           {/* Essential */}
           <TierCard
             name={t('tiers.essential.name')}
+            tierId="essential"
             priceEurCents={TIERS.essential.priceEurCents}
             subtitle={t('tiers.essential.subtitle')}
             features={[
@@ -50,12 +51,14 @@ export default async function PricingPage() {
             ]}
             cta={t('tiers.essential.cta')}
             href={`${ctaBase}?tier=essential`}
+            isAuthenticated={!!user}
             ctaVariant="outline"
           />
 
           {/* Standard */}
           <TierCard
             name={t('tiers.standard.name')}
+            tierId="standard"
             priceEurCents={TIERS.standard.priceEurCents}
             subtitle={t('tiers.standard.subtitle')}
             features={[
@@ -65,12 +68,14 @@ export default async function PricingPage() {
             ]}
             cta={t('tiers.standard.cta')}
             href={`${ctaBase}?tier=standard`}
+            isAuthenticated={!!user}
             ctaVariant="default"
           />
 
           {/* Express */}
           <TierCard
             name={t('tiers.express.name')}
+            tierId="express"
             priceEurCents={TIERS.express.priceEurCents}
             subtitle={t('tiers.express.subtitle')}
             features={[
@@ -81,6 +86,7 @@ export default async function PricingPage() {
             ]}
             cta={t('tiers.express.cta')}
             href={`${ctaBase}?tier=express`}
+            isAuthenticated={!!user}
             isFeatured
             badge={t('tiers.express.badge')}
             ctaVariant="default"

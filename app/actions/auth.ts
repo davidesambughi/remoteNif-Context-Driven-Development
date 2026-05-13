@@ -10,10 +10,7 @@ import {
   requestPasswordResetSchema,
   updatePasswordSchema,
 } from '@/lib/validations/auth'
-
-type ActionResult<T = undefined> =
-  | { success: true; data?: T }
-  | { success: false; error: string }
+import type { ActionResult } from '@/lib/types'
 
 // ---------------------------------------------------------------------------
 // signUp

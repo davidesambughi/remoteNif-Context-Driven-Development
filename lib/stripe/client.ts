@@ -1,0 +1,8 @@
+import Stripe from 'stripe'
+import { env } from '@/lib/env'
+
+export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+  // @ts-ignore
+  apiVersion: '2023-10-16',
+  typescript: true,
+})

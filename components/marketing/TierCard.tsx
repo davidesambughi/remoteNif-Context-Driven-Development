@@ -2,6 +2,8 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
 import { Check, Clock, Zap, Minus } from 'lucide-react'
+import type { Tier } from '@/lib/pricing'
+import { CheckoutButton } from './CheckoutButton'
 
 interface FeatureItem {
   label: string
@@ -10,11 +12,13 @@ interface FeatureItem {
 
 interface TierCardProps {
   name: string
+  tierId: Tier
   priceEurCents: number
   subtitle: string
   features: FeatureItem[]
   cta: string
   href: string
+  isAuthenticated: boolean
   isFeatured?: boolean
   badge?: string
   ctaVariant: 'default' | 'outline'
@@ -36,11 +40,13 @@ function FeatureIcon({ icon }: { icon: FeatureItem['icon'] }) {
 
 export function TierCard({
   name,
+  tierId,
   priceEurCents,
   subtitle,
   features,
   cta,
   href,
+  isAuthenticated,
   isFeatured,
   badge,
   ctaVariant,
@@ -113,9 +119,13 @@ export function TierCard({
 
       {/* CTA — mt-auto pushes to card bottom regardless of feature list length */}
       <div className="mt-auto pt-[length:var(--space-6)]">
-        <Button variant={ctaVariant} size="lg" className="w-full" asChild>
-          <Link href={href}>{cta}</Link>
-        </Button>
+        {isAuthenticated ? (
+          <CheckoutButton tier={tierId} cta={cta} ctaVariant={ctaVariant} />
+        ) : (
+          <Button variant={ctaVariant} size="lg" className="w-full" asChild>
+            <Link href={href}>{cta}</Link>
+          </Button>
+        )}
       </div>
     </Card>
   )

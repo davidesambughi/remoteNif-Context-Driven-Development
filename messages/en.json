@@ -167,5 +167,17 @@
       "adminVerification": "Admin verification",
       "emailSupport": "Priority email support"
     }
+  },
+  "checkout": {
+    "errors": {
+      "generic": "Unable to create checkout session. Please try again.",
+      "unauthorized": "You must be signed in to checkout."
+    }
+  },
+  "dashboard": {
+    "checkoutSuccess": {
+      "title": "Payment Successful!",
+      "description": "We are preparing your workspace."
+    }
   }
 }

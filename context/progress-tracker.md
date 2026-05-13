@@ -8,13 +8,13 @@
 
 ## Current Phase
 
-Active development. Features 01–05c complete.
+Active development. Features 01–07b complete.
 
 ---
 
 ## Current Goal
 
-Feature 07 — Checkout.
+Feature 08 — Dashboard Shell.
 
 ---
 
@@ -51,6 +51,12 @@ Feature 07 — Checkout.
 
 - **Feature 06b — Marketing Button Audit** ✓
   `HeroSection` "Get Started" (`Link /pricing`) and "Learn More" (`<a #how-it-works`) wrapped in `Button asChild` (variants `default` and `outline`). `MarketingHeader` "Sign In" (`Link /signin`) wrapped in `Button variant="outline" size="sm" asChild`. All three CTAs now carry shadcn's `focus-visible:ring`. No new routes, actions, translations, or data changes. `npm run build` passes (36 static pages).
+
+- **Feature 07a — Checkout Session** ✓
+  Stripe installed (`stripe@22.x`). `ActionResult<T>` moved from `app/actions/auth.ts` to `lib/types.ts`. Stripe client initialized in `lib/stripe/client.ts`. Server action `createCheckoutSession` built in `app/actions/checkout.ts` to create the Stripe checkout session, receiving `CheckoutSessionSchema` (`tier`). `components/marketing/CheckoutButton.tsx` (Client Component) handles the loading state and redirecting to the Stripe-hosted checkout. Pricing page updated to pass `isAuthenticated` into `TierCard`, rendering `CheckoutButton` only for authenticated users (unauthenticated users still get routed to signup via `Link`). Checkout error translations added to all 4 locale files (`en.json`, `fr.json`, `es.json`, `de.json`). `npm run build` passes.
+
+- **Feature 07b — Checkout Webhook** ✓
+  `lib/stripe/webhooks.ts` built with `handleCheckoutSessionCompleted` logic. Uses `db.transaction()` to insert a new `Order` (status: `documents_pending`) and `Payment` simultaneously. Includes idempotency check via `payments.stripeCheckoutSessionId`. `app/api/webhooks/stripe/route.ts` built to capture the raw body with `request.text()` and verify the `Stripe-Signature` header according to 2026 App Router best practices. Added a basic dashboard shell at `app/[locale]/(dashboard)/dashboard/page.tsx` to handle the `success_url` redirect (`?session_id=...`), displaying a success message. Updated `messages/*.json` with `dashboard.checkoutSuccess` keys. `npm run build` passes.
 
 ---
 

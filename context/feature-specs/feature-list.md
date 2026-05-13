@@ -157,25 +157,46 @@ Depends on: 06a.
 
 ---
 
-## 07 — Checkout
+## 07a — Checkout Session
 
-Add Stripe checkout and webhook processing.
+Implement Stripe checkout session creation triggered from tier selection.
 
 Done when:
 
-- Checkout can be created from the app.
-- Successful payment creates the expected order/payment records.
-- Webhook handling is idempotent.
-- Order confirmation updates correctly after checkout.
+- Stripe package is installed and client is initialized.
+- Checkout session can be created from the app (`app/actions/checkout.ts`).
+- `ActionResult<T>` is moved from `app/actions/auth.ts` to `lib/types.ts`.
+- Tier selection triggers the session creation and redirects to Stripe-hosted checkout.
 
 Notes:
 
-- Verify current Stripe and webhook best practices.
-- Consider splitting: checkout session creation and webhook processing + DB record writes are independent concerns.
-- All new user-facing copy (confirmation page, error states) uses next-intl translation keys; add to all four locale files.
-- When creating `app/actions/checkout.ts`, move `ActionResult<T>` from `app/actions/auth.ts` to `lib/types.ts` so all action files share it.
+- Verify current Stripe checkout best practices.
+- Do not add webhook handling or DB record creation yet.
+- All new user-facing copy uses next-intl translation keys; add to all four locale files.
 
-Depends on: 04, 06.
+Depends on: 04, 06a.
+
+---
+
+## 07b — Checkout Webhook
+
+Implement Stripe webhook processing to finalize order and payment records.
+
+Done when:
+
+- Webhook endpoint receives Stripe events (`app/api/webhooks/stripe/route.ts`).
+- Webhook handling verifies signature and is idempotent.
+- Successful payment (`checkout.session.completed`) creates the expected `Order` (status: `documents_pending`) and `Payment` records in the database.
+- Order confirmation page is shown after successful checkout (part of the dashboard shell).
+
+Notes:
+
+- Verify current Stripe webhook best practices.
+- Do not send order confirmation emails yet (that belongs to Feature 12).
+- Do not implement document upload UI yet (that belongs to Feature 10).
+- All new user-facing copy (confirmation page, error states) uses next-intl translation keys; add to all four locale files.
+
+Depends on: 07a.
 
 ---
 
