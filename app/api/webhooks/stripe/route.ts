@@ -1,4 +1,9 @@
 import { headers } from 'next/headers'
+
+/**
+ * Public endpoint for Stripe Webhooks.
+ * Uses raw body verification to ensure events are genuinely from Stripe.
+ */
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import { env } from '@/lib/env'
@@ -6,6 +11,7 @@ import { handleCheckoutSessionCompleted } from '@/lib/stripe/webhooks'
 import Stripe from 'stripe'
 
 export async function POST(req: Request) {
+  // 1. Capture raw body and signature for verification
   const body = await req.text()
   const signature = (await headers()).get('Stripe-Signature')
 
@@ -16,6 +22,7 @@ export async function POST(req: Request) {
   let event: Stripe.Event
 
   try {
+    // 2. Verify that the event is authentic and hasn't been tampered with
     event = stripe.webhooks.constructEvent(
       body,
       signature,
@@ -27,9 +34,11 @@ export async function POST(req: Request) {
   }
 
   try {
+    // 3. Route the event based on its type
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
+        // Pass the session to our dedicated handler for business logic
         await handleCheckoutSessionCompleted(session)
         break
       }

@@ -8,24 +8,34 @@ import { Link } from '@/i18n/navigation'
 import OrderTimeline from '@/components/dashboard/OrderTimeline'
 import { Mail, ShieldCheck, FileCheck, Send, CheckCircle2 } from 'lucide-react'
 
+/**
+ * Main Customer Dashboard.
+ * Displays the active NIF order status, progress timeline, and specific details
+ * for each stage of the acquisition process.
+ */
+
 export default async function DashboardPage() {
+  // 1. Fetch translations and auth session in parallel
   const [t, user, locale] = await Promise.all([
     getTranslations('dashboard'),
     getCurrentUser(),
     import('next-intl/server').then((m) => m.getLocale()),
   ])
 
+  // 2. Auth guard — redirect guests to sign in
   if (!user) {
     redirect({ href: '/signin', locale: locale as 'en' | 'fr' | 'es' | 'de' })
     return null
   }
 
+  // 3. Fetch the most recent order for this user
   const order = await getUserActiveOrder(user.id)
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col bg-[var(--bg-base)]">
       <main className="flex-1 w-full max-w-4xl mx-auto p-[length:var(--space-6)] py-[length:var(--space-12)] space-y-[length:var(--space-10)]">
         
+        {/* Case A: User has no orders yet (Empty State) */}
         {!order && (
           <div className="space-y-[length:var(--space-6)]">
             <div>
@@ -43,6 +53,7 @@ export default async function DashboardPage() {
           </div>
         )}
 
+        {/* Case B: User has an active order */}
         {order && (
           <>
             <div className="space-y-[length:var(--space-2)]">
@@ -137,6 +148,7 @@ export default async function DashboardPage() {
                 </Card>
               )}
 
+              {/* Delivered State: Final NIF delivery with prominent mono-spaced display */}
               {order.status === 'delivered' && (
                 <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-lg)] bg-[var(--bg-surface)] border-[var(--status-success)] border-2">
                   <CardHeader className="flex flex-row items-center gap-[length:var(--space-4)] space-y-0 text-center sm:text-left">

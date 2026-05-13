@@ -1,3 +1,7 @@
+/**
+ * Singleton Stripe client instance.
+ * Shared across the app for server-side payments logic.
+ */
 import Stripe from 'stripe'
 import { env } from '@/lib/env'
 

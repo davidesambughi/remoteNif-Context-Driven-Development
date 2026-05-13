@@ -1,5 +1,9 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
+/**
+ * Dashboard Loading State.
+ * Provides a skeleton layout for the dashboard while user and order data are streaming.
+ */
 export default function DashboardLoading() {
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col bg-[var(--bg-base)]">

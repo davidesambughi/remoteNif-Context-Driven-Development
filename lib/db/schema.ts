@@ -86,7 +86,7 @@ export const orders = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     userId: uuid('user_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     tier: tierEnum('tier').notNull(),
     status: orderStatusEnum('status').notNull().default('documents_pending'),
 
@@ -136,10 +136,10 @@ export const documents = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     orderId: uuid('order_id')
       .notNull()
-      .references(() => orders.id),
+      .references(() => orders.id, { onDelete: 'cascade' }),
     userId: uuid('user_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     type: documentTypeEnum('type').notNull(),
 
     // File storage
@@ -156,7 +156,7 @@ export const documents = pgTable(
 
     // Admin override
     adminOverride: boolean('admin_override').notNull().default(false),
-    adminOverrideBy: uuid('admin_override_by').references(() => users.id),
+    adminOverrideBy: uuid('admin_override_by').references(() => users.id, { onDelete: 'set null' }),
     adminOverrideReason: text('admin_override_reason'),
     adminOverrideAt: timestamp('admin_override_at'),
 
@@ -184,10 +184,10 @@ export const payments = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     orderId: uuid('order_id')
       .notNull()
-      .references(() => orders.id),
+      .references(() => orders.id, { onDelete: 'cascade' }),
     userId: uuid('user_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
 
     // Stripe data
     stripePaymentIntentId: text('stripe_payment_intent_id').notNull().unique(),
@@ -219,10 +219,10 @@ export const operatorNotifications = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     orderId: uuid('order_id')
       .notNull()
-      .references(() => orders.id),
+      .references(() => orders.id, { onDelete: 'cascade' }),
     operatorId: uuid('operator_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     type: notificationTypeEnum('type').notNull(),
     status: notificationStatusEnum('status').notNull().default('pending'),
     attempts: integer('attempts').notNull().default(0),
@@ -240,7 +240,7 @@ export const operatorPreferences = pgTable('operator_preferences', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id')
     .notNull()
-    .references(() => users.id)
+    .references(() => users.id, { onDelete: 'cascade' })
     .unique(),
   emailNotifications: boolean('email_notifications').notNull().default(true),
   smsNotifications: boolean('sms_notifications').notNull().default(true),
@@ -254,8 +254,8 @@ export const auditLog = pgTable(
   'audit_log',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    userId: uuid('user_id').references(() => users.id),
-    orderId: uuid('order_id').references(() => orders.id),
+    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }),
+    orderId: uuid('order_id').references(() => orders.id, { onDelete: 'cascade' }),
     action: text('action').notNull(),
     details: jsonb('details').notNull(),
     ipAddress: text('ip_address'),

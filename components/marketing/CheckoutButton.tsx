@@ -1,5 +1,10 @@
 'use client'
 
+/**
+ * Client Component for the Pricing Page CTAs.
+ * Handles the transition to Stripe Checkout and manages loading/error states.
+ */
+
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { createCheckoutSession } from '@/app/actions/checkout'
@@ -23,9 +28,11 @@ export function CheckoutButton({ tier, cta, ctaVariant }: CheckoutButtonProps) {
     setErrorMsg(null)
     
     try {
+      // Trigger the server action to get a Stripe Checkout URL
       const result = await createCheckoutSession({ tier })
       
       if (result.success && result.data?.url) {
+        // Redirect the browser directly to the Stripe-hosted checkout page
         window.location.href = result.data.url
       } else {
         setErrorMsg(result.success === false && result.error ? t(result.error as Parameters<typeof t>[0]) : t('checkout.errors.generic'))

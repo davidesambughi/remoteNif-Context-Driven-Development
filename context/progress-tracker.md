@@ -66,6 +66,9 @@ Feature 08b — Dashboard Order States & Timeline.
 - **Feature 08b — Dashboard Order States & Timeline** ✓
   `OrderTimeline` RSC built to visualize the 5-step application process using shadcn-aligned design tokens. Dashboard page updated with specific views for `under_review`, `approved` (with tier-specific Express notice), `submitted` (with delivery estimates), and `delivered` (prominent NIF display). Support contact link added to the dashboard. Translations for all states and timeline steps added to all 4 locale files. `npm run build` passes.
 
+- **Hotfix — Foreign Key Cascade** ✓
+  Updated `lib/db/schema.ts` to include `.onDelete('cascade')` on all foreign key references to `users.id` and `orders.id`. This ensures that deleting a user or an order automatically removes all child records (orders, documents, payments, etc.), fulfilling the "Delete Account" requirement. Migration `0002_flowery_amphibian.sql` generated and applied. Verified via `scratch/verify-delete-cascade.ts`.
+
 ---
 
 ## In Progress

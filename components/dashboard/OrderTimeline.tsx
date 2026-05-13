@@ -2,12 +2,18 @@ import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
 
+/**
+ * Visual progress tracker for the NIF acquisition process.
+ * Highlights the current step and shows completion status for previous steps.
+ */
+
 type OrderStatus = 'documents_pending' | 'documents_under_review' | 'documents_approved' | 'submitted' | 'delivered'
 
 interface OrderTimelineProps {
   status: OrderStatus
 }
 
+// Canonical sequence of order statuses for the timeline
 const steps = [
   { id: 'documents_pending', labelKey: 'timeline.upload' },
   { id: 'documents_under_review', labelKey: 'timeline.review' },
@@ -19,6 +25,7 @@ const steps = [
 export default async function OrderTimeline({ status }: OrderTimelineProps) {
   const t = await getTranslations('dashboard')
   
+  // Calculate the current progress percentage
   const currentStepIndex = steps.findIndex((step) => step.id === status)
 
   return (

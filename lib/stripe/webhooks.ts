@@ -1,9 +1,15 @@
 import Stripe from 'stripe'
+
+/**
+ * Business logic for processing Stripe webhook events.
+ * Handles order creation and payment persistence after successful checkout.
+ */
 import { db } from '@/lib/db'
 import { orders, payments } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
 export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+  // 1. Extract metadata passed during session creation
   const userId = session.metadata?.userId
   const tier = session.metadata?.tier
 
@@ -30,8 +36,9 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
   }
 
   try {
+    // 3. Persist Order and Payment records in a single atomic transaction
     await db.transaction(async (tx) => {
-      // 1. Create Order
+      // Create the Order record (status defaults to 'documents_pending')
       const [newOrder] = await tx
         .insert(orders)
         .values({
@@ -47,7 +54,7 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
         throw new Error('Failed to create order record')
       }
 
-      // 2. Create Payment
+      // Create the Payment record as an audit trail for the transaction
       await tx.insert(payments).values({
         orderId: newOrder.id,
         userId,

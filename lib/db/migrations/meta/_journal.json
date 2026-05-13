@@ -15,6 +15,13 @@
       "when": 1747094400000,
       "tag": "0001_handle_new_user",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778676142075,
+      "tag": "0002_flowery_amphibian",
+      "breakpoints": true
     }
   ]
 }

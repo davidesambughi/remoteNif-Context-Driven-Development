@@ -1,5 +1,10 @@
 'use server'
 
+/**
+ * Server Action to create a Stripe Checkout Session for NIF acquisition.
+ * Validates the selected tier and ensures the user is authenticated.
+ */
+
 
 import { CheckoutSessionSchema } from '@/lib/validations/checkout'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -11,23 +16,28 @@ import type { ActionResult } from '@/lib/types'
 export async function createCheckoutSession(
   input: unknown
 ): Promise<ActionResult<{ url: string }>> {
+  // 1. Validate input tier against the checkout schema
   const parsed = CheckoutSessionSchema.safeParse(input)
   if (!parsed.success) {
     return { success: false, error: 'checkout.errors.generic' }
   }
 
   const { tier } = parsed.data
+
+  // 2. Auth check — only authenticated users can proceed to checkout
   const user = await getCurrentUser()
   if (!user) {
     return { success: false, error: 'checkout.errors.unauthorized' }
   }
 
+  // 3. Lookup tier configuration (price, description)
   const tierConfig = TIERS[tier]
   if (!tierConfig) {
     return { success: false, error: 'checkout.errors.generic' }
   }
 
   try {
+    // 4. Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       customer_email: user.email,
       line_items: [
@@ -56,6 +66,7 @@ export async function createCheckoutSession(
       throw new Error('No session URL returned from Stripe')
     }
 
+    // 5. Return redirect URL to the client
     return { success: true, data: { url: session.url } }
   } catch (error) {
     console.error('[createCheckoutSession] Error:', error)
