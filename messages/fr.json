@@ -11,6 +11,9 @@
       "process": "Processus",
       "terms": "Conditions d'utilisation",
       "privacy": "Politique de confidentialité"
+    },
+    "support": {
+      "needHelp": "Besoin d'aide avec votre demande ?"
     }
   },
   "auth": {
@@ -182,13 +185,6 @@
       "description": "Vous n'avez aucune demande de NIF active. Commencez-en une pour obtenir votre numéro fiscal portugais.",
       "buttonLabel": "Voir les tarifs et commencer"
     },
-    "pending": {
-      "title": "Action requise : Téléversez vos documents",
-      "description": "Votre paiement a été effectué avec succès. Veuillez compléter vos informations personnelles et téléverser les documents requis pour commencer le processus de demande.",
-      "orderIdLabel": "ID de commande",
-      "tierLabel": "Forfait",
-      "actionButton": "Commencer le téléversement"
-    },
     "timeline": {
       "upload": "Téléverser",
       "review": "Révision",
@@ -215,9 +211,63 @@
         "description": "Félicitations ! Votre numéro d'identification fiscale portugais a été délivré avec succès.",
         "nifLabel": "Votre numéro NIF"
       }
+    }
+  },
+  "personalDetails": {
+    "title": "Vos Informations Personnelles",
+    "description": "Ces informations sont utilisées pour préparer votre demande de NIF. Veuillez les saisir exactement comme elles apparaissent sur votre passeport.",
+    "fullName": "Nom légal complet",
+    "fullNamePlaceholder": "Tel qu'il apparaît sur votre passeport",
+    "dateOfBirth": "Date de naissance",
+    "nationality": "Nationalité",
+    "nationalityPlaceholder": "Sélectionnez votre nationalité",
+    "passportNumber": "Numéro de passeport",
+    "passportNumberPlaceholder": "ex. AB1234567",
+    "passportExpiry": "Date d'expiration du passeport",
+    "address": "Adresse actuelle",
+    "addressPlaceholder": "Rue, ville, code postal, pays",
+    "saveButton": "Enregistrer",
+    "save": {
+      "success": "Vos informations ont été enregistrées.",
+      "error": "Une erreur est survenue. Veuillez réessayer.",
+      "validationError": "Veuillez vérifier le formulaire et corriger les erreurs."
     },
-    "support": {
-      "needHelp": "Besoin d'aide avec votre demande ?"
+    "uploadGate": {
+      "tooltip": "Complétez d'abord vos informations personnelles pour débloquer le téléversement des documents."
+    },
+    "docs": {
+      "passport": {
+        "title": "Passeport",
+        "description": "Téléversez une copie nette de la page photo de votre passeport."
+      },
+      "proofOfAddress": {
+        "title": "Justificatif de domicile",
+        "description": "Une facture ou un relevé bancaire datant de moins de 3 mois."
+      },
+      "signedPoa": {
+        "title": "Procuration signée",
+        "description": "Votre document de procuration signé."
+      }
+    },
+    "validation": {
+      "fullName": {
+        "required": "Le nom complet doit comporter au moins 2 caractères."
+      },
+      "dateOfBirth": {
+        "invalid": "Veuillez saisir une date de naissance valide (AAAA-MM-JJ)."
+      },
+      "nationality": {
+        "invalid": "Veuillez sélectionner une nationalité valide."
+      },
+      "passportNumber": {
+        "invalid": "Le numéro de passeport doit comporter entre 3 et 20 caractères."
+      },
+      "passportExpiry": {
+        "invalid": "Veuillez saisir une date d'expiration valide (AAAA-MM-JJ)."
+      },
+      "address": {
+        "required": "L'adresse doit comporter au moins 5 caractères."
+      }
     }
   }
 }

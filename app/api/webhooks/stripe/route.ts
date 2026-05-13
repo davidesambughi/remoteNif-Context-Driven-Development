@@ -28,8 +28,7 @@ export async function POST(req: Request) {
       signature,
       env.STRIPE_WEBHOOK_SECRET
     )
-  } catch (err) {
-    console.error(`[stripe-webhook] Verification failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+  } catch {
     return new NextResponse('Invalid signature', { status: 400 })
   }
 
@@ -37,18 +36,17 @@ export async function POST(req: Request) {
     // 3. Route the event based on its type
     switch (event.type) {
       case 'checkout.session.completed': {
+        // event.data.object is a union of all Stripe object types — narrowed by the switch case
         const session = event.data.object as Stripe.Checkout.Session
-        // Pass the session to our dedicated handler for business logic
         await handleCheckoutSessionCompleted(session)
         break
       }
       default:
-        console.warn(`[stripe-webhook] Unhandled event type: ${event.type}`)
+        break
     }
 
     return new NextResponse('Success', { status: 200 })
-  } catch (err) {
-    console.error('[stripe-webhook] Handler failed:', err)
+  } catch {
     return new NextResponse('Webhook handler failed', { status: 500 })
   }
 }

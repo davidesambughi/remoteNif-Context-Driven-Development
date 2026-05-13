@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { getCurrentUser } from '@/lib/auth/session'
 import { redirect } from '@/i18n/navigation'
 import { getUserActiveOrder } from '@/lib/db/queries'
@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
 import OrderTimeline from '@/components/dashboard/OrderTimeline'
+import { PersonalDetailsForm } from '@/components/dashboard/PersonalDetailsForm'
 import { Mail, ShieldCheck, FileCheck, Send, CheckCircle2 } from 'lucide-react'
 
 /**
@@ -16,14 +17,16 @@ import { Mail, ShieldCheck, FileCheck, Send, CheckCircle2 } from 'lucide-react'
 
 export default async function DashboardPage() {
   // 1. Fetch translations and auth session in parallel
-  const [t, user, locale] = await Promise.all([
+  const [t, tc, user, locale] = await Promise.all([
     getTranslations('dashboard'),
+    getTranslations('common'),
     getCurrentUser(),
-    import('next-intl/server').then((m) => m.getLocale()),
+    getLocale(),
   ])
 
   // 2. Auth guard — redirect guests to sign in
   if (!user) {
+    // getLocale() returns string; redirect() requires the narrower Locale union
     redirect({ href: '/signin', locale: locale as 'en' | 'fr' | 'es' | 'de' })
     return null
   }
@@ -70,21 +73,22 @@ export default async function DashboardPage() {
             <div className="grid gap-[length:var(--space-6)]">
               {/* Status Specific Card */}
               {order.status === 'documents_pending' && (
-                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-[var(--bg-surface)] border-[var(--border-default)]">
-                  <CardHeader>
-                    <CardTitle className="text-[length:var(--text-xl)] text-[var(--text-primary)]">
-                      {t('pending.title')}
-                    </CardTitle>
-                    <CardDescription className="text-[length:var(--text-base)] text-[var(--text-secondary)] mt-[length:var(--space-2)]">
-                      {t('pending.description')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button disabled className="w-full sm:w-auto bg-[var(--brand-primary)] text-[var(--text-on-accent)]">
-                      {t('pending.actionButton')}
-                    </Button>
-                  </CardContent>
-                </Card>
+                <PersonalDetailsForm
+                  orderId={order.id}
+                  initialValues={
+                    order.fullName
+                      ? {
+                          fullName: order.fullName,
+                          dateOfBirth: order.dateOfBirth ?? '',
+                          nationality: order.nationality ?? '',
+                          passportNumber: order.passportNumber ?? '',
+                          passportExpiry: order.passportExpiry ?? '',
+                          address: order.address ?? '',
+                        }
+                      : null
+                  }
+                  detailsSaved={order.fullName !== null}
+                />
               )}
 
               {order.status === 'documents_under_review' && (
@@ -182,7 +186,7 @@ export default async function DashboardPage() {
                 <div className="flex items-center gap-[length:var(--space-3)] text-[var(--text-secondary)]">
                   <Mail className="h-5 w-5" />
                   <p className="text-[length:var(--text-sm)]">
-                    {t('support.needHelp')}{' '}
+                    {tc('support.needHelp')}{' '}
                     <a href="mailto:support@remotenif.com" className="text-[var(--brand-primary)] font-[number:var(--font-medium)] hover:underline">
                       support@remotenif.com
                     </a>

@@ -29,6 +29,9 @@ export async function signUp(input: unknown): Promise<ActionResult> {
     options: {
       // language written to raw_user_meta_data — the handle_new_user trigger reads it
       data: { language },
+      // Without this, Supabase redirects the confirmation link to the site root.
+      // /auth/confirm exchanges the token; next=/dashboard lands the user after confirmation.
+      emailRedirectTo: `${env.NEXT_PUBLIC_APP_URL}/auth/confirm?next=/dashboard`,
     },
   })
 

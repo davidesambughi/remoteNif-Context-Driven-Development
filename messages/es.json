@@ -11,6 +11,9 @@
       "process": "Proceso",
       "terms": "Términos de servicio",
       "privacy": "Política de privacidad"
+    },
+    "support": {
+      "needHelp": "¿Necesitas ayuda con tu solicitud?"
     }
   },
   "auth": {
@@ -182,13 +185,6 @@
       "description": "No tienes ninguna solicitud de NIF activa. Inicia una para obtener tu número de identificación fiscal portugués.",
       "buttonLabel": "Ver precios y comenzar"
     },
-    "pending": {
-      "title": "Acción requerida: Sube tus documentos",
-      "description": "Tu pago se ha realizado correctamente. Por favor, completa tus datos personales y sube los documentos requeridos para iniciar el proceso de solicitud.",
-      "orderIdLabel": "ID del pedido",
-      "tierLabel": "Plan",
-      "actionButton": "Comenzar subida de documentos"
-    },
     "timeline": {
       "upload": "Subir",
       "review": "Revisión",
@@ -215,9 +211,63 @@
         "description": "¡Felicidades! Tu número de identificación fiscal portugués ha sido emitido con éxito.",
         "nifLabel": "Tu número NIF"
       }
+    }
+  },
+  "personalDetails": {
+    "title": "Tus Datos Personales",
+    "description": "Estos datos se utilizan para preparar tu solicitud de NIF. Introdúcelos exactamente como aparecen en tu pasaporte.",
+    "fullName": "Nombre legal completo",
+    "fullNamePlaceholder": "Tal como aparece en tu pasaporte",
+    "dateOfBirth": "Fecha de nacimiento",
+    "nationality": "Nacionalidad",
+    "nationalityPlaceholder": "Selecciona tu nacionalidad",
+    "passportNumber": "Número de pasaporte",
+    "passportNumberPlaceholder": "ej. AB1234567",
+    "passportExpiry": "Fecha de caducidad del pasaporte",
+    "address": "Dirección actual",
+    "addressPlaceholder": "Calle, ciudad, código postal, país",
+    "saveButton": "Guardar datos",
+    "save": {
+      "success": "Tus datos han sido guardados.",
+      "error": "Algo salió mal. Por favor, inténtalo de nuevo.",
+      "validationError": "Por favor, revisa el formulario y corrige los errores."
     },
-    "support": {
-      "needHelp": "¿Necesitas ayuda con tu solicitud?"
+    "uploadGate": {
+      "tooltip": "Completa primero tus datos personales para desbloquear la subida de documentos."
+    },
+    "docs": {
+      "passport": {
+        "title": "Pasaporte",
+        "description": "Sube una copia clara de la página de foto de tu pasaporte."
+      },
+      "proofOfAddress": {
+        "title": "Comprobante de domicilio",
+        "description": "Una factura o extracto bancario con fecha de menos de 3 meses."
+      },
+      "signedPoa": {
+        "title": "POA firmado",
+        "description": "Tu documento de poder notarial firmado."
+      }
+    },
+    "validation": {
+      "fullName": {
+        "required": "El nombre completo debe tener al menos 2 caracteres."
+      },
+      "dateOfBirth": {
+        "invalid": "Por favor, introduce una fecha de nacimiento válida (AAAA-MM-DD)."
+      },
+      "nationality": {
+        "invalid": "Por favor, selecciona una nacionalidad válida."
+      },
+      "passportNumber": {
+        "invalid": "El número de pasaporte debe tener entre 3 y 20 caracteres."
+      },
+      "passportExpiry": {
+        "invalid": "Por favor, introduce una fecha de caducidad válida (AAAA-MM-DD)."
+      },
+      "address": {
+        "required": "La dirección debe tener al menos 5 caracteres."
+      }
     }
   }
 }

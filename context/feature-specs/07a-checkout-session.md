@@ -1,7 +1,5 @@
 # 07a — Checkout Session
 
-Read `context/AGENTS.md`, `context/progress-tracker.md`, `context/architecture-context.md`, `context/tech-spec.md` before starting.
-
 Implement Stripe checkout session creation triggered from the pricing page tier selection.
 
 ---
@@ -24,8 +22,8 @@ Implement Stripe checkout session creation triggered from the pricing page tier 
 ```typescript
 // lib/validations/checkout.ts
 const CheckoutSessionSchema = z.object({
-  tier: z.enum(['essential', 'standard', 'express'])
-})
+  tier: z.enum(["essential", "standard", "express"]),
+});
 ```
 
 ### i18n

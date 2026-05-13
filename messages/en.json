@@ -11,6 +11,9 @@
       "process": "Process",
       "terms": "Terms of Service",
       "privacy": "Privacy Policy"
+    },
+    "support": {
+      "needHelp": "Need help with your application?"
     }
   },
   "auth": {
@@ -182,13 +185,6 @@
       "description": "You don't have any active NIF applications. Start one to get your Portuguese Tax Number.",
       "buttonLabel": "View Pricing & Start"
     },
-    "pending": {
-      "title": "Action Required: Upload Documents",
-      "description": "Your payment was successful. Please complete your personal details and upload the required documents to begin the application process.",
-      "orderIdLabel": "Order ID",
-      "tierLabel": "Tier",
-      "actionButton": "Start Document Upload"
-    },
     "timeline": {
       "upload": "Upload",
       "review": "Review",
@@ -215,9 +211,63 @@
         "description": "Congratulations! Your Portuguese Tax Identification Number has been successfully issued.",
         "nifLabel": "Your NIF Number"
       }
+    }
+  },
+  "personalDetails": {
+    "title": "Your Personal Details",
+    "description": "These details are used to prepare your NIF application. Please enter them exactly as they appear on your passport.",
+    "fullName": "Full legal name",
+    "fullNamePlaceholder": "As shown on your passport",
+    "dateOfBirth": "Date of birth",
+    "nationality": "Nationality",
+    "nationalityPlaceholder": "Select your nationality",
+    "passportNumber": "Passport number",
+    "passportNumberPlaceholder": "e.g. AB1234567",
+    "passportExpiry": "Passport expiry date",
+    "address": "Current address",
+    "addressPlaceholder": "Street, city, postal code, country",
+    "saveButton": "Save details",
+    "save": {
+      "success": "Your details have been saved.",
+      "error": "Something went wrong. Please try again.",
+      "validationError": "Please check the form and correct any errors."
     },
-    "support": {
-      "needHelp": "Need help with your application?"
+    "uploadGate": {
+      "tooltip": "Complete your personal details first to unlock document upload."
+    },
+    "docs": {
+      "passport": {
+        "title": "Passport",
+        "description": "Upload a clear copy of your passport photo page."
+      },
+      "proofOfAddress": {
+        "title": "Proof of Address",
+        "description": "A utility bill or bank statement dated within 3 months."
+      },
+      "signedPoa": {
+        "title": "Signed POA",
+        "description": "Your signed Power of Attorney document."
+      }
+    },
+    "validation": {
+      "fullName": {
+        "required": "Full name must be at least 2 characters."
+      },
+      "dateOfBirth": {
+        "invalid": "Please enter a valid date of birth (YYYY-MM-DD)."
+      },
+      "nationality": {
+        "invalid": "Please select a valid nationality."
+      },
+      "passportNumber": {
+        "invalid": "Passport number must be between 3 and 20 characters."
+      },
+      "passportExpiry": {
+        "invalid": "Please enter a valid expiry date (YYYY-MM-DD)."
+      },
+      "address": {
+        "required": "Address must be at least 5 characters."
+      }
     }
   }
 }

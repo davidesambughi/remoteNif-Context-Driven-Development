@@ -242,24 +242,49 @@ Depends on: 08a.
 
 ---
 
-## 09 — Personal Details
+## 09a — Personal Details Form
 
-Add the personal details form and POA generation flow.
+Add the personal details form and persist the data to the order record.
 
 Done when:
 
-- Customers can save personal details.
-- Order data updates correctly.
-- A pre-filled POA document is generated.
-- The POA download link appears after save.
-- Document uploads stay locked until details are complete.
+- Customers can fill in and save all required personal details (name, nationality, date of birth, Portuguese address, NIF-adjacent fields, etc.).
+- The form uses shadcn form primitives with react-hook-form + zod validation.
+- Saved data is written back to the order record in the database.
+- Document uploads stay locked until details are saved (gate enforced in the UI).
+- Success and error states are clearly communicated to the user.
 
 Notes:
 
-- Consider splitting: the form + data save is one session; PDF generation is a separate concern (see open question Q5 on PDF library).
+- Use shadcn when possible — `Form`, `Input`, `Select`, `Button`, etc.
+- Add comments to all non-trivial code.
 - All new user-facing copy (form labels, validation messages, status copy) uses next-intl translation keys; add to all four locale files.
+- The POA generation step (09b) must not block this feature — save first, generate PDF separately.
+- Verify current email-confirmation status: per Feature 04 notes, if email confirmation is still disabled, add a check here that blocks POA generation (not form save) until the email is verified, as the legal note requires.
 
 Depends on: 08.
+
+---
+
+## 09b — POA PDF Generation
+
+Generate a pre-filled Power of Attorney PDF from the saved personal details.
+
+Done when:
+
+- After personal details are saved, a POA PDF is generated server-side pre-filled with the customer's data.
+- The PDF download link appears in the dashboard once generation is complete.
+- Regeneration is possible if details are edited (old link replaced).
+- The generated file is stored securely (Supabase Storage or equivalent) and not publicly guessable.
+
+Notes:
+
+- Resolves open question Q5 on PDF library choice — research and select a suitable Node.js-compatible PDF library (e.g. `pdf-lib`, `@react-pdf/renderer`, or a puppeteer-based approach) before starting implementation.
+- Generation should happen server-side (Server Action or API route) — never expose raw template logic to the client.
+- Add comments to all non-trivial code.
+- All new user-facing copy (generation status, download label, error states) uses next-intl translation keys; add to all four locale files.
+
+Depends on: 09a.
 
 ---
 
@@ -280,7 +305,7 @@ Notes:
 - Consider splitting: Supabase Storage bucket setup and upload UI are distinct concerns (see open question Q6).
 - All new user-facing copy (upload slot labels, status messages, file validation errors) uses next-intl translation keys; add to all four locale files.
 
-Depends on: 09.
+Depends on: 09b.
 
 ---
 
@@ -315,6 +340,7 @@ Done when:
 - Emails are localized.
 - Emails include deep links back to the dashboard.
 - Password reset email support is in place.
+- Languages translations must be coherent with other pages.
 
 Notes:
 
@@ -437,7 +463,32 @@ Depends on: 15, 16.
 
 ---
 
-## 19 — SEO & Metadata
+## 19 — UX Improvements & Corrections
+
+Fix accumulated UX gaps and misleading states discovered during testing.
+
+Done when:
+
+- All identified misleading or broken user-facing states are corrected.
+- Error messages map to what actually happened — no raw i18n keys, no generic copy where a specific message exists.
+- Edge cases discovered during development are handled gracefully.
+
+Known items to address:
+
+- **Signup — "email already in Supabase Auth but not in public.users"**: Supabase silently accepts the signup call, attempts to send a confirmation email, but returns no session. The user sees "Email confirmation is required. Please check your inbox." — misleading because the email is either never sent (SMTP domain restriction blocks sends to non-owner addresses during dev) or Supabase silently swallows the duplicate. The fix is to detect this state more precisely and show a message that does not promise an email the system may not have sent (e.g. "If this email is not registered, you'll receive a confirmation link shortly.") — or, once email confirmation is re-enabled pre-launch, test the full confirmation flow end-to-end.
+- Add further items here as they are discovered during feature testing.
+
+Notes:
+
+- This feature is a rolling list — add to it whenever a UX gap is found during testing of any earlier feature.
+- Do not add new functionality here. Corrections and copy/state fixes only.
+- All copy changes go through next-intl as usual.
+
+Depends on: 18 (all functional features complete so the full flow can be reviewed).
+
+---
+
+## 20 — SEO & Metadata
 
 Add per-page metadata, structured data, sitemap, and robots.txt.
 
@@ -460,7 +511,7 @@ Depends on: 18 (all pages must exist to write meaningful metadata).
 
 ---
 
-## 20 — UI Polish & High Fidelity
+## 21 — UI Polish & High Fidelity
 
 Do a full visual pass across all screens once every feature is structurally complete.
 
@@ -479,7 +530,7 @@ Notes:
 - Do not redesign structure or add new sections here — polish only. Structural changes belong in the feature they affect.
 - A high-fidelity mockup or design reference should be provided before starting this feature.
 
-Depends on: 19 (all features complete).
+Depends on: 20 (all features complete).
 
 ---
 

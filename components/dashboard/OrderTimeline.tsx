@@ -1,16 +1,15 @@
 import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
+import type { SelectOrder } from '@/lib/db/schema'
 
 /**
  * Visual progress tracker for the NIF acquisition process.
  * Highlights the current step and shows completion status for previous steps.
  */
 
-type OrderStatus = 'documents_pending' | 'documents_under_review' | 'documents_approved' | 'submitted' | 'delivered'
-
 interface OrderTimelineProps {
-  status: OrderStatus
+  status: SelectOrder['status']
 }
 
 // Canonical sequence of order statuses for the timeline
@@ -61,6 +60,7 @@ export default async function OrderTimeline({ status }: OrderTimelineProps) {
               </div>
               <span 
                 className={cn(
+                  // text-[8px]: no token exists below --text-xs (12px); 8px needed on mobile to fit 5 labels without overflow
                   "absolute -bottom-8 whitespace-nowrap text-[8px] sm:text-[length:var(--text-xs)] font-[number:var(--font-medium)] uppercase tracking-wider",
                   isCompleted ? "text-[var(--status-success)]" : 
                   isCurrent ? "text-[var(--brand-primary)]" : 

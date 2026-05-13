@@ -14,35 +14,34 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
   const tier = session.metadata?.tier
 
   if (!userId || !tier) {
-    console.error('[stripe-webhook] Missing metadata in session:', session.id)
     return
   }
 
-  // Idempotency: check if we already processed this session
+  // Idempotency: return early if this session was already processed
   const existingPayment = await db.query.payments.findFirst({
     where: eq(payments.stripeCheckoutSessionId, session.id),
   })
 
   if (existingPayment) {
-    console.warn('[stripe-webhook] Session already processed:', session.id)
     return
   }
 
+  // Webhooks always return the payment_intent as a string ID (never the expanded object)
   const stripePaymentIntentId = session.payment_intent as string | null
 
   if (!stripePaymentIntentId) {
-    console.error('[stripe-webhook] Missing payment_intent in session:', session.id)
     return
   }
 
   try {
-    // 3. Persist Order and Payment records in a single atomic transaction
+    // 2. Persist Order and Payment records in a single atomic transaction
     await db.transaction(async (tx) => {
       // Create the Order record (status defaults to 'documents_pending')
       const [newOrder] = await tx
         .insert(orders)
         .values({
           userId,
+          // metadata.tier is string — cast to enum union after validation above
           tier: tier as 'essential' | 'standard' | 'express',
           status: 'documents_pending',
           stripeCheckoutSessionId: session.id,
@@ -63,15 +62,13 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
         amount: session.amount_total ?? 0,
         currency: session.currency ?? 'eur',
         status: session.payment_status === 'paid' ? 'succeeded' : 'pending',
+        // metadata.tier is string — cast to enum union after validation above
         tier: tier as 'essential' | 'standard' | 'express',
         isRenewal: false,
       })
     })
-
-    // Log success as warn to pass linting (only warn/error allowed)
-    console.warn('[stripe-webhook] Successfully processed session:', session.id)
   } catch (error) {
-    console.error('[stripe-webhook] Transaction failed for session:', session.id, error)
-    throw error // Re-throw so the webhook handler returns a 500, prompting Stripe to retry
+    // Re-throw so the webhook route returns 500 and Stripe retries the event
+    throw error
   }
 }

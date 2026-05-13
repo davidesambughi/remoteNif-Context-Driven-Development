@@ -26,7 +26,8 @@
       "mcp__plugin_playwright_playwright__browser_evaluate",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\" -Recurse -Depth 2)",
       "Bash(Format-Table -HideTableHeaders)",
-      "Bash(python3)"
+      "Bash(python3)",
+      "Bash(powershell *)"
     ]
   }
 }

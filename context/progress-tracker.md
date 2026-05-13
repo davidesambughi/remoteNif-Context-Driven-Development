@@ -14,7 +14,7 @@ Active development. Features 01–07b complete.
 
 ## Current Goal
 
-Feature 08b — Dashboard Order States & Timeline.
+Feature 09b — POA Generation.
 
 ---
 
@@ -64,6 +64,9 @@ Feature 08b — Dashboard Order States & Timeline.
 ---
 
 - **Feature 08b — Dashboard Order States & Timeline** ✓
+
+- **Feature 09a — Personal Details Form** ✓
+  `PersonalDetailsSchema` + `PersonalDetailsData` type in `lib/validations/orders.ts`. `updateOrderPersonalDetails` query in `lib/db/queries.ts` (ownership check via `and(eq(orders.id), eq(orders.userId))`). `savePersonalDetails` Server Action in `app/actions/orders.ts` (validate → auth → update → return `ActionResult<void>`). `COUNTRIES` list in `lib/utils/countries.ts` (15 ISO alpha-2 countries). `PersonalDetailsForm` Client Component with `react-hook-form` + `zodResolver`, two-column layout, shadcn `Select` for nationality, success/error banners, `router.refresh()` on save, upload-gate placeholder slots with `opacity-50 cursor-not-allowed`. Dashboard page updated to pass `orderId`, `initialValues`, and `detailsSaved` props. `personalDetails` i18n namespace added to all 4 locale files. `npm run build` passes.
   `OrderTimeline` RSC built to visualize the 5-step application process using shadcn-aligned design tokens. Dashboard page updated with specific views for `under_review`, `approved` (with tier-specific Express notice), `submitted` (with delivery estimates), and `delivered` (prominent NIF display). Support contact link added to the dashboard. Translations for all states and timeline steps added to all 4 locale files. `npm run build` passes.
 
 - **Hotfix — Foreign Key Cascade** ✓

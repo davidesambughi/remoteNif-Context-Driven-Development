@@ -1,7 +1,5 @@
 # 07b — Checkout Webhook
 
-Read `context/AGENTS.md`, `context/progress-tracker.md`, `context/architecture-context.md`, `context/tech-spec.md` before starting.
-
 Implement Stripe webhook processing to reliably finalize order and payment records after a successful checkout.
 
 ---

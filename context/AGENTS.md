@@ -5,7 +5,6 @@ Do not skip steps. Do not infer missing information — log it as an open questi
 
 ## Reading Order
 
-1. `context/project-overview.md` — who this is for, what problem it solves, scope, success criteria, constraints
 2. `context/user-flows.md` — how users move through the product, including edge cases and error paths
 3. `context/ui-context.md` — design language, tokens, component inventory, interaction states, copy rules
 4. `context/architecture-context.md` — stack, project tree, system boundaries, storage model, invariants

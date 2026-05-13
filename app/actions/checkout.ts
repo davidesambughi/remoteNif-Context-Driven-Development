@@ -68,8 +68,7 @@ export async function createCheckoutSession(
 
     // 5. Return redirect URL to the client
     return { success: true, data: { url: session.url } }
-  } catch (error) {
-    console.error('[createCheckoutSession] Error:', error)
+  } catch {
     return { success: false, error: 'checkout.errors.generic' }
   }
 }

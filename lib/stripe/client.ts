@@ -6,7 +6,5 @@ import Stripe from 'stripe'
 import { env } from '@/lib/env'
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  // @ts-expect-error - Stripe types may not match the pinned apiVersion exactly
-  apiVersion: '2023-10-16',
-  typescript: true,
+  apiVersion: '2026-04-22.dahlia',
 })

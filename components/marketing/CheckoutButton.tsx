@@ -21,6 +21,8 @@ interface CheckoutButtonProps {
 export function CheckoutButton({ tier, cta, ctaVariant }: CheckoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  // Root translator — Server Actions return full-path i18n keys (e.g. 'checkout.errors.generic')
+  // that span namespaces, so we translate at the root level rather than scoping to 'checkout'.
   const t = useTranslations()
 
   const handleCheckout = async () => {
@@ -35,7 +37,12 @@ export function CheckoutButton({ tier, cta, ctaVariant }: CheckoutButtonProps) {
         // Redirect the browser directly to the Stripe-hosted checkout page
         window.location.href = result.data.url
       } else {
-        setErrorMsg(result.success === false && result.error ? t(result.error as Parameters<typeof t>[0]) : t('checkout.errors.generic'))
+        // result.error is always a valid i18n key — Server Actions in this project
+        // return typed key strings, never raw messages.
+        const errorKey = (result.success === false && result.error)
+          ? result.error as Parameters<typeof t>[0]
+          : 'checkout.errors.generic' as Parameters<typeof t>[0]
+        setErrorMsg(t(errorKey))
         setIsLoading(false)
       }
     } catch {

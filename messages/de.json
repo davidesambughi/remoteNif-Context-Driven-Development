@@ -11,6 +11,9 @@
       "process": "Prozess",
       "terms": "Nutzungsbedingungen",
       "privacy": "Datenschutzrichtlinie"
+    },
+    "support": {
+      "needHelp": "Benötigen Sie Hilfe bei Ihrer Bewerbung?"
     }
   },
   "auth": {
@@ -182,13 +185,6 @@
       "description": "Sie haben keine aktiven NIF-Anträge. Starten Sie einen, um Ihre portugiesische Steuernummer zu erhalten.",
       "buttonLabel": "Preise ansehen & starten"
     },
-    "pending": {
-      "title": "Aktion erforderlich: Dokumente hochladen",
-      "description": "Ihre Zahlung war erfolgreich. Bitte vervollständigen Sie Ihre persönlichen Daten und laden Sie die erforderlichen Dokumente hoch, um den Antragsprozess zu starten.",
-      "orderIdLabel": "Bestell-ID",
-      "tierLabel": "Paket",
-      "actionButton": "Dokument-Upload starten"
-    },
     "timeline": {
       "upload": "Hochladen",
       "review": "Prüfung",
@@ -215,9 +211,63 @@
         "description": "Herzlichen Glückwunsch! Ihre portugiesische Steuernummer wurde erfolgreich ausgestellt.",
         "nifLabel": "Ihre NIF-Nummer"
       }
+    }
+  },
+  "personalDetails": {
+    "title": "Ihre Persönlichen Daten",
+    "description": "Diese Daten werden zur Vorbereitung Ihres NIF-Antrags verwendet. Bitte geben Sie sie genau so ein, wie sie in Ihrem Reisepass stehen.",
+    "fullName": "Vollständiger rechtlicher Name",
+    "fullNamePlaceholder": "Wie im Reisepass angegeben",
+    "dateOfBirth": "Geburtsdatum",
+    "nationality": "Staatsangehörigkeit",
+    "nationalityPlaceholder": "Staatsangehörigkeit auswählen",
+    "passportNumber": "Reisepassnummer",
+    "passportNumberPlaceholder": "z.B. AB1234567",
+    "passportExpiry": "Ablaufdatum des Reisepasses",
+    "address": "Aktuelle Adresse",
+    "addressPlaceholder": "Straße, Stadt, Postleitzahl, Land",
+    "saveButton": "Daten speichern",
+    "save": {
+      "success": "Ihre Daten wurden gespeichert.",
+      "error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+      "validationError": "Bitte überprüfen Sie das Formular und korrigieren Sie die Fehler."
     },
-    "support": {
-      "needHelp": "Benötigen Sie Hilfe bei Ihrem Antrag?"
+    "uploadGate": {
+      "tooltip": "Vervollständigen Sie zuerst Ihre persönlichen Daten, um den Dokumenten-Upload freizuschalten."
+    },
+    "docs": {
+      "passport": {
+        "title": "Reisepass",
+        "description": "Laden Sie eine klare Kopie der Fotoseite Ihres Reisepasses hoch."
+      },
+      "proofOfAddress": {
+        "title": "Adressnachweis",
+        "description": "Eine Versorgungsrechnung oder ein Kontoauszug, nicht älter als 3 Monate."
+      },
+      "signedPoa": {
+        "title": "Unterzeichnete Vollmacht",
+        "description": "Ihr unterzeichnetes Vollmachtsdokument."
+      }
+    },
+    "validation": {
+      "fullName": {
+        "required": "Der vollständige Name muss mindestens 2 Zeichen lang sein."
+      },
+      "dateOfBirth": {
+        "invalid": "Bitte geben Sie ein gültiges Geburtsdatum ein (JJJJ-MM-TT)."
+      },
+      "nationality": {
+        "invalid": "Bitte wählen Sie eine gültige Staatsangehörigkeit aus."
+      },
+      "passportNumber": {
+        "invalid": "Die Reisepassnummer muss zwischen 3 und 20 Zeichen lang sein."
+      },
+      "passportExpiry": {
+        "invalid": "Bitte geben Sie ein gültiges Ablaufdatum ein (JJJJ-MM-TT)."
+      },
+      "address": {
+        "required": "Die Adresse muss mindestens 5 Zeichen lang sein."
+      }
     }
   }
 }

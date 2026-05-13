@@ -41,6 +41,7 @@ export default function SignUpForm({ locale }: Props) {
       const messages: Record<string, string> = {
         'auth.signUp.errors.emailInUse': t('errors.emailInUse'),
         'auth.signUp.errors.generic': t('errors.generic'),
+        'auth.signUp.errors.emailConfirmationRequired': t('errors.emailConfirmationRequired'),
       }
       setServerError(messages[result.error] ?? result.error)
       return
