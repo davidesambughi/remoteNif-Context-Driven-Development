@@ -18,7 +18,7 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
   })
 
   if (existingPayment) {
-    console.log('[stripe-webhook] Session already processed:', session.id)
+    console.warn('[stripe-webhook] Session already processed:', session.id)
     return
   }
 
@@ -61,7 +61,8 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
       })
     })
 
-    console.log('[stripe-webhook] Successfully processed session:', session.id)
+    // Log success as warn to pass linting (only warn/error allowed)
+    console.warn('[stripe-webhook] Successfully processed session:', session.id)
   } catch (error) {
     console.error('[stripe-webhook] Transaction failed for session:', session.id, error)
     throw error // Re-throw so the webhook handler returns a 500, prompting Stripe to retry

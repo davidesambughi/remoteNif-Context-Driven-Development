@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         break
       }
       default:
-        console.log(`[stripe-webhook] Unhandled event type: ${event.type}`)
+        console.warn(`[stripe-webhook] Unhandled event type: ${event.type}`)
     }
 
     return new NextResponse('Success', { status: 200 })

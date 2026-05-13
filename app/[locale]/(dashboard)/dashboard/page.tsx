@@ -4,6 +4,7 @@ import { redirect } from '@/i18n/navigation'
 import { getUserActiveOrder } from '@/lib/db/queries'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Link } from '@/i18n/navigation'
 import OrderTimeline from '@/components/dashboard/OrderTimeline'
 import { Mail, ShieldCheck, FileCheck, Send, CheckCircle2 } from 'lucide-react'
 
@@ -37,7 +38,7 @@ export default async function DashboardPage() {
             </div>
             
             <Button asChild>
-              <a href="/pricing">{t('emptyState.buttonLabel')}</a>
+              <Link href="/pricing">{t('emptyState.buttonLabel')}</Link>
             </Button>
           </div>
         )}

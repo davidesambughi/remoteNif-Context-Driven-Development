@@ -28,10 +28,10 @@ export function CheckoutButton({ tier, cta, ctaVariant }: CheckoutButtonProps) {
       if (result.success && result.data?.url) {
         window.location.href = result.data.url
       } else {
-        setErrorMsg(result.success === false && result.error ? t(result.error as any) : t('checkout.errors.generic'))
+        setErrorMsg(result.success === false && result.error ? t(result.error as Parameters<typeof t>[0]) : t('checkout.errors.generic'))
         setIsLoading(false)
       }
-    } catch (error) {
+    } catch {
       setErrorMsg(t('checkout.errors.generic'))
       setIsLoading(false)
     }

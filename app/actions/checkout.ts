@@ -1,6 +1,6 @@
 'use server'
 
-import { redirect } from 'next/navigation'
+
 import { CheckoutSessionSchema } from '@/lib/validations/checkout'
 import { getCurrentUser } from '@/lib/auth/session'
 import { TIERS } from '@/lib/pricing'
