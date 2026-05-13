@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { Button } from '@/components/ui/button'
 
 // Sticky top bar — brand name left, language switcher + Sign In right
 export function MarketingHeader() {
@@ -18,15 +19,9 @@ export function MarketingHeader() {
 
         <div className="flex items-center gap-[length:var(--space-4)]">
           <LanguageSwitcher />
-          <Link
-            href="/signin"
-            className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-[var(--text-primary)]
-              border border-[var(--border-default)] rounded-[length:var(--radius-md)]
-              px-[length:var(--space-4)] py-[length:var(--space-2)]
-              hover:bg-[var(--bg-subtle)] transition-[var(--transition-base)]"
-          >
-            {t('nav.signIn')}
-          </Link>
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/signin">{t('nav.signIn')}</Link>
+          </Button>
         </div>
       </div>
     </header>

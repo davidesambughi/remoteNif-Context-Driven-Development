@@ -5,20 +5,19 @@ Do not skip steps. Do not infer missing information — log it as an open questi
 
 ## Reading Order
 
-1. `context/project-overview.md` — who this is for, what problem it solves, scope, success criteria, constraints
-2. `context/user-flows.md` — how users move through the product, including edge cases and error paths
-3. `context/ui-context.md` — design language, tokens, component inventory, interaction states, copy rules
-4. `context/architecture-context.md` — stack, project tree, system boundaries, storage model, invariants
-5. `context/tech-spec.md` — data models (all 7 tables, fields, business rules), database indexes, environment variables
-6. `context/code-standards.md` — implementation rules specific to this project's stack
-7. `context/ai-workflow-rules.md` — how to scope, split, and deliver work
-8. `context/progress-tracker.md` — current phase, active goal, completed work, open questions
+1. `context/ui-context.md` — design language, tokens, component inventory, interaction states, copy rules
+2. `context/architecture-context.md` — stack, project tree, system boundaries, storage model, invariants
+3. `context/code-standards.md` — implementation rules specific to this project's stack
+4. `context/ai-workflow-rules.md` — how to scope, split, and deliver work
+5. `context/progress-tracker.md` — current phase, active goal, completed work, open questions
+6. `context/feature-specs/feature-list.md` — list of feature specs in order
 
 ## Feature Specs
 
 Feature specs live in `feature-specs/`. They are not read upfront — they are given to you one at a time when a feature unit is ready to be built.
 
 When you receive a feature spec:
+
 - Read the context files it references before starting.
 - Implement only what the spec defines — nothing adjacent, nothing assumed.
 - Respect the `Scope Limits` section exactly.
@@ -30,6 +29,7 @@ When you receive a feature spec:
 Current-issues files live in `current-issues/`. Like feature specs, they are not read upfront — they are given to you one at a time when a bug fix session begins.
 
 When you receive a current-issues file:
+
 - Review the components or directories listed in the opening line before touching anything.
 - Fix only what is listed — nothing adjacent, nothing assumed.
 - Add `Do not change anything else` as a hard constraint on every issue.

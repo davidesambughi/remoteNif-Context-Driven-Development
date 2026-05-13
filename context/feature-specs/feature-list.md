@@ -137,27 +137,7 @@ Depends on: 03, 04.
 
 ---
 
-## 06b — Pricing Page (Deadline Proximity Logic)
-
-Add deadline-awareness to the pricing tier cards.
-
-Done when:
-
-- User can input or select their required NIF deadline.
-- Card state reflects tier feasibility based on the selected deadline.
-- Tiers that cannot meet the deadline are visually de-emphasised or flagged.
-- Logic reads delivery time constants from `lib/pricing.ts`.
-
-Notes:
-
-- Design decision required before implementation: how should infeasible tiers render? (greyed out, warning badge, disabled CTA?) Provide a reference or decision before writing the spec.
-- `TierConfig.deliveryDescription` in `lib/pricing.ts` is a hardcoded English string — replace with a translation key before rendering it in UI.
-
-Depends on: 06a.
-
----
-
-## 06c — Marketing Button Audit
+## 06b — Marketing Button Audit
 
 Replace custom-styled link/anchor CTAs in existing marketing components with shadcn `Button asChild`.
 

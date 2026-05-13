@@ -14,7 +14,7 @@ Active development. Features 01–05c complete.
 
 ## Current Goal
 
-Feature 06b — Pricing Page (Deadline Proximity Logic).
+Feature 07 — Checkout.
 
 ---
 
@@ -48,6 +48,9 @@ Feature 06b — Pricing Page (Deadline Proximity Logic).
 - **Feature 06a — Pricing Page (Structure)** ✓
   `/pricing` page renders hero + 3 tier cards + "All tiers include" bar. `TierCard` uses shadcn `Card` shell and `Button asChild` for the CTA (focus ring, keyboard nav). Unauthenticated CTA → `/signup?tier=X`; authenticated → `/dashboard?tier=X`. `pricing` namespace added to all 4 locale files. CTA copy: `Get Essential / Get Standard / Get Express` (en), `Obtenir` (fr), `Obtener` (es), `holen` (de). `npm run build` passes (36 static pages).
   `useRouter` and `Link` imports corrected in all five auth form components (`SignUpForm`, `SignInForm`, `RequestPasswordResetForm`, `NewPasswordForm`, `InternalSignInForm`) — now use `@/i18n/navigation` instead of `next/navigation`/`next/link`. Hardcoded English error string in `signUp` action replaced with `'auth.signUp.errors.emailConfirmationRequired'`; raw `error.message` in `updatePassword` replaced with `'auth.newPassword.errors.generic'`. `auth` namespace fully translated in `fr.json`, `es.json`, `de.json`. New key `auth.signUp.errors.emailConfirmationRequired` added to all four locale files. Design token violations fixed in `MarketingHeader`, `MarketingFooter`, `LanguageSwitcher`, `HeroSection`, `HowItWorksSection`, `FAQSection`. Hardcoded `RemoteNIF` literals replaced with `{t('appName')}` in `AuthCard`, `MarketingHeader`, `MarketingFooter`.
+
+- **Feature 06b — Marketing Button Audit** ✓
+  `HeroSection` "Get Started" (`Link /pricing`) and "Learn More" (`<a #how-it-works`) wrapped in `Button asChild` (variants `default` and `outline`). `MarketingHeader` "Sign In" (`Link /signin`) wrapped in `Button variant="outline" size="sm" asChild`. All three CTAs now carry shadcn's `focus-visible:ring`. No new routes, actions, translations, or data changes. `npm run build` passes (36 static pages).
 
 ---
 

@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
+import { Button } from '@/components/ui/button'
 
 interface StatItemProps {
   value: string
@@ -33,27 +34,13 @@ export function HeroSection() {
           {t('subheadline')}
         </p>
 
-        <Link
-          href="/pricing"
-          className="mt-6 flex items-center justify-center w-full
-            bg-[var(--brand-primary)] text-[var(--text-on-accent)]
-            rounded-[length:var(--radius-md)] py-[length:var(--space-4)]
-            text-[length:var(--text-base)] font-[number:var(--font-semibold)]
-            hover:opacity-90 transition-[var(--transition-base)]"
-        >
-          {t('cta')}
-        </Link>
+        <Button variant="default" asChild className="w-full mt-6">
+          <Link href="/pricing">{t('cta')}</Link>
+        </Button>
 
-        <a
-          href="#how-it-works"
-          className="mt-3 flex items-center justify-center w-full
-            border border-[var(--border-default)] text-[var(--text-primary)]
-            rounded-[length:var(--radius-md)] py-[length:var(--space-4)]
-            text-[length:var(--text-base)] font-[number:var(--font-semibold)]
-            hover:bg-[var(--bg-subtle)] transition-[var(--transition-base)]"
-        >
-          {t('learnMore')}
-        </a>
+        <Button variant="outline" asChild className="w-full mt-3">
+          <a href="#how-it-works">{t('learnMore')}</a>
+        </Button>
 
         {/* 2×2 stats grid — honest product facts, no made-up social proof */}
         <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[var(--border-subtle)] pt-6">
