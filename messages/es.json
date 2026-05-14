@@ -237,6 +237,16 @@
       "description": "Tus datos han sido guardados y tus documentos están ahora desbloqueados.",
       "editButton": "Editar datos"
     },
+    "poa": {
+      "sectionTitle": "Poder notarial",
+      "sectionDescription": "Descarga tu poder notarial pre-rellenado, fírmalo a mano y luego sube la copia firmada a continuación.",
+      "generateButton": "Generar mi poder notarial",
+      "generating": "Generando…",
+      "downloadButton": "Descargar poder notarial",
+      "ready": "Tu poder notarial está listo para descargar.",
+      "regenerateNote": "Has modificado tus datos — genera un nuevo poder notarial para reflejar los cambios.",
+      "error": "Error al generar el poder notarial. Por favor, inténtalo de nuevo."
+    },
     "uploadGate": {
       "tooltip": "Completa primero tus datos personales para desbloquear la subida de documentos."
     },

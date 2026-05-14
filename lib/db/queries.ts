@@ -28,6 +28,48 @@ export async function getUserActiveOrder(userId: string): Promise<SelectOrder | 
 }
 
 /**
+ * Fetches the personal details fields and current POA path for an order.
+ * Returns null if the order doesn't exist or isn't owned by the given user.
+ * Used by the generatePoa action to verify data completeness before PDF rendering.
+ */
+export async function getOrderPersonalDetails(
+  orderId: string,
+  userId: string,
+): Promise<Pick<SelectOrder, 'fullName' | 'dateOfBirth' | 'nationality' | 'passportNumber' | 'passportExpiry' | 'address' | 'poaGeneratedPath'> | null> {
+  const result = await db
+    .select({
+      fullName: orders.fullName,
+      dateOfBirth: orders.dateOfBirth,
+      nationality: orders.nationality,
+      passportNumber: orders.passportNumber,
+      passportExpiry: orders.passportExpiry,
+      address: orders.address,
+      poaGeneratedPath: orders.poaGeneratedPath,
+    })
+    .from(orders)
+    .where(and(eq(orders.id, orderId), eq(orders.userId, userId)))
+    .limit(1)
+
+  return result[0] ?? null
+}
+
+/**
+ * Updates the poaGeneratedPath on an order.
+ * Pass null to clear the path (forces regeneration after a details edit).
+ * Enforces ownership by checking both orderId and userId.
+ */
+export async function updateOrderPoaPath(
+  orderId: string,
+  userId: string,
+  path: string | null,
+): Promise<void> {
+  await db
+    .update(orders)
+    .set({ poaGeneratedPath: path, updatedAt: new Date() })
+    .where(and(eq(orders.id, orderId), eq(orders.userId, userId)))
+}
+
+/**
  * Updates the personal details of an order.
  * Enforces ownership by checking both orderId and userId.
  */

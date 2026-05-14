@@ -1,0 +1,1 @@
+ALTER TABLE "orders" ADD COLUMN "poa_generated_path" text;

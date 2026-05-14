@@ -237,6 +237,16 @@
       "description": "Vos informations ont été enregistrées et vos documents sont maintenant déverrouillés.",
       "editButton": "Modifier"
     },
+    "poa": {
+      "sectionTitle": "Procuration",
+      "sectionDescription": "Téléchargez votre procuration pré-remplie, signez-la à la main, puis téléversez la copie signée ci-dessous.",
+      "generateButton": "Générer ma procuration",
+      "generating": "Génération en cours…",
+      "downloadButton": "Télécharger la procuration",
+      "ready": "Votre procuration est prête à télécharger.",
+      "regenerateNote": "Vous avez modifié vos données — générez une nouvelle procuration pour les refléter.",
+      "error": "La génération de la procuration a échoué. Veuillez réessayer."
+    },
     "uploadGate": {
       "tooltip": "Complétez d'abord vos informations personnelles pour débloquer le téléversement des documents."
     },

@@ -1,20 +1,32 @@
 'use server'
+
 import { requireAuth } from '@/lib/auth/session'
-import { updateOrderPersonalDetails } from '@/lib/db/queries'
-import { PersonalDetailsSchema } from '@/lib/validations/orders'
+import {
+  updateOrderPersonalDetails,
+  updateOrderPoaPath,
+  getOrderPersonalDetails,
+} from '@/lib/db/queries'
+import { PersonalDetailsSchema, GeneratePoaSchema } from '@/lib/validations/orders'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 import type { ActionResult } from '@/lib/types'
+import { generateAndStorePoaPdf, deleteStoredPoaPdf } from '@/lib/pdf/generator'
 
 /**
  * Saves the personal details for a specific order.
- * Validates the input data and ensures the user owns the order.
+ * If a POA was previously generated, deletes the stored file and clears the path
+ * so the user must regenerate after editing their details.
  */
 export async function savePersonalDetails(
   orderId: string,
-  data: PersonalDetailsData
+  data: PersonalDetailsData,
 ): Promise<ActionResult<void>> {
   try {
-    // 1. Validate input with Zod
+    // 1. Validate all input at the boundary
+    const validatedId = GeneratePoaSchema.safeParse({ orderId })
+    if (!validatedId.success) {
+      return { success: false, error: 'personalDetails.save.validationError' }
+    }
+
     const validated = PersonalDetailsSchema.safeParse(data)
     if (!validated.success) {
       return { success: false, error: 'personalDetails.save.validationError' }
@@ -23,12 +35,64 @@ export async function savePersonalDetails(
     // 2. Auth check
     const user = await requireAuth()
 
-    // 3. Update DB with ownership check
-    await updateOrderPersonalDetails(orderId, user.id, validated.data)
+    // 3. Fetch current POA path before overwriting details (need it to delete the file)
+    const current = await getOrderPersonalDetails(validatedId.data.orderId, user.id)
 
-    // 4. Return success
+    // 4. Update personal details with ownership check
+    await updateOrderPersonalDetails(validatedId.data.orderId, user.id, validated.data)
+
+    // 5. If a POA was previously generated, delete the stale file and clear the DB path
+    if (current?.poaGeneratedPath) {
+      await deleteStoredPoaPdf(current.poaGeneratedPath)
+      await updateOrderPoaPath(validatedId.data.orderId, user.id, null)
+    }
+
     return { success: true }
   } catch {
     return { success: false, error: 'personalDetails.save.error' }
+  }
+}
+
+/**
+ * Generates a pre-filled POA PDF from the order's saved personal details,
+ * stores it in Supabase Storage, and returns a 1-hour signed download URL.
+ */
+export async function generatePoa(
+  orderId: string,
+): Promise<ActionResult<{ signedUrl: string }>> {
+  try {
+    // 1. Validate input at the boundary
+    const validatedId = GeneratePoaSchema.safeParse({ orderId })
+    if (!validatedId.success) {
+      return { success: false, error: 'personalDetails.poa.error' }
+    }
+
+    // 2. Auth check
+    const user = await requireAuth()
+
+    // 3. Fetch the order's saved personal details
+    const order = await getOrderPersonalDetails(validatedId.data.orderId, user.id)
+    if (!order) {
+      return { success: false, error: 'personalDetails.poa.error' }
+    }
+
+    // 4. Safety check — all fields must be present before rendering the PDF
+    const { fullName, dateOfBirth, nationality, passportNumber, passportExpiry, address } = order
+    if (!fullName || !dateOfBirth || !nationality || !passportNumber || !passportExpiry || !address) {
+      return { success: false, error: 'personalDetails.poa.error' }
+    }
+
+    // 5. Render PDF and upload to Storage (business logic lives in lib/pdf/generator.ts)
+    const { path, signedUrl } = await generateAndStorePoaPdf(
+      validatedId.data.orderId,
+      { fullName, dateOfBirth, nationality, passportNumber, passportExpiry, address },
+    )
+
+    // 6. Persist the storage path so the dashboard RSC can re-fetch the signed URL on reload
+    await updateOrderPoaPath(validatedId.data.orderId, user.id, path)
+
+    return { success: true, data: { signedUrl } }
+  } catch {
+    return { success: false, error: 'personalDetails.poa.error' }
   }
 }

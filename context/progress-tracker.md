@@ -14,7 +14,7 @@ Active development. Features 01–07b complete.
 
 ## Current Goal
 
-Feature 09b — POA Generation.
+Feature 10 — Document Uploads.
 
 ---
 
@@ -74,6 +74,9 @@ Feature 09b — POA Generation.
 
 ---
 
+- **Feature 09b — POA PDF Generation** ✓
+  `poaGeneratedPath` column added to `orders` table (migration `0003`). `@react-pdf/renderer` installed; added to `serverExternalPackages` in `next.config.ts`. `lib/pdf/poa-template.tsx` renders a single-page A4 POA with draft banner, bilingual PT/EN field labels (Portuguese first as legally binding), alternating EN/PT authorization paragraphs, representative placeholder, and signature block. Footer is bilingual PT/EN. This is the permanent document design — not locale-driven. `lib/pdf/generator.ts` contains all PDF/storage business logic (`generateAndStorePoaPdf`, `deleteStoredPoaPdf`, `getPoaSignedUrl`) — all using the admin client. `GeneratePoaSchema` added to `lib/validations/orders.ts`. `generatePoa` Server Action added to `app/actions/orders.ts`; `savePersonalDetails` updated to delete and clear the stored POA when details are re-saved. Dashboard RSC fetches a signed URL server-side when `poaGeneratedPath` is set. `PersonalDetailsForm` summary view extended with a POA section (three states: idle → generating → ready/download). `ActionResult<T>` type fixed to use a conditional so `data` is required (not optional) when `T` is non-void. New i18n keys (`poa.*`) added to all four locale files with full translations (FR/ES/DE). `npm run build` passes.
+
 - **Hotfix — Personal Details Form UX** ✓
   `PersonalDetailsForm` now has two modes: editing (default, first visit) and saved (post-save / returning user). On successful save the form immediately collapses to a read-only summary card (name, DOB, nationality, passport, address) with a checkmark icon and an "Edit details" button. Clicking "Edit" re-opens the form with values pre-filled. A pre-submit note was added above the save button ("Please double-check your details…"). The `router.refresh()` call was removed — not needed since the state transition is handled locally. Two new i18n keys added (`save.preSubmitNote`, `summary.description`, `summary.editButton`) to all four locale files. `npm run build` passes.
 
@@ -88,7 +91,7 @@ Feature 09b — POA Generation.
 ## Open Questions
 
 - Q4 — SEO content strategy (keyword clusters, cadence, AI vs human copy) — blocking: no — can decide before launch.
-- Q5 — PDF library for POA generation (Feature 09): options are `pdf-lib` (low-level) or `@react-pdf/renderer` (React-based). Must resolve before writing the Feature 09 spec. Blocking: yes, for Feature 09.
+- Q5 — RESOLVED: `@react-pdf/renderer` selected. No existing template; layout designed from scratch in `lib/pdf/poa-template.tsx`. Draft placeholder copy — fiscal rep must review and confirm before launch.
 - Q6 — Supabase Storage bucket setup (Feature 10): private `documents` bucket with access rules required before document upload. Must be covered in the Feature 10 spec. Blocking: yes, for Feature 10.
 
 ---

@@ -114,6 +114,9 @@ export const orders = pgTable(
     // Set when customer confirms "I no longer need fiscal rep" — suppresses all future renewal emails
     fiscalRepDismissedAt: timestamp('fiscal_rep_dismissed_at'),
 
+    // Generated POA — Supabase Storage path; null until the user generates the document
+    poaGeneratedPath: text('poa_generated_path'),
+
     // Stripe
     stripeCheckoutSessionId: text('stripe_checkout_session_id'),
     stripePaymentIntentId: text('stripe_payment_intent_id'),

@@ -237,6 +237,16 @@
       "description": "Ihre Daten wurden gespeichert und Ihre Dokumente sind jetzt freigeschaltet.",
       "editButton": "Bearbeiten"
     },
+    "poa": {
+      "sectionTitle": "Vollmacht",
+      "sectionDescription": "Laden Sie Ihre vorausgefüllte Vollmacht herunter, unterschreiben Sie sie handschriftlich und laden Sie die unterschriebene Kopie anschließend hoch.",
+      "generateButton": "Vollmacht generieren",
+      "generating": "Wird generiert…",
+      "downloadButton": "Vollmacht herunterladen",
+      "ready": "Ihre Vollmacht steht zum Download bereit.",
+      "regenerateNote": "Sie haben Ihre Angaben geändert — generieren Sie eine neue Vollmacht, um die Änderungen zu übernehmen.",
+      "error": "Vollmacht konnte nicht generiert werden. Bitte versuchen Sie es erneut."
+    },
     "uploadGate": {
       "tooltip": "Vervollständigen Sie zuerst Ihre persönlichen Daten, um den Dokumenten-Upload freizuschalten."
     },

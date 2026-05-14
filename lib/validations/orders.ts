@@ -1,5 +1,10 @@
 import { z } from 'zod'
 
+/** Validates the orderId argument passed to the generatePoa Server Action. */
+export const GeneratePoaSchema = z.object({
+  orderId: z.string().uuid(),
+})
+
 export const PersonalDetailsSchema = z.object({
   fullName: z.string().min(2, { message: 'validation.fullName.required' }).max(150),
   dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { message: 'validation.dateOfBirth.invalid' }),

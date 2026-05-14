@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
-import { Loader2, AlertCircle, CheckCircle2, Pencil } from 'lucide-react'
+import { Loader2, AlertCircle, CheckCircle2, Pencil, Download, FileText } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -28,7 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 import { PersonalDetailsSchema } from '@/lib/validations/orders'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
-import { savePersonalDetails } from '@/app/actions/orders'
+import { savePersonalDetails, generatePoa } from '@/app/actions/orders'
 import { COUNTRIES } from '@/lib/utils/countries'
 
 interface PersonalDetailsFormProps {
@@ -36,6 +36,8 @@ interface PersonalDetailsFormProps {
   initialValues: Partial<PersonalDetailsData> | null
   // detailsSaved=true means the server already has complete details for this order
   detailsSaved: boolean
+  // Pre-fetched signed URL from the RSC — null if no POA has been generated yet
+  poaSignedUrl: string | null
 }
 
 // Maps an ISO alpha-2 code to a display name for the saved summary view
@@ -47,6 +49,7 @@ export function PersonalDetailsForm({
   orderId,
   initialValues,
   detailsSaved,
+  poaSignedUrl,
 }: PersonalDetailsFormProps) {
   const t = useTranslations('personalDetails')
 
@@ -56,6 +59,14 @@ export function PersonalDetailsForm({
   const [isSaved, setIsSaved] = useState(detailsSaved)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [saveError, setSaveError] = useState(false)
+
+  // POA state — initialised from the server-fetched URL so returning users see
+  // the download link immediately without clicking "Generate" again.
+  const [poaUrl, setPoaUrl] = useState<string | null>(poaSignedUrl)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [poaError, setPoaError] = useState(false)
+  // Tracks whether the user had a POA and then edited their details — triggers the regenerate notice
+  const [hadPoaBefore, setHadPoaBefore] = useState(false)
 
   // Pre-resolve translations for the doc slot types (strict i18n typing requirement)
   const docSlots = [
@@ -76,9 +87,6 @@ export function PersonalDetailsForm({
     },
   })
 
-  // Current values used to render the summary card after a successful save
-  const saved = form.getValues()
-
   async function onSubmit(data: PersonalDetailsData) {
     setIsSubmitting(true)
     setSaveError(false)
@@ -86,7 +94,7 @@ export function PersonalDetailsForm({
     try {
       const result = await savePersonalDetails(orderId, data)
       if (result.success) {
-        // Collapse immediately — no delay needed, the summary card confirms success
+        // Collapse immediately — the summary card is the success confirmation
         setIsSaved(true)
       } else {
         setSaveError(true)
@@ -95,6 +103,35 @@ export function PersonalDetailsForm({
       setSaveError(true)
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  // When the user clicks Edit after having generated a POA, record that so we can
+  // show the "regenerate needed" notice once they re-save.
+  function handleEditClick() {
+    if (poaUrl !== null) {
+      setHadPoaBefore(true)
+      setPoaUrl(null)
+    }
+    setPoaError(false)
+    setIsSaved(false)
+  }
+
+  async function handleGenerate() {
+    setIsGenerating(true)
+    setPoaError(false)
+    try {
+      const result = await generatePoa(orderId)
+      if (result.success) {
+        setPoaUrl(result.data.signedUrl)
+        setHadPoaBefore(false)
+      } else {
+        setPoaError(true)
+      }
+    } catch {
+      setPoaError(true)
+    } finally {
+      setIsGenerating(false)
     }
   }
 
@@ -120,7 +157,7 @@ export function PersonalDetailsForm({
               variant="outline"
               size="sm"
               className="shrink-0"
-              onClick={() => setIsSaved(false)}
+              onClick={handleEditClick}
             >
               <Pencil className="h-4 w-4 mr-2" />
               {t('summary.editButton')}
@@ -153,6 +190,55 @@ export function PersonalDetailsForm({
                 <dd className="text-text-primary whitespace-pre-line">{values.address}</dd>
               </div>
             </dl>
+
+            {/* POA section — separated by a divider, inside the same card */}
+            <div className="mt-6 pt-6 border-t border-[var(--border-default)]">
+              <div className="flex items-center gap-2 mb-1">
+                <FileText className="h-4 w-4 text-[var(--text-secondary)]" />
+                <h3 className="text-sm font-semibold text-primary">{t('poa.sectionTitle')}</h3>
+              </div>
+              <p className="text-sm text-muted mb-4">{t('poa.sectionDescription')}</p>
+
+              {/* Regenerate notice — shown after editing details that had a previously generated POA */}
+              {hadPoaBefore && !poaUrl && (
+                <p className="text-sm text-muted mb-3 italic">{t('poa.regenerateNote')}</p>
+              )}
+
+              {/* State: POA ready — show download link */}
+              {poaUrl ? (
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-[var(--status-success)] shrink-0" />
+                  <span className="text-sm text-primary">{t('poa.ready')}</span>
+                  <Button variant="outline" size="sm" asChild>
+                    <a href={poaUrl} target="_blank" rel="noopener noreferrer">
+                      <Download className="h-4 w-4 mr-2" />
+                      {t('poa.downloadButton')}
+                    </a>
+                  </Button>
+                </div>
+              ) : (
+                /* State: generating or idle — show generate button */
+                <div className="flex flex-col gap-2">
+                  {poaError && (
+                    <p className="text-sm text-[var(--status-error)]">{t('poa.error')}</p>
+                  )}
+                  <Button
+                    onClick={handleGenerate}
+                    disabled={isGenerating}
+                    className="bg-brand-primary text-on-accent hover:bg-brand-primary/90 w-full md:w-auto"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t('poa.generating')}
+                      </>
+                    ) : (
+                      t('poa.generateButton')
+                    )}
+                  </Button>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
 

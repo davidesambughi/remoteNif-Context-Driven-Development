@@ -237,6 +237,16 @@
       "description": "Your details have been saved and your documents are now unlocked.",
       "editButton": "Edit details"
     },
+    "poa": {
+      "sectionTitle": "Power of Attorney",
+      "sectionDescription": "Download your pre-filled POA, sign it by hand, then upload the signed copy below.",
+      "generateButton": "Generate my POA",
+      "generating": "Generating…",
+      "downloadButton": "Download POA",
+      "ready": "Your POA is ready to download.",
+      "regenerateNote": "You edited your details — generate a new POA to reflect the changes.",
+      "error": "POA generation failed. Please try again."
+    },
     "uploadGate": {
       "tooltip": "Complete your personal details first to unlock document upload."
     },

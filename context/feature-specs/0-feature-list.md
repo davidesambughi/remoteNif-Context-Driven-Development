@@ -288,45 +288,81 @@ Depends on: 09a.
 
 ---
 
-## 10 — Document Uploads
+## 10a — Storage Infrastructure & Security
 
-Add document upload handling.
+Set up Supabase Storage and secure document upload tracking logic.
 
 Done when:
 
-- Customers can upload the required document set.
-- File validation is enforced.
-- Upload status is visible.
-- Signed POA is accepted without review.
-- POA upload stays locked until personal details are saved.
+- The `documents` bucket is created in Supabase Storage.
+- Row Level Security (RLS) policies restrict users to only upload/read their own files associated with their order.
+- Server Actions securely record document metadata (file path, type, size) into the Postgres `documents` table upon successful upload.
 
 Notes:
 
-- Consider splitting: Supabase Storage bucket setup and upload UI are distinct concerns (see open question Q6).
-- All new user-facing copy (upload slot labels, status messages, file validation errors) uses next-intl translation keys; add to all four locale files.
+- Backend/Infrastructure task only. No UI components.
+- Resolves open question Q6.
 
 Depends on: 09b.
 
 ---
 
-## 11 — Document Review
+## 10b — Document Upload UI
 
-Add automated document review and escalation.
+Add frontend document upload handling components.
 
 Done when:
 
-- Uploaded documents are reviewed automatically where needed.
-- Approved, flagged, and error states are shown clearly.
-- Failed review attempts can escalate to manual review.
-- Admins are notified when escalation or completion happens.
+- Customers can upload the required document set (Passport, Proof of Address, Signed POA) using drag-and-drop components.
+- Client-side file validation is enforced (PDF/JPG/PNG, max 10MB).
+- Upload status is visible (idle, uploading, success, error).
+- Signed POA is accepted without review.
+- POA upload stays locked until personal details are saved.
 
 Notes:
 
-- Verify current AI/document review integration approach before implementation.
-- Consider splitting: AI review integration and the escalation + admin notification flow are independent concerns.
-- AI flag reasons shown to customers must use next-intl translation keys — do not surface raw AI output as user-facing copy.
+- UI only. Assumes the secure Server Actions from 10a are already in place.
+- All new user-facing copy (upload slot labels, status messages, file validation errors) uses next-intl translation keys; add to all four locale files.
 
-Depends on: 10.
+Depends on: 10a.
+
+---
+
+## 11a — Automated AI Document Review
+
+Integrate AI to automatically review uploaded documents.
+
+Done when:
+
+- Uploaded documents (Passport, Proof of Address) are automatically sent for AI review upon successful upload.
+- The AI correctly identifies if the document is valid or flagged.
+- Approved and flagged states are updated in the database and shown clearly in the customer dashboard.
+
+Notes:
+
+- Verify current AI/document review integration approach (Google Gemini API) before implementation.
+- AI flag reasons shown to customers must use `next-intl` translation keys — do NOT surface raw AI output as user-facing copy. Map AI responses to predefined error keys.
+
+Depends on: 10b.
+
+---
+
+## 11b — Manual Review Escalation & Notifications
+
+Implement the fallback manual review workflow and admin notifications.
+
+Done when:
+
+- Failed AI review attempts (e.g., 2 consecutive flags or AI errors) automatically escalate the document to manual review.
+- The customer dashboard clearly shows the "Manual review required" state instead of asking for more uploads.
+- Admins are notified when a document escalates to manual review, OR when all documents for an order are successfully approved.
+
+Notes:
+
+- Keeps the system robust against AI failures or persistent user upload errors.
+- Ensures admins are kept in the loop only when human intervention is required or when the order is ready to proceed.
+
+Depends on: 11a.
 
 ---
 
