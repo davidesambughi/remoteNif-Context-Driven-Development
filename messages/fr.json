@@ -230,7 +230,12 @@
     "save": {
       "success": "Vos informations ont été enregistrées.",
       "error": "Une erreur est survenue. Veuillez réessayer.",
-      "validationError": "Veuillez vérifier le formulaire et corriger les erreurs."
+      "validationError": "Veuillez vérifier le formulaire et corriger les erreurs.",
+      "preSubmitNote": "Veuillez vérifier vos informations avant d'enregistrer — elles seront utilisées dans votre demande officielle de NIF."
+    },
+    "summary": {
+      "description": "Vos informations ont été enregistrées et vos documents sont maintenant déverrouillés.",
+      "editButton": "Modifier"
     },
     "uploadGate": {
       "tooltip": "Complétez d'abord vos informations personnelles pour débloquer le téléversement des documents."

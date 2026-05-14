@@ -230,7 +230,12 @@
     "save": {
       "success": "Your details have been saved.",
       "error": "Something went wrong. Please try again.",
-      "validationError": "Please check the form and correct any errors."
+      "validationError": "Please check the form and correct any errors.",
+      "preSubmitNote": "Please double-check your details before saving — they will be used in your official NIF application."
+    },
+    "summary": {
+      "description": "Your details have been saved and your documents are now unlocked.",
+      "editButton": "Edit details"
     },
     "uploadGate": {
       "tooltip": "Complete your personal details first to unlock document upload."

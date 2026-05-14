@@ -476,6 +476,7 @@ Done when:
 Known items to address:
 
 - **Signup — "email already in Supabase Auth but not in public.users"**: Supabase silently accepts the signup call, attempts to send a confirmation email, but returns no session. The user sees "Email confirmation is required. Please check your inbox." — misleading because the email is either never sent (SMTP domain restriction blocks sends to non-owner addresses during dev) or Supabase silently swallows the duplicate. The fix is to detect this state more precisely and show a message that does not promise an email the system may not have sent (e.g. "If this email is not registered, you'll receive a confirmation link shortly.") — or, once email confirmation is re-enabled pre-launch, test the full confirmation flow end-to-end.
+- **Personal details form — no success state after save**: after a successful save the form stays fully visible and editable, giving no signal that the save worked. Users may think it failed and retry or abandon. Fix: collapse the form into a read-only summary card on success, with an "Edit" link to re-open it. Also add a short pre-submit note ("Please double-check your details — they will be used in your official application") to surface the typo-check prompt before saving.
 - Add further items here as they are discovered during feature testing.
 
 Notes:

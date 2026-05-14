@@ -230,7 +230,12 @@
     "save": {
       "success": "Ihre Daten wurden gespeichert.",
       "error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
-      "validationError": "Bitte überprüfen Sie das Formular und korrigieren Sie die Fehler."
+      "validationError": "Bitte überprüfen Sie das Formular und korrigieren Sie die Fehler.",
+      "preSubmitNote": "Bitte überprüfen Sie Ihre Angaben vor dem Speichern — sie werden für Ihren offiziellen NIF-Antrag verwendet."
+    },
+    "summary": {
+      "description": "Ihre Daten wurden gespeichert und Ihre Dokumente sind jetzt freigeschaltet.",
+      "editButton": "Bearbeiten"
     },
     "uploadGate": {
       "tooltip": "Vervollständigen Sie zuerst Ihre persönlichen Daten, um den Dokumenten-Upload freizuschalten."

@@ -230,7 +230,12 @@
     "save": {
       "success": "Tus datos han sido guardados.",
       "error": "Algo salió mal. Por favor, inténtalo de nuevo.",
-      "validationError": "Por favor, revisa el formulario y corrige los errores."
+      "validationError": "Por favor, revisa el formulario y corrige los errores.",
+      "preSubmitNote": "Por favor, revisa tus datos antes de guardar — se utilizarán en tu solicitud oficial de NIF."
+    },
+    "summary": {
+      "description": "Tus datos han sido guardados y tus documentos están ahora desbloqueados.",
+      "editButton": "Editar datos"
     },
     "uploadGate": {
       "tooltip": "Completa primero tus datos personales para desbloquear la subida de documentos."

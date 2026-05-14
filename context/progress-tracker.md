@@ -74,6 +74,9 @@ Feature 09b — POA Generation.
 
 ---
 
+- **Hotfix — Personal Details Form UX** ✓
+  `PersonalDetailsForm` now has two modes: editing (default, first visit) and saved (post-save / returning user). On successful save the form immediately collapses to a read-only summary card (name, DOB, nationality, passport, address) with a checkmark icon and an "Edit details" button. Clicking "Edit" re-opens the form with values pre-filled. A pre-submit note was added above the save button ("Please double-check your details…"). The `router.refresh()` call was removed — not needed since the state transition is handled locally. Two new i18n keys added (`save.preSubmitNote`, `summary.description`, `summary.editButton`) to all four locale files. `npm run build` passes.
+
 ## In Progress
 
 - Nothing.
