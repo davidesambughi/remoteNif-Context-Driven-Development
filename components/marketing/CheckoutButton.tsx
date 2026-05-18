@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 /**
  * Client Component for the Pricing Page CTAs.
@@ -64,7 +64,7 @@ export function CheckoutButton({ tier, cta, ctaVariant }: CheckoutButtonProps) {
         {cta}
       </Button>
       {errorMsg && (
-        <p className="text-[length:var(--text-sm)] text-[var(--status-error)] text-center">
+        <p className="text-[length:var(--text-sm)] text-error text-center">
           {errorMsg}
         </p>
       )}

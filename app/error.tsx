@@ -18,12 +18,12 @@ export default function GlobalError({ error, reset }: Props) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8 text-center">
       <h1 className="text-2xl font-semibold">Something went wrong</h1>
-      <p className="text-sm text-gray-500 max-w-sm">
+      <p className="text-sm text-text-muted max-w-sm">
         An unexpected error occurred. Please try again, or contact support if the problem persists.
       </p>
       <button
         onClick={reset}
-        className="mt-2 px-4 py-2 rounded bg-black text-white text-sm hover:bg-gray-800"
+        className="mt-2 px-4 py-2 rounded bg-brand-primary text-on-accent text-sm hover:bg-brand-primary-dim"
       >
         Try again
       </button>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
@@ -40,13 +40,13 @@ export default function RequestPasswordResetForm({ locale }: Props) {
   if (submitted) {
     return (
       <div>
-        <p className="text-[length:var(--text-base)] text-[var(--text-primary)]">
+        <p className="text-[length:var(--text-base)] text-text-primary">
           {t('successMessage')}
         </p>
         <p className="text-center mt-[length:var(--space-4)]">
           <Link
             href="/signin"
-            className="text-[length:var(--text-sm)] text-[var(--brand-secondary)] underline-offset-4 hover:underline"
+            className="text-[length:var(--text-sm)] text-brand-secondary underline-offset-4 hover:underline"
           >
             {t('backToSignIn')}
           </Link>
@@ -61,7 +61,7 @@ export default function RequestPasswordResetForm({ locale }: Props) {
         {/* Hidden locale field — used by server action to build the redirectTo URL */}
         <input type="hidden" {...form.register('locale')} value={locale} />
 
-        <p className="text-[length:var(--text-sm)] text-[var(--text-secondary)] mb-[length:var(--space-4)]">
+        <p className="text-[length:var(--text-sm)] text-text-secondary mb-[length:var(--space-4)]">
           {t('description')}
         </p>
 
@@ -70,18 +70,18 @@ export default function RequestPasswordResetForm({ locale }: Props) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-[var(--text-secondary)]">
+              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-text-secondary">
                 {t('email')}
               </FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  className="rounded-[length:var(--radius-md)] border-[var(--border-default)] focus:border-[var(--brand-primary)]"
+                  className="rounded-[length:var(--radius-md)] border-border-default focus:border-brand-primary"
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-[length:var(--text-sm)] text-[var(--status-error)]" />
+              <FormMessage className="text-[length:var(--text-sm)] text-error" />
             </FormItem>
           )}
         />
@@ -89,16 +89,16 @@ export default function RequestPasswordResetForm({ locale }: Props) {
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
-          className="w-full mt-[length:var(--space-6)] bg-[var(--brand-primary)] text-[var(--text-on-accent)] font-[number:var(--font-semibold)]"
+          className="w-full mt-[length:var(--space-6)] bg-brand-primary text-on-accent font-[number:var(--font-semibold)]"
         >
           {t('submit')}
         </Button>
       </form>
 
-      <p className="text-center text-[length:var(--text-sm)] text-[var(--text-secondary)] mt-[length:var(--space-4)]">
+      <p className="text-center text-[length:var(--text-sm)] text-text-secondary mt-[length:var(--space-4)]">
         <Link
           href="/signin"
-          className="text-[var(--brand-secondary)] underline-offset-4 hover:underline"
+          className="text-brand-secondary underline-offset-4 hover:underline"
         >
           {t('backToSignIn')}
         </Link>

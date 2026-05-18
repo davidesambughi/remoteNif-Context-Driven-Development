@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useRouter } from '@/i18n/navigation'
 import { Link } from '@/i18n/navigation'
@@ -60,18 +60,18 @@ export default function SignUpForm({ locale }: Props) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-[var(--text-secondary)]">
+              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-text-secondary">
                 {t('email')}
               </FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  className="rounded-[length:var(--radius-md)] border-[var(--border-default)] focus:border-[var(--brand-primary)]"
+                  className="rounded-[length:var(--radius-md)] border-border-default focus:border-brand-primary"
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-[length:var(--text-sm)] text-[var(--status-error)]" />
+              <FormMessage className="text-[length:var(--text-sm)] text-error" />
             </FormItem>
           )}
         />
@@ -81,41 +81,41 @@ export default function SignUpForm({ locale }: Props) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-[var(--text-secondary)]">
+              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-text-secondary">
                 {t('password')}
               </FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   autoComplete="new-password"
-                  className="rounded-[length:var(--radius-md)] border-[var(--border-default)] focus:border-[var(--brand-primary)]"
+                  className="rounded-[length:var(--radius-md)] border-border-default focus:border-brand-primary"
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-[length:var(--text-sm)] text-[var(--status-error)]" />
+              <FormMessage className="text-[length:var(--text-sm)] text-error" />
             </FormItem>
           )}
         />
 
         {/* Server-side error (e.g. email already in use) */}
         {serverError && (
-          <p className="text-[length:var(--text-sm)] text-[var(--status-error)]">{serverError}</p>
+          <p className="text-[length:var(--text-sm)] text-error">{serverError}</p>
         )}
 
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
-          className="w-full mt-[length:var(--space-6)] bg-[var(--brand-primary)] text-[var(--text-on-accent)] font-[number:var(--font-semibold)]"
+          className="w-full mt-[length:var(--space-6)] bg-brand-primary text-on-accent font-[number:var(--font-semibold)]"
         >
           {t('submit')}
         </Button>
       </form>
 
-      <p className="text-center text-[length:var(--text-sm)] text-[var(--text-secondary)] mt-[length:var(--space-4)]">
+      <p className="text-center text-[length:var(--text-sm)] text-text-secondary mt-[length:var(--space-4)]">
         {t('hasAccount')}{' '}
         <Link
           href="/signin"
-          className="text-[var(--brand-secondary)] underline-offset-4 hover:underline"
+          className="text-brand-secondary underline-offset-4 hover:underline"
         >
           {t('signInLink')}
         </Link>

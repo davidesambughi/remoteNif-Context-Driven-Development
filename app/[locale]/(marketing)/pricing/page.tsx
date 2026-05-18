@@ -22,13 +22,13 @@ export default async function PricingPage() {
       <section className="max-w-2xl mx-auto px-4 pt-[length:var(--space-16)] text-center">
         <h1
           className="text-[length:var(--text-4xl)] font-[number:var(--font-bold)]
-            text-[var(--text-primary)] leading-[var(--leading-tight)]"
+            text-text-primary leading-[var(--leading-tight)]"
         >
           {t('hero.headline')}
         </h1>
         <p
           className="mt-[length:var(--space-4)] text-[length:var(--text-base)]
-            text-[var(--text-secondary)] leading-[var(--leading-relaxed)]"
+            text-text-secondary leading-[var(--leading-relaxed)]"
         >
           {t('hero.subheadline')}
         </p>
@@ -96,7 +96,7 @@ export default async function PricingPage() {
       </section>
 
       {/* ── All tiers include bar ─────────────────────────────────────── */}
-      <div className="mt-[length:var(--space-12)] bg-[var(--bg-subtle)] py-[length:var(--space-6)]">
+      <div className="mt-[length:var(--space-12)] bg-subtle py-[length:var(--space-6)]">
         <div className="max-w-5xl mx-auto px-4">
           <div
             className="flex flex-col md:flex-row items-center justify-center
@@ -104,7 +104,7 @@ export default async function PricingPage() {
           >
             <span
               className="text-[length:var(--text-sm)] font-[number:var(--font-semibold)]
-                text-[var(--text-secondary)] uppercase tracking-wide"
+                text-text-secondary uppercase tracking-wide"
             >
               {t('includes.title')}
             </span>
@@ -114,22 +114,22 @@ export default async function PricingPage() {
                 gap-[length:var(--space-4)] md:gap-[length:var(--space-6)]"
             >
               <div className="flex items-center gap-[length:var(--space-2)]">
-                <ScanSearch className="h-4 w-4 text-[var(--brand-primary)]" aria-hidden="true" />
-                <span className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+                <ScanSearch className="h-4 w-4 text-brand-primary" aria-hidden="true" />
+                <span className="text-[length:var(--text-sm)] text-text-secondary">
                   {t('includes.aiReview')}
                 </span>
               </div>
 
               <div className="flex items-center gap-[length:var(--space-2)]">
-                <UserCheck className="h-4 w-4 text-[var(--brand-primary)]" aria-hidden="true" />
-                <span className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+                <UserCheck className="h-4 w-4 text-brand-primary" aria-hidden="true" />
+                <span className="text-[length:var(--text-sm)] text-text-secondary">
                   {t('includes.adminVerification')}
                 </span>
               </div>
 
               <div className="flex items-center gap-[length:var(--space-2)]">
-                <Mail className="h-4 w-4 text-[var(--brand-primary)]" aria-hidden="true" />
-                <span className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+                <Mail className="h-4 w-4 text-brand-primary" aria-hidden="true" />
+                <span className="text-[length:var(--text-sm)] text-text-secondary">
                   {t('includes.emailSupport')}
                 </span>
               </div>

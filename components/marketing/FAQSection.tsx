@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+﻿import { useTranslations } from 'next-intl'
 import {
   Accordion,
   AccordionContent,
@@ -13,22 +13,22 @@ export function FAQSection() {
   const t = useTranslations('home.faq')
 
   return (
-    <section className="bg-[var(--bg-surface)] px-4 py-12">
+    <section className="bg-surface px-4 py-12">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-[var(--text-primary)]">
+        <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
           {t('title')}
         </h2>
-        <p className="mt-2 text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+        <p className="mt-2 text-[length:var(--text-sm)] text-text-secondary">
           {t('subtitle')}
         </p>
 
         <Accordion type="single" collapsible className="mt-6">
           {FAQ_KEYS.map((key) => (
             <AccordionItem key={key} value={`item-${key}`}>
-              <AccordionTrigger className="text-left text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-[var(--text-primary)]">
+              <AccordionTrigger className="text-left text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-text-primary">
                 {t(`q${key}`)}
               </AccordionTrigger>
-              <AccordionContent className="text-[length:var(--text-sm)] text-[var(--text-secondary)] leading-[var(--leading-relaxed)]">
+              <AccordionContent className="text-[length:var(--text-sm)] text-text-secondary leading-[var(--leading-relaxed)]">
                 {t(`a${key}`)}
               </AccordionContent>
             </AccordionItem>

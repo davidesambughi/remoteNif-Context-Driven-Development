@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+﻿import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { Button } from '@/components/ui/button'
@@ -8,11 +8,11 @@ export function MarketingHeader() {
   const t = useTranslations('common')
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)]">
+    <header className="sticky top-0 z-50 bg-surface border-b border-border-subtle">
       <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link
           href="/"
-          className="font-[number:var(--font-semibold)] text-[length:var(--text-base)] text-[var(--text-primary)] hover:opacity-80 transition-[var(--transition-base)]"
+          className="font-[number:var(--font-semibold)] text-[length:var(--text-base)] text-text-primary hover:opacity-80 transition-[var(--transition-base)]"
         >
           {t('appName')}
         </Link>

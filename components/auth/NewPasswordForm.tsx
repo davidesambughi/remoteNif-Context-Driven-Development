@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
@@ -46,18 +46,18 @@ export default function NewPasswordForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-[var(--text-secondary)]">
+              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-text-secondary">
                 {t('password')}
               </FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   autoComplete="new-password"
-                  className="rounded-[length:var(--radius-md)] border-[var(--border-default)] focus:border-[var(--brand-primary)]"
+                  className="rounded-[length:var(--radius-md)] border-border-default focus:border-brand-primary"
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-[length:var(--text-sm)] text-[var(--status-error)]" />
+              <FormMessage className="text-[length:var(--text-sm)] text-error" />
             </FormItem>
           )}
         />
@@ -67,30 +67,30 @@ export default function NewPasswordForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-[var(--text-secondary)]">
+              <FormLabel className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-text-secondary">
                 {t('confirmPassword')}
               </FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   autoComplete="new-password"
-                  className="rounded-[length:var(--radius-md)] border-[var(--border-default)] focus:border-[var(--brand-primary)]"
+                  className="rounded-[length:var(--radius-md)] border-border-default focus:border-brand-primary"
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-[length:var(--text-sm)] text-[var(--status-error)]" />
+              <FormMessage className="text-[length:var(--text-sm)] text-error" />
             </FormItem>
           )}
         />
 
         {serverError && (
-          <p className="text-[length:var(--text-sm)] text-[var(--status-error)]">{serverError}</p>
+          <p className="text-[length:var(--text-sm)] text-error">{serverError}</p>
         )}
 
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
-          className="w-full mt-[length:var(--space-6)] bg-[var(--brand-primary)] text-[var(--text-on-accent)] font-[number:var(--font-semibold)]"
+          className="w-full mt-[length:var(--space-6)] bg-brand-primary text-on-accent font-[number:var(--font-semibold)]"
         >
           {t('submit')}
         </Button>

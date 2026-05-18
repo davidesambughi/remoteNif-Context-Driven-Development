@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+﻿import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
 import type { SelectOrder } from '@/lib/db/schema'
@@ -31,9 +31,9 @@ export default async function OrderTimeline({ status }: OrderTimelineProps) {
     <div className="w-full py-[length:var(--space-8)] px-[length:var(--space-4)] sm:px-0">
       <div className="relative flex items-center justify-between">
         {/* Progress Line */}
-        <div className="absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-[var(--border-subtle)]" />
+        <div className="absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-border-subtle" />
         <div 
-          className="absolute left-0 top-1/2 h-[2px] -translate-y-1/2 bg-[var(--status-success)] transition-all duration-500"
+          className="absolute left-0 top-1/2 h-[2px] -translate-y-1/2 bg-success transition-all duration-500"
           style={{ width: `${(currentStepIndex / (steps.length - 1)) * 100}%` }}
         />
 
@@ -47,24 +47,24 @@ export default async function OrderTimeline({ status }: OrderTimelineProps) {
               <div 
                 className={cn(
                   "relative z-10 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border-2 bg-[var(--bg-base)] transition-colors duration-300",
-                  isCompleted ? "border-[var(--status-success)] bg-[var(--status-success)] text-[var(--text-on-accent)]" : 
-                  isCurrent ? "border-[var(--brand-primary)] bg-[var(--bg-base)] text-[var(--brand-primary)]" : 
-                  "border-[var(--border-subtle)] bg-[var(--bg-base)] text-[var(--text-muted)]"
+                  isCompleted ? "border-success bg-success text-on-accent" : 
+                  isCurrent ? "border-brand-primary bg-[var(--bg-base)] text-brand-primary" : 
+                  "border-border-subtle bg-[var(--bg-base)] text-text-muted"
                 )}
               >
                 {isCompleted ? (
                   <Check className="h-5 w-5 sm:h-6 sm:w-6" />
                 ) : (
-                  <div className={cn("h-2 w-2 sm:h-3 sm:w-3 rounded-full", isCurrent ? "bg-[var(--brand-primary)]" : "bg-[var(--border-subtle)]")} />
+                  <div className={cn("h-2 w-2 sm:h-3 sm:w-3 rounded-full", isCurrent ? "bg-brand-primary" : "bg-border-subtle")} />
                 )}
               </div>
               <span 
                 className={cn(
                   // text-[8px]: no token exists below --text-xs (12px); 8px needed on mobile to fit 5 labels without overflow
                   "absolute -bottom-8 whitespace-nowrap text-[8px] sm:text-[length:var(--text-xs)] font-[number:var(--font-medium)] uppercase tracking-wider",
-                  isCompleted ? "text-[var(--status-success)]" : 
-                  isCurrent ? "text-[var(--brand-primary)]" : 
-                  "text-[var(--text-muted)]"
+                  isCompleted ? "text-success" : 
+                  isCurrent ? "text-brand-primary" : 
+                  "text-text-muted"
                 )}
               >
                 {t(step.labelKey)}

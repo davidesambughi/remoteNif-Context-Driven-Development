@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+﻿import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
@@ -7,12 +7,12 @@ export function MarketingFooter() {
   const t = useTranslations('common')
 
   return (
-    <footer className="bg-[var(--bg-surface)] border-t border-[var(--border-subtle)] px-4 py-8">
+    <footer className="bg-surface border-t border-border-subtle px-4 py-8">
       <div className="max-w-7xl mx-auto">
-        <p className="text-[length:var(--text-base)] font-[number:var(--font-semibold)] text-[var(--text-primary)]">
+        <p className="text-[length:var(--text-base)] font-[number:var(--font-semibold)] text-text-primary">
           {t('appName')}
         </p>
-        <p className="text-[length:var(--text-xs)] text-[var(--text-muted)] mt-1">
+        <p className="text-[length:var(--text-xs)] text-text-muted mt-1">
           {t('footer.copyright')}
         </p>
 
@@ -22,25 +22,25 @@ export function MarketingFooter() {
         >
           <Link
             href="/pricing"
-            className="text-[length:var(--text-sm)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-[var(--transition-base)]"
+            className="text-[length:var(--text-sm)] text-text-secondary hover:text-text-primary transition-[var(--transition-base)]"
           >
             {t('footer.pricing')}
           </Link>
           <a
             href="#how-it-works"
-            className="text-[length:var(--text-sm)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-[var(--transition-base)]"
+            className="text-[length:var(--text-sm)] text-text-secondary hover:text-text-primary transition-[var(--transition-base)]"
           >
             {t('footer.process')}
           </a>
           <a
             href="#"
-            className="text-[length:var(--text-sm)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-[var(--transition-base)]"
+            className="text-[length:var(--text-sm)] text-text-secondary hover:text-text-primary transition-[var(--transition-base)]"
           >
             {t('footer.terms')}
           </a>
           <a
             href="#"
-            className="text-[length:var(--text-sm)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-[var(--transition-base)]"
+            className="text-[length:var(--text-sm)] text-text-secondary hover:text-text-primary transition-[var(--transition-base)]"
           >
             {t('footer.privacy')}
           </a>

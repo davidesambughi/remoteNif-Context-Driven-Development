@@ -49,10 +49,10 @@ export default async function DashboardPage() {
         {!order && (
           <div className="space-y-[length:var(--space-6)]">
             <div>
-              <h1 className="text-[length:var(--text-3xl)] font-[number:var(--font-bold)] text-[var(--text-primary)]">
+              <h1 className="text-[length:var(--text-3xl)] font-[number:var(--font-bold)] text-text-primary">
                 {t('emptyState.title')}
               </h1>
-              <p className="text-[length:var(--text-base)] text-[var(--text-secondary)] mt-[length:var(--space-2)]">
+              <p className="text-[length:var(--text-base)] text-text-secondary mt-[length:var(--space-2)]">
                 {t('emptyState.description')}
               </p>
             </div>
@@ -67,10 +67,10 @@ export default async function DashboardPage() {
         {order && (
           <>
             <div className="space-y-[length:var(--space-2)]">
-              <h1 className="text-[length:var(--text-3xl)] font-[number:var(--font-bold)] text-[var(--text-primary)]">
+              <h1 className="text-[length:var(--text-3xl)] font-[number:var(--font-bold)] text-text-primary">
                 {t('title')}
               </h1>
-              <p className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+              <p className="text-[length:var(--text-sm)] text-text-secondary">
                 {t('orderInfo', { tier: order.tier, id: order.id.slice(0, 8) })}
               </p>
             </div>
@@ -100,16 +100,16 @@ export default async function DashboardPage() {
               )}
 
               {order.status === 'documents_under_review' && (
-                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-[var(--bg-surface)] border-[var(--border-default)]">
+                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-surface border-border-default">
                   <CardHeader className="flex flex-row items-center gap-[length:var(--space-4)] space-y-0">
-                    <div className="h-12 w-12 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center text-[var(--brand-primary)] shrink-0">
+                    <div className="h-12 w-12 rounded-full bg-subtle flex items-center justify-center text-brand-primary shrink-0">
                       <ShieldCheck className="h-6 w-6" />
                     </div>
                     <div>
-                      <CardTitle className="text-[length:var(--text-xl)] text-[var(--text-primary)]">
+                      <CardTitle className="text-[length:var(--text-xl)] text-text-primary">
                         {t('states.underReview.title')}
                       </CardTitle>
-                      <CardDescription className="text-[length:var(--text-base)] text-[var(--text-secondary)]">
+                      <CardDescription className="text-[length:var(--text-base)] text-text-secondary">
                         {t('states.underReview.description')}
                       </CardDescription>
                     </div>
@@ -118,23 +118,23 @@ export default async function DashboardPage() {
               )}
 
               {order.status === 'documents_approved' && (
-                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-[var(--bg-surface)] border-[var(--border-default)]">
+                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-surface border-border-default">
                   <CardHeader className="flex flex-row items-center gap-[length:var(--space-4)] space-y-0">
-                    <div className="h-12 w-12 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center text-[var(--status-success)] shrink-0">
+                    <div className="h-12 w-12 rounded-full bg-subtle flex items-center justify-center text-success shrink-0">
                       <FileCheck className="h-6 w-6" />
                     </div>
                     <div>
-                      <CardTitle className="text-[length:var(--text-xl)] text-[var(--text-primary)]">
+                      <CardTitle className="text-[length:var(--text-xl)] text-text-primary">
                         {t('states.approved.title')}
                       </CardTitle>
-                      <CardDescription className="text-[length:var(--text-base)] text-[var(--text-secondary)]">
+                      <CardDescription className="text-[length:var(--text-base)] text-text-secondary">
                         {t('states.approved.description')}
                       </CardDescription>
                     </div>
                   </CardHeader>
                   {order.tier === 'express' && (
                     <CardContent>
-                      <p className="text-[length:var(--text-sm)] text-[var(--brand-primary)] font-[number:var(--font-medium)]">
+                      <p className="text-[length:var(--text-sm)] text-brand-primary font-[number:var(--font-medium)]">
                         {t('states.approved.expressNotice')}
                       </p>
                     </CardContent>
@@ -143,16 +143,16 @@ export default async function DashboardPage() {
               )}
 
               {order.status === 'submitted' && (
-                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-[var(--bg-surface)] border-[var(--border-default)]">
+                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-surface border-border-default">
                   <CardHeader className="flex flex-row items-center gap-[length:var(--space-4)] space-y-0">
-                    <div className="h-12 w-12 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center text-[var(--brand-primary)] shrink-0">
+                    <div className="h-12 w-12 rounded-full bg-subtle flex items-center justify-center text-brand-primary shrink-0">
                       <Send className="h-6 w-6" />
                     </div>
                     <div>
-                      <CardTitle className="text-[length:var(--text-xl)] text-[var(--text-primary)]">
+                      <CardTitle className="text-[length:var(--text-xl)] text-text-primary">
                         {t('states.submitted.title')}
                       </CardTitle>
-                      <CardDescription className="text-[length:var(--text-base)] text-[var(--text-secondary)]">
+                      <CardDescription className="text-[length:var(--text-base)] text-text-secondary">
                         {t('states.submitted.description')}
                       </CardDescription>
                     </div>
@@ -162,26 +162,26 @@ export default async function DashboardPage() {
 
               {/* Delivered State: Final NIF delivery with prominent mono-spaced display */}
               {order.status === 'delivered' && (
-                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-lg)] bg-[var(--bg-surface)] border-[var(--status-success)] border-2">
+                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-lg)] bg-surface border-success border-2">
                   <CardHeader className="flex flex-row items-center gap-[length:var(--space-4)] space-y-0 text-center sm:text-left">
-                    <div className="h-12 w-12 rounded-full bg-[var(--status-success)] flex items-center justify-center text-[var(--text-on-accent)] shrink-0">
+                    <div className="h-12 w-12 rounded-full bg-success flex items-center justify-center text-on-accent shrink-0">
                       <CheckCircle2 className="h-6 w-6" />
                     </div>
                     <div className="flex-1">
-                      <CardTitle className="text-[length:var(--text-2xl)] text-[var(--status-success)]">
+                      <CardTitle className="text-[length:var(--text-2xl)] text-success">
                         {t('states.delivered.title')}
                       </CardTitle>
-                      <CardDescription className="text-[length:var(--text-base)] text-[var(--text-secondary)]">
+                      <CardDescription className="text-[length:var(--text-base)] text-text-secondary">
                         {t('states.delivered.description')}
                       </CardDescription>
                     </div>
                   </CardHeader>
                   <CardContent className="flex flex-col items-center sm:items-start gap-[length:var(--space-4)]">
-                    <div className="bg-[var(--bg-subtle)] p-[length:var(--space-6)] rounded-[length:var(--radius-lg)] border border-[var(--border-subtle)] w-full text-center">
-                      <div className="text-[length:var(--text-sm)] text-[var(--text-muted)] uppercase tracking-widest font-[number:var(--font-bold)] mb-[length:var(--space-2)]">
+                    <div className="bg-subtle p-[length:var(--space-6)] rounded-[length:var(--radius-lg)] border border-border-subtle w-full text-center">
+                      <div className="text-[length:var(--text-sm)] text-text-muted uppercase tracking-widest font-[number:var(--font-bold)] mb-[length:var(--space-2)]">
                         {t('states.delivered.nifLabel')}
                       </div>
-                      <div className="text-[length:var(--text-4xl)] text-[var(--text-primary)] font-[number:var(--font-bold)] font-mono tracking-tighter">
+                      <div className="text-[length:var(--text-4xl)] text-text-primary font-[number:var(--font-bold)] font-mono tracking-tighter">
                         {order.nifNumber || '--- --- ---'}
                       </div>
                     </div>
@@ -190,12 +190,12 @@ export default async function DashboardPage() {
               )}
 
               {/* Support Contact */}
-              <div className="pt-[length:var(--space-8)] border-t border-[var(--border-subtle)]">
-                <div className="flex items-center gap-[length:var(--space-3)] text-[var(--text-secondary)]">
+              <div className="pt-[length:var(--space-8)] border-t border-border-subtle">
+                <div className="flex items-center gap-[length:var(--space-3)] text-text-secondary">
                   <Mail className="h-5 w-5" />
                   <p className="text-[length:var(--text-sm)]">
                     {tc('support.needHelp')}{' '}
-                    <a href="mailto:support@remotenif.com" className="text-[var(--brand-primary)] font-[number:var(--font-medium)] hover:underline">
+                    <a href="mailto:support@remotenif.com" className="text-brand-primary font-[number:var(--font-medium)] hover:underline">
                       support@remotenif.com
                     </a>
                   </p>

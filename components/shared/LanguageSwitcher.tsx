@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useLocale } from 'next-intl'
 import { useRouter, usePathname } from '@/i18n/navigation'
@@ -26,8 +26,8 @@ export function LanguageSwitcher() {
 
   return (
     <div className="relative inline-flex items-center gap-[length:var(--space-1)] cursor-pointer">
-      <Globe className="h-4 w-4 text-[var(--text-secondary)] pointer-events-none" />
-      <span className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-[var(--text-secondary)] uppercase pointer-events-none">
+      <Globe className="h-4 w-4 text-text-secondary pointer-events-none" />
+      <span className="text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-text-secondary uppercase pointer-events-none">
         {locale}
       </span>
       {/* Transparent native select sits on top — handles dropdown + keyboard nav */}

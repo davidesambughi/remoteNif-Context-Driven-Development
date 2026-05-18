@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+﻿import { useTranslations } from 'next-intl'
 
 interface StepCardProps {
   number: string
@@ -9,18 +9,18 @@ interface StepCardProps {
 // Single step card with oversized number as visual anchor
 function StepCard({ number, title, description }: StepCardProps) {
   return (
-    <div className="bg-[var(--bg-surface)] rounded-[length:var(--radius-lg)] p-5 shadow-[var(--shadow-md)]">
+    <div className="bg-surface rounded-[length:var(--radius-lg)] p-5 shadow-[var(--shadow-md)]">
       <span
-        className="block text-[length:var(--text-4xl)] font-[number:var(--font-bold)] text-[var(--brand-primary)] leading-none"
+        className="block text-[length:var(--text-4xl)] font-[number:var(--font-bold)] text-brand-primary leading-none"
         style={{ opacity: 0.2 }}
         aria-hidden="true"
       >
         {number}
       </span>
-      <h3 className="mt-2 text-[length:var(--text-lg)] font-[number:var(--font-semibold)] text-[var(--text-primary)]">
+      <h3 className="mt-2 text-[length:var(--text-lg)] font-[number:var(--font-semibold)] text-text-primary">
         {title}
       </h3>
-      <p className="mt-1 text-[length:var(--text-sm)] text-[var(--text-secondary)] leading-[var(--leading-relaxed)]">
+      <p className="mt-1 text-[length:var(--text-sm)] text-text-secondary leading-[var(--leading-relaxed)]">
         {description}
       </p>
     </div>
@@ -34,10 +34,10 @@ export function HowItWorksSection() {
   return (
     <section id="how-it-works" className="bg-[var(--bg-base)] px-4 py-12">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-[var(--text-primary)]">
+        <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
           {t('title')}
         </h2>
-        <p className="mt-2 text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+        <p className="mt-2 text-[length:var(--text-sm)] text-text-secondary">
           {t('subtitle')}
         </p>
 

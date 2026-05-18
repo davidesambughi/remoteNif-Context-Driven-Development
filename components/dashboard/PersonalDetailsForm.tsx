@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -165,11 +165,11 @@ export function PersonalDetailsForm({
     const values = form.getValues()
     return (
       <div className="space-y-8">
-        <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-[var(--bg-surface)] border-[var(--border-default)]">
+        <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-surface border-border-default">
           <CardHeader className="flex flex-row items-start justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-[var(--status-success)] shrink-0" />
+                <CheckCircle2 className="h-5 w-5 text-success shrink-0" />
                 <CardTitle className="text-text-primary">{t('title')}</CardTitle>
               </div>
               <CardDescription className="text-text-secondary">
@@ -215,9 +215,9 @@ export function PersonalDetailsForm({
             </dl>
 
             {/* POA section — separated by a divider, inside the same card */}
-            <div className="mt-6 pt-6 border-t border-[var(--border-default)]">
+            <div className="mt-6 pt-6 border-t border-border-default">
               <div className="flex items-center gap-2 mb-1">
-                <FileText className="h-4 w-4 text-[var(--text-secondary)]" />
+                <FileText className="h-4 w-4 text-text-secondary" />
                 <h3 className="text-sm font-semibold text-primary">{t('poa.sectionTitle')}</h3>
               </div>
               <p className="text-sm text-muted mb-4">{t('poa.sectionDescription')}</p>
@@ -230,7 +230,7 @@ export function PersonalDetailsForm({
               {/* State: POA ready — show download link */}
               {poaUrl ? (
                 <div className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-[var(--status-success)] shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-success shrink-0" />
                   <span className="text-sm text-primary">{t('poa.ready')}</span>
                   <Button variant="outline" size="sm" asChild>
                     <a href={poaUrl} target="_blank" rel="noopener noreferrer">
@@ -243,7 +243,7 @@ export function PersonalDetailsForm({
                 /* State: generating or idle — show generate button */
                 <div className="flex flex-col gap-2">
                   {poaError && (
-                    <p className="text-sm text-[var(--status-error)]">{t('poa.error')}</p>
+                    <p className="text-sm text-error">{t('poa.error')}</p>
                   )}
                   <Button
                     onClick={handleGenerate}
@@ -289,7 +289,7 @@ export function PersonalDetailsForm({
   // Shown on first visit (no saved details) or after the user clicks "Edit".
   return (
     <div className="space-y-8">
-      <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-[var(--bg-surface)] border-[var(--border-default)]">
+      <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-surface border-border-default">
         <CardHeader>
           <CardTitle className="text-text-primary">{t('title')}</CardTitle>
           <CardDescription className="text-text-secondary">

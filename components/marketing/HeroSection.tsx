@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+﻿import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 
@@ -11,10 +11,10 @@ interface StatItemProps {
 function StatItem({ value, label }: StatItemProps) {
   return (
     <div className="flex flex-col gap-[length:var(--space-1)]">
-      <span className="text-[length:var(--text-xl)] font-[number:var(--font-bold)] text-[var(--text-primary)]">
+      <span className="text-[length:var(--text-xl)] font-[number:var(--font-bold)] text-text-primary">
         {value}
       </span>
-      <span className="text-[length:var(--text-xs)] text-[var(--text-muted)]">{label}</span>
+      <span className="text-[length:var(--text-xs)] text-text-muted">{label}</span>
     </div>
   )
 }
@@ -24,13 +24,13 @@ export function HeroSection() {
   const t = useTranslations('home.hero')
 
   return (
-    <section className="bg-[var(--bg-surface)] px-4 pt-10 pb-8">
+    <section className="bg-surface px-4 pt-10 pb-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-[length:var(--text-3xl)] md:text-[length:var(--text-4xl)] font-[number:var(--font-bold)] leading-[var(--leading-tight)] text-[var(--text-primary)]">
+        <h1 className="text-[length:var(--text-3xl)] md:text-[length:var(--text-4xl)] font-[number:var(--font-bold)] leading-[var(--leading-tight)] text-text-primary">
           {t('headline')}
         </h1>
 
-        <p className="text-[length:var(--text-base)] text-[var(--text-secondary)] mt-3 leading-[var(--leading-relaxed)]">
+        <p className="text-[length:var(--text-base)] text-text-secondary mt-3 leading-[var(--leading-relaxed)]">
           {t('subheadline')}
         </p>
 
@@ -43,7 +43,7 @@ export function HeroSection() {
         </Button>
 
         {/* 2×2 stats grid — honest product facts, no made-up social proof */}
-        <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[var(--border-subtle)] pt-6">
+        <div className="mt-8 grid grid-cols-2 gap-4 border-t border-border-subtle pt-6">
           <StatItem value={t('stat1Value')} label={t('stat1Label')} />
           <StatItem value={t('stat2Value')} label={t('stat2Label')} />
           <StatItem value={t('stat3Value')} label={t('stat3Label')} />
