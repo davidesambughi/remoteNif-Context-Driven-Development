@@ -42,8 +42,8 @@ export function HeroSection() {
           <a href="#how-it-works">{t('learnMore')}</a>
         </Button>
 
-        {/* 2×2 stats grid — honest product facts, no made-up social proof */}
-        <div className="mt-8 grid grid-cols-2 gap-4 border-t border-border-subtle pt-6">
+        {/* 2×2 stats grid — brand-tinted background makes it feel distinct from the text above */}
+        <div className="mt-8 grid grid-cols-2 gap-4 bg-brand-primary-dim rounded-[length:var(--radius-lg)] p-[length:var(--space-6)]">
           <StatItem value={t('stat1Value')} label={t('stat1Label')} />
           <StatItem value={t('stat2Value')} label={t('stat2Label')} />
           <StatItem value={t('stat3Value')} label={t('stat3Label')} />

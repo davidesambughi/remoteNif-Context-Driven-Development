@@ -15,20 +15,38 @@ export function FAQSection() {
   return (
     <section className="bg-surface px-4 py-12">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
-          {t('title')}
-        </h2>
-        <p className="mt-2 text-[length:var(--text-sm)] text-text-secondary">
-          {t('subtitle')}
-        </p>
+        <div className="border-l-4 border-brand-primary pl-[length:var(--space-4)]">
+          <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
+            {t('title')}
+          </h2>
+          <p className="mt-2 text-[length:var(--text-sm)] text-text-secondary">
+            {t('subtitle')}
+          </p>
+        </div>
 
         <Accordion type="single" collapsible className="mt-6">
           {FAQ_KEYS.map((key) => (
-            <AccordionItem key={key} value={`item-${key}`}>
-              <AccordionTrigger className="text-left text-[length:var(--text-sm)] font-[number:var(--font-medium)] text-text-primary">
+            <AccordionItem
+              key={key}
+              value={`item-${key}`}
+              className="border-b border-brand-primary/30"
+            >
+              <AccordionTrigger
+                className={[
+                  'text-left text-[length:var(--text-base)] font-[number:var(--font-semibold)] text-text-primary',
+                  // chevron inherits text color; open state turns the whole trigger brand-primary
+                  'data-[state=open]:text-brand-primary',
+                  '[&>svg]:text-brand-primary [&>svg]:shrink-0',
+                ].join(' ')}
+              >
                 {t(`q${key}`)}
               </AccordionTrigger>
-              <AccordionContent className="text-[length:var(--text-sm)] text-text-secondary leading-[var(--leading-relaxed)]">
+              <AccordionContent
+                className={[
+                  'text-[length:var(--text-sm)] text-text-secondary leading-[var(--leading-relaxed)]',
+                  'border-l-2 border-brand-primary/40 pl-[length:var(--space-4)] ml-[length:var(--space-1)]',
+                ].join(' ')}
+              >
                 {t(`a${key}`)}
               </AccordionContent>
             </AccordionItem>

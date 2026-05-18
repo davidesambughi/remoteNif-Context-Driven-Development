@@ -19,6 +19,7 @@
   --color-slate-50: oklch(98% 0.006 264);
   --color-slate-100: oklch(96% 0.008 264);
   --color-slate-200: oklch(92% 0.01 264);
+  --color-slate-300: oklch(88% 0.011 264);
   --color-slate-500: oklch(62% 0.02 264);
   --color-slate-700: oklch(45% 0.03 264);
   --color-slate-950: oklch(22% 0.04 264);
@@ -61,9 +62,9 @@
       BORDERS — emphasis scale
       subtle → default → strong
       ========================================== */
-  --border-default: var(--color-slate-200);
+  --border-default: var(--color-slate-300);
   /* Standard card and input borders */
-  --border-subtle: var(--color-slate-100);
+  --border-subtle: var(--color-slate-200);
   /* Light dividers, section separators */
   --border-strong: var(--color-slate-950);
   /* Emphasis borders, focused elements */
@@ -85,6 +86,10 @@
   --status-warning: var(--color-amber-500);
   --status-error: var(--color-rose-600);
   --status-info: var(--color-sky-500);
+  /* Subtle tinted backgrounds for state-bearing surfaces (8% opacity on white) */
+  --status-success-subtle: oklch(70% 0.14 165 / 0.08);
+  --status-warning-subtle: oklch(78% 0.13 75 / 0.08);
+  --status-error-subtle: oklch(62% 0.18 25 / 0.08);
 
   /* ==========================================
       TYPOGRAPHY
@@ -259,6 +264,9 @@
   --color-warning: var(--status-warning);
   --color-error: var(--status-error);
   --color-info: var(--status-info);
+  --color-success-subtle: var(--status-success-subtle);
+  --color-warning-subtle: var(--status-warning-subtle);
+  --color-error-subtle: var(--status-error-subtle);
 
   /* Fonts */
   --font-family-sans: var(--font-sans);

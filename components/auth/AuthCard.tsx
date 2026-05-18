@@ -18,7 +18,7 @@ export default async function AuthCard({ title, children }: AuthCardProps) {
 
       {/* Card */}
       <div
-        className="w-full bg-surface border border-border-default shadow-[var(--shadow-md)] rounded-[length:var(--radius-xl)] p-[length:var(--space-8)]"
+        className="w-full bg-surface border border-border-default border-t-4 border-t-brand-primary shadow-[var(--shadow-md)] rounded-[length:var(--radius-xl)] p-[length:var(--space-8)]"
       >
         <h1 className="text-[length:var(--text-xl)] font-[number:var(--font-bold)] text-text-primary mb-[length:var(--space-6)]">
           {title}

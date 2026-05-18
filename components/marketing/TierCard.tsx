@@ -57,7 +57,7 @@ export function TierCard({
     <Card
       className={[
         'relative flex flex-col p-[length:var(--space-8)] shadow-[var(--shadow-md)]',
-        isFeatured ? 'border-2 border-brand-secondary' : '',
+        isFeatured ? 'border-2 border-brand-secondary bg-brand-primary-dim' : '',
       ]
         .filter(Boolean)
         .join(' ')}

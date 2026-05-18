@@ -165,7 +165,7 @@ export function PersonalDetailsForm({
     const values = form.getValues()
     return (
       <div className="space-y-8">
-        <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-surface border-border-default">
+        <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-md)] bg-success-subtle border-success">
           <CardHeader className="flex flex-row items-start justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">

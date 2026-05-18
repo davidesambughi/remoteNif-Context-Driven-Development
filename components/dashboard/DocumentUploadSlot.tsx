@@ -43,31 +43,37 @@ const STATE_CONFIG = {
     border: 'border-border-default',
     iconBg: 'bg-subtle',
     iconColor: 'text-text-secondary',
+    cardBg: 'bg-surface',
   },
   uploading: {
     border: 'border-border-default',
     iconBg: 'bg-subtle',
     iconColor: 'text-text-muted',
+    cardBg: 'bg-surface',
   },
   pending_review: {
     border: 'border-warning',
     iconBg: 'bg-warning',
     iconColor: 'text-on-accent',
+    cardBg: 'bg-warning-subtle',
   },
   approved: {
     border: 'border-success',
     iconBg: 'bg-success',
     iconColor: 'text-on-accent',
+    cardBg: 'bg-success-subtle',
   },
   flagged: {
     border: 'border-error',
     iconBg: 'bg-error',
     iconColor: 'text-on-accent',
+    cardBg: 'bg-error-subtle',
   },
   manual_review: {
     border: 'border-warning',
     iconBg: 'bg-warning',
     iconColor: 'text-on-accent',
+    cardBg: 'bg-warning-subtle',
   },
 } as const
 
@@ -193,11 +199,12 @@ export function DocumentUploadSlot({
   return (
     <div
       className={[
-        'bg-surface border rounded-[length:var(--radius-lg)]',
+        'border rounded-[length:var(--radius-lg)]',
         'shadow-[var(--shadow-sm)] p-[length:var(--space-5)]',
         'flex items-center gap-[length:var(--space-4)]',
         'transition-colors duration-200',
         cfg.border,
+        cfg.cardBg,
         disabled ? 'opacity-50' : '',
       ].join(' ')}
     >
