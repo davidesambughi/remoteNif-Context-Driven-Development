@@ -14,7 +14,7 @@ Active development. Features 01–07b complete.
 
 ## Current Goal
 
-Feature 10b — Document Upload UI.
+Feature 11 — AI Document Review.
 
 ---
 
@@ -83,6 +83,9 @@ Feature 10b — Document Upload UI.
 - **Feature 10a — Storage Infrastructure & Security** ✓
   `lib/validations/documents.ts` created (`CreateUploadUrlSchema`, `UploadDocumentSchema`). `lib/db/queries.ts` extended with `getOrderForUser` (ownership gate), `createDocumentRecord`, `supersedePreviousDocuments` (soft-delete via `supersededAt`). `app/actions/documents.ts` created with `createUploadSignedUrl` (admin client, signed upload URL, timestamp-prefixed path `{userId}/{orderId}/{ts}-{file}`) and `uploadDocument` (soft-deletes prior upload of same type, inserts record, instant-approves `signed_poa`, sets `aiReviewStatus: 'pending'` for passport/proof_of_address). `npm run build` passes (41 static pages).
   Supabase `documents` bucket pre-existed. RLS SQL policies (user-own-folder INSERT/SELECT + admin SELECT/DELETE) to be verified in Supabase dashboard — see feature spec for SQL.
+
+- **Feature 10b — Document Upload UI** ✓
+  `documents` i18n namespace added to all 4 locale files (upload button, state labels, disabled reasons, error messages). `components/dashboard/DocumentUploadSlot.tsx` built as a Client Component: manages `SlotStatus` state machine (`idle → uploading → pending_review | approved`), runs client-side pre-flight (size ≤ 10 MB, allowed MIME types), calls `createUploadSignedUrl` → PUT to signed URL → `uploadDocument`, calls `router.refresh()` on success. `signed_poa` transitions directly to `approved`; passport/proof_of_address go to `pending_review`. `PersonalDetailsForm` updated: placeholder div grids replaced with `DocumentUploadSlot` in both the saved and editing branches; `slots` array computed from live `isSaved`/`poaUrl` state so slots unlock instantly without a page refresh. `npm run build` passes (41 static pages).
 
 ## In Progress
 

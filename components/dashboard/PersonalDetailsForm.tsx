@@ -30,6 +30,7 @@ import { PersonalDetailsSchema } from '@/lib/validations/orders'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 import { savePersonalDetails, generatePoa } from '@/app/actions/orders'
 import { COUNTRIES } from '@/lib/utils/countries'
+import { DocumentUploadSlot } from '@/components/dashboard/DocumentUploadSlot'
 
 interface PersonalDetailsFormProps {
   orderId: string
@@ -68,11 +69,33 @@ export function PersonalDetailsForm({
   // Tracks whether the user had a POA and then edited their details — triggers the regenerate notice
   const [hadPoaBefore, setHadPoaBefore] = useState(false)
 
-  // Pre-resolve translations for the doc slot types (strict i18n typing requirement)
-  const docSlots = [
-    { id: 'passport', title: t('docs.passport.title'), description: t('docs.passport.description') },
-    { id: 'proofOfAddress', title: t('docs.proofOfAddress.title'), description: t('docs.proofOfAddress.description') },
-    { id: 'signedPoa', title: t('docs.signedPoa.title'), description: t('docs.signedPoa.description') },
+  // Upload slot definitions — disabled/disabledReason are derived from live state so
+  // slots unlock immediately when the user saves details or generates the POA.
+  const slots = [
+    {
+      id: 'passport',
+      type: 'passport' as const,
+      label: t('docs.passport.title'),
+      description: t('docs.passport.description'),
+      disabled: !isSaved,
+      disabledReason: (!isSaved ? 'details' : null) as 'details' | 'poa' | null,
+    },
+    {
+      id: 'proofOfAddress',
+      type: 'proof_of_address' as const,
+      label: t('docs.proofOfAddress.title'),
+      description: t('docs.proofOfAddress.description'),
+      disabled: !isSaved,
+      disabledReason: (!isSaved ? 'details' : null) as 'details' | 'poa' | null,
+    },
+    {
+      id: 'signedPoa',
+      type: 'signed_poa' as const,
+      label: t('docs.signedPoa.title'),
+      description: t('docs.signedPoa.description'),
+      disabled: !isSaved || !poaUrl,
+      disabledReason: (!isSaved ? 'details' : !poaUrl ? 'poa' : null) as 'details' | 'poa' | null,
+    },
   ]
 
   const form = useForm<PersonalDetailsData>({
@@ -242,21 +265,20 @@ export function PersonalDetailsForm({
           </CardContent>
         </Card>
 
-        {/* Upload slots — unlocked because details are saved */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {docSlots.map((slot) => (
-            <div
+        {/* Upload slots — enabled state depends on isSaved and poaUrl */}
+        <div className="space-y-[length:var(--space-3)]">
+          {slots.map((slot) => (
+            <DocumentUploadSlot
               key={slot.id}
-              className="relative p-6 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center gap-3 transition-base border-border-default bg-surface hover:border-brand-primary"
-            >
-              <div className="p-3 rounded-full bg-brand-primary-dim text-brand-primary">
-                <AlertCircle className="h-6 w-6" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-semibold text-text-primary">{slot.title}</h3>
-                <p className="text-sm text-text-muted">{slot.description}</p>
-              </div>
-            </div>
+              orderId={orderId}
+              type={slot.type}
+              label={slot.label}
+              description={slot.description}
+              disabled={slot.disabled}
+              disabledReason={slot.disabledReason}
+              initialStatus="idle"
+              initialFlagReason={null}
+            />
           ))}
         </div>
       </div>
@@ -433,22 +455,20 @@ export function PersonalDetailsForm({
         </CardContent>
       </Card>
 
-      {/* Upload slots — locked until details are saved */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {docSlots.map((slot) => (
-          <div
+      {/* Upload slots — all disabled while details are being edited */}
+      <div className="space-y-[length:var(--space-3)]">
+        {slots.map((slot) => (
+          <DocumentUploadSlot
             key={slot.id}
-            className="relative p-6 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center gap-3 transition-base border-border-subtle bg-subtle opacity-50 cursor-not-allowed"
-            title={t('uploadGate.tooltip')}
-          >
-            <div className="p-3 rounded-full bg-[var(--bg-base)] text-text-muted">
-              <AlertCircle className="h-6 w-6" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-semibold text-text-muted">{slot.title}</h3>
-              <p className="text-sm text-text-muted">{slot.description}</p>
-            </div>
-          </div>
+            orderId={orderId}
+            type={slot.type}
+            label={slot.label}
+            description={slot.description}
+            disabled={slot.disabled}
+            disabledReason={slot.disabledReason}
+            initialStatus="idle"
+            initialFlagReason={null}
+          />
         ))}
       </div>
     </div>

@@ -284,5 +284,26 @@
         "required": "Die Adresse muss mindestens 5 Zeichen lang sein."
       }
     }
+  },
+  "documents": {
+    "upload": {
+      "button": "Hochladen",
+      "reUpload": "Erneut hochladen"
+    },
+    "states": {
+      "uploading": "Wird hochgeladen…",
+      "pendingReview": "In Prüfung",
+      "approved": "Genehmigt",
+      "manualReview": "Unser Team wird Ihr Dokument innerhalb von 4 Stunden prüfen"
+    },
+    "disabled": {
+      "details": "Vervollständigen Sie zuerst Ihre persönlichen Daten, um den Dokument-Upload freizuschalten",
+      "poa": "Generieren und laden Sie zuerst Ihre Vollmacht herunter, dann laden Sie die unterzeichnete Kopie hier hoch"
+    },
+    "errors": {
+      "fileTooLarge": "Die Datei muss kleiner als 10 MB sein",
+      "invalidType": "Nur PDF-, JPG- und PNG-Dateien werden akzeptiert",
+      "uploadFailed": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut."
+    }
   }
 }

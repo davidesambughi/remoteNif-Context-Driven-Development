@@ -284,5 +284,26 @@
         "required": "Address must be at least 5 characters."
       }
     }
+  },
+  "documents": {
+    "upload": {
+      "button": "Upload",
+      "reUpload": "Re-upload"
+    },
+    "states": {
+      "uploading": "Uploading…",
+      "pendingReview": "Under review",
+      "approved": "Approved",
+      "manualReview": "Our team will review your document within 4 hours"
+    },
+    "disabled": {
+      "details": "Complete your personal details first to unlock document upload",
+      "poa": "Generate and download your POA first, then upload the signed copy here"
+    },
+    "errors": {
+      "fileTooLarge": "File must be under 10 MB",
+      "invalidType": "Only PDF, JPG, and PNG files are accepted",
+      "uploadFailed": "Upload failed. Please try again."
+    }
   }
 }

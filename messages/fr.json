@@ -284,5 +284,26 @@
         "required": "L'adresse doit comporter au moins 5 caractères."
       }
     }
+  },
+  "documents": {
+    "upload": {
+      "button": "Téléverser",
+      "reUpload": "Retéléverser"
+    },
+    "states": {
+      "uploading": "Téléversement…",
+      "pendingReview": "En cours d'examen",
+      "approved": "Approuvé",
+      "manualReview": "Notre équipe examinera votre document dans les 4 heures"
+    },
+    "disabled": {
+      "details": "Complétez d'abord vos informations personnelles pour déverrouiller le téléversement de documents",
+      "poa": "Générez et téléchargez votre procuration d'abord, puis téléversez la copie signée ici"
+    },
+    "errors": {
+      "fileTooLarge": "Le fichier doit faire moins de 10 Mo",
+      "invalidType": "Seuls les fichiers PDF, JPG et PNG sont acceptés",
+      "uploadFailed": "Échec du téléversement. Veuillez réessayer."
+    }
   }
 }

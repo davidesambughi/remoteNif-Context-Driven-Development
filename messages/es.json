@@ -284,5 +284,26 @@
         "required": "La dirección debe tener al menos 5 caracteres."
       }
     }
+  },
+  "documents": {
+    "upload": {
+      "button": "Subir",
+      "reUpload": "Volver a subir"
+    },
+    "states": {
+      "uploading": "Subiendo…",
+      "pendingReview": "En revisión",
+      "approved": "Aprobado",
+      "manualReview": "Nuestro equipo revisará tu documento en un plazo de 4 horas"
+    },
+    "disabled": {
+      "details": "Completa primero tus datos personales para desbloquear la subida de documentos",
+      "poa": "Genera y descarga tu poder notarial primero, luego sube la copia firmada aquí"
+    },
+    "errors": {
+      "fileTooLarge": "El archivo debe ser menor de 10 MB",
+      "invalidType": "Solo se aceptan archivos PDF, JPG y PNG",
+      "uploadFailed": "Error al subir. Por favor, inténtalo de nuevo."
+    }
   }
 }

@@ -342,6 +342,8 @@ Notes:
 
 - Verify current AI/document review integration approach (Google Gemini API) before implementation.
 - AI flag reasons shown to customers must use `next-intl` translation keys — do NOT surface raw AI output as user-facing copy. Map AI responses to predefined error keys.
+- The UI must include a 30-second timeout fallback (graceful degradation) transitioning the badge to "Still reviewing…" if the AI is slow.
+- Cross-slot locking (locking other approved document slots when one is flagged) and hydrating the UI from the database should be implemented here, as deferred from 10b.
 
 Depends on: 10b.
 
