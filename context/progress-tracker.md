@@ -14,7 +14,7 @@ Active development. Features 01–07b complete.
 
 ## Current Goal
 
-Feature 10 — Document Uploads.
+Feature 10b — Document Upload UI.
 
 ---
 
@@ -79,6 +79,10 @@ Feature 10 — Document Uploads.
 
 - **Hotfix — Personal Details Form UX** ✓
   `PersonalDetailsForm` now has two modes: editing (default, first visit) and saved (post-save / returning user). On successful save the form immediately collapses to a read-only summary card (name, DOB, nationality, passport, address) with a checkmark icon and an "Edit details" button. Clicking "Edit" re-opens the form with values pre-filled. A pre-submit note was added above the save button ("Please double-check your details…"). The `router.refresh()` call was removed — not needed since the state transition is handled locally. Two new i18n keys added (`save.preSubmitNote`, `summary.description`, `summary.editButton`) to all four locale files. `npm run build` passes.
+
+- **Feature 10a — Storage Infrastructure & Security** ✓
+  `lib/validations/documents.ts` created (`CreateUploadUrlSchema`, `UploadDocumentSchema`). `lib/db/queries.ts` extended with `getOrderForUser` (ownership gate), `createDocumentRecord`, `supersedePreviousDocuments` (soft-delete via `supersededAt`). `app/actions/documents.ts` created with `createUploadSignedUrl` (admin client, signed upload URL, timestamp-prefixed path `{userId}/{orderId}/{ts}-{file}`) and `uploadDocument` (soft-deletes prior upload of same type, inserts record, instant-approves `signed_poa`, sets `aiReviewStatus: 'pending'` for passport/proof_of_address). `npm run build` passes (41 static pages).
+  Supabase `documents` bucket pre-existed. RLS SQL policies (user-own-folder INSERT/SELECT + admin SELECT/DELETE) to be verified in Supabase dashboard — see feature spec for SQL.
 
 ## In Progress
 

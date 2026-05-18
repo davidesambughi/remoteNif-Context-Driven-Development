@@ -366,62 +366,85 @@ Depends on: 11a.
 
 ---
 
-## 12 — Customer Emails
+## 12a — Customer Emails (Order Phase)
 
-Add customer email templates and delivery triggers.
+Add customer email templates and delivery triggers for the order phase.
 
 Done when:
 
-- Order and document phase emails exist.
-- Emails are localized.
-- Emails include deep links back to the dashboard.
+- Order confirmation emails exist.
 - Password reset email support is in place.
-- Languages translations must be coherent with other pages.
+- Emails are localized and translations are coherent with other pages.
+- Emails include deep links back to the dashboard.
 
-Notes:
-
-- Consider splitting: order-phase templates and document-phase templates can be built independently.
-
-Depends on: 07, 11.
+Depends on: 07.
 
 ---
 
-## 13 — Admin Panel
+## 12b — Customer Emails (Document Phase)
 
-Build the admin area for review and approvals.
+Add customer email templates and delivery triggers for the document phase.
 
 Done when:
 
-- Admins can view and filter orders.
+- Document review status and approval notification emails exist.
+- Emails are localized and translations are coherent with other pages.
+- Emails include deep links back to the dashboard.
+
+Depends on: 11, 12a.
+
+---
+
+## 13a — Admin Panel (Order List)
+
+Build the admin area order list and filter views.
+
+Done when:
+
+- Admins can view and filter orders in a main table view.
+- **Proxy redirect for admin/operator routes is updated.** Currently `proxy.ts` redirects all unauthenticated users (including admins hitting `/admin/*` and operators hitting `/operator/*`) to the customer `/signin` page. Per `user-flows.md` Flow 6d and 6e, they should be redirected to `/admin/signin` and `/operator/signin` respectively. Fix the proxy's redirect logic when building this feature — it requires detecting the route prefix and choosing the correct sign-in destination.
+
+Depends on: 11, 12b.
+
+---
+
+## 13b — Admin Panel (Order Detail & Actions)
+
+Build the admin order detail view and status update actions.
+
+Done when:
+
 - Order detail views show customer and document data.
 - Admin actions update order/document state.
 - Key actions are logged.
 
-Notes:
-
-- Consider splitting: order list + filter view and order detail + actions are distinct screens.
-- **Proxy redirect for admin/operator routes needs updating.** Currently `proxy.ts` redirects all unauthenticated users (including admins hitting `/admin/*` and operators hitting `/operator/*`) to the customer `/signin` page. Per `user-flows.md` Flow 6d and 6e, they should be redirected to `/admin/signin` and `/operator/signin` respectively. This was deferred from Feature 04 to avoid scope creep. Fix the proxy's redirect logic when building this feature — it requires detecting the route prefix and choosing the correct sign-in destination.
-
-Depends on: 11, 12.
+Depends on: 13a.
 
 ---
 
-## 14 — Operator Queue
+## 14a — Operator Queue (Packaging & Submission)
 
-Build the operator queue and preferences area.
+Build the operator priority queue and submission workflow.
 
 Done when:
 
 - Operators see the queue in the correct priority order.
 - Orders can be packaged and submitted.
+
+Depends on: 13b.
+
+---
+
+## 14b — Operator Queue (Archive & Preferences)
+
+Build the operator archive view and preferences area.
+
+Done when:
+
 - Submitted orders move into an archive view.
 - Operator notification preferences can be updated.
 
-Notes:
-
-- Consider splitting: queue + packaging logic and the archive view + preferences area are independent concerns.
-
-Depends on: 13.
+Depends on: 14a.
 
 ---
 
@@ -458,20 +481,18 @@ Depends on: 15.
 
 ---
 
-## 17 — Account Settings
+## 17a — Account Settings (Security & Deletion)
 
-Add user account settings.
+Add user account security settings and deletion.
 
 Done when:
 
 - Email can be changed securely.
 - Password can be changed securely.
-- Language preference is saved.
 - Account deletion is supported safely.
 
 Notes:
 
-- Consider splitting: email + password changes and account deletion are higher-risk than language preference and can be scoped separately.
 - All new user-facing copy uses next-intl translation keys; add to all four locale files.
 - This feature adds more auth-adjacent forms — evaluate whether a shared form hook is worth introducing to reduce the structural repetition across auth form components.
 
@@ -479,23 +500,54 @@ Depends on: 04.
 
 ---
 
-## 18 — Renewal Flow
+## 17b — Account Settings (Language Preference)
 
-Add fiscal representation renewal support.
+Add user language preference settings.
+
+Done when:
+
+- Language preference is saved.
+- The UI immediately applies the saved language preference.
+
+Notes:
+
+- All new user-facing copy uses next-intl translation keys; add to all four locale files.
+
+Depends on: 17a.
+
+---
+
+## 18a — Renewal Flow (Checkout & Extension)
+
+Add fiscal representation renewal checkout and expiry extension.
+
+Done when:
+
+- Renewal checkout works.
+- Renewal payments extend the relevant expiry.
+
+Notes:
+
+- All new user-facing copy uses next-intl translation keys; add to all four locale files.
+
+Depends on: 15, 16.
+
+---
+
+## 18b — Renewal Flow (Reminders & Expired State)
+
+Add fiscal representation renewal reminders and expired-state handling.
 
 Done when:
 
 - Renewal reminders are sent on schedule.
-- Renewal checkout works.
-- Renewal payments extend the relevant expiry.
 - Expired-state messaging and dismissal are handled properly.
 
 Notes:
 
-- Consider splitting: Stripe renewal checkout + expiry extension and the reminder scheduling + expired-state UI are independent concerns.
 - All new user-facing copy (renewal banner, expiry messaging) uses next-intl translation keys; renewal emails sent in the customer's stored language preference.
 
-Depends on: 15, 16.
+Depends on: 18a.
 
 ---
 
@@ -521,7 +573,7 @@ Notes:
 - Do not add new functionality here. Corrections and copy/state fixes only.
 - All copy changes go through next-intl as usual.
 
-Depends on: 18 (all functional features complete so the full flow can be reviewed).
+Depends on: 18b (all functional features complete so the full flow can be reviewed).
 
 ---
 
@@ -544,7 +596,7 @@ Notes:
 - Locale variants of metadata (translated titles/descriptions) are a stretch goal — English is sufficient for launch.
 - Do not add per-page metadata before this feature — the base template in root layout is enough until here.
 
-Depends on: 18 (all pages must exist to write meaningful metadata).
+Depends on: 18b (all pages must exist to write meaningful metadata).
 
 ---
 
@@ -573,7 +625,7 @@ Depends on: 20 (all features complete).
 
 ## Notes
 
-- Feature 17 can be built in parallel with 08–16 after auth is ready.
+- Features 17a and 17b can be built in parallel with 08–16 after auth is ready.
 - Features 05 and 06 can be built in parallel with 07 after auth is ready.
 - Do not start a feature until its dependencies are complete.
 - Mark progress in `progress-tracker.md` as each feature finishes.

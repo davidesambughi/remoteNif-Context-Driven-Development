@@ -1,6 +1,6 @@
 # 10a — Storage Infrastructure & Security
 
-Read `context/AGENTS.md`, `context/progress-tracker.md`, `context/architecture-context.md`, `context/tech-spec.md` before starting.
+Read `context/-AGENTS.md`, `context/progress-tracker.md`, `context/architecture-context.md`, `context/tech-spec.md` before starting.
 
 Set up the Supabase Storage bucket, configure Row Level Security (RLS) policies, and implement the Server Actions for secure document upload tracking in the database.
 
@@ -32,18 +32,18 @@ Set up the Supabase Storage bucket, configure Row Level Security (RLS) policies,
 // lib/validations/documents.ts
 export const UploadDocumentSchema = z.object({
   orderId: z.string().uuid(),
-  type: z.enum(['passport', 'proof_of_address', 'signed_poa']),
+  type: z.enum(["passport", "proof_of_address", "signed_poa"]),
   filePath: z.string(),
   fileName: z.string(),
   fileSize: z.number().max(10 * 1024 * 1024), // 10MB
   mimeType: z.string().regex(/^(application\/pdf|image\/jpeg|image\/png)$/),
-})
+});
 
 export const CreateUploadUrlSchema = z.object({
   orderId: z.string().uuid(),
   fileName: z.string(),
   contentType: z.string(),
-})
+});
 ```
 
 ---

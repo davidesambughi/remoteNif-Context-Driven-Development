@@ -1,9 +1,9 @@
 // Reusable DB queries — populated by feature specs as each feature is built.
 
-import { eq, desc, and } from 'drizzle-orm'
+import { eq, desc, and, isNull } from 'drizzle-orm'
 import { db } from '@/lib/db'
-import { users, orders } from '@/lib/db/schema'
-import type { SelectUser, SelectOrder } from '@/lib/db/schema'
+import { users, orders, documents } from '@/lib/db/schema'
+import type { SelectUser, SelectOrder, SelectDocument, InsertDocument } from '@/lib/db/schema'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 
 /** Fetches a user record by their primary ID. */
@@ -67,6 +67,55 @@ export async function updateOrderPoaPath(
     .update(orders)
     .set({ poaGeneratedPath: path, updatedAt: new Date() })
     .where(and(eq(orders.id, orderId), eq(orders.userId, userId)))
+}
+
+/**
+ * Verifies that an order exists and belongs to the given user.
+ * Returns the order row or null — used as an ownership gate in Server Actions.
+ */
+export async function getOrderForUser(
+  orderId: string,
+  userId: string,
+): Promise<SelectOrder | null> {
+  const result = await db
+    .select()
+    .from(orders)
+    .where(and(eq(orders.id, orderId), eq(orders.userId, userId)))
+    .limit(1)
+  return result[0] ?? null
+}
+
+/**
+ * Inserts a new document record into the documents table.
+ * id, createdAt, and updatedAt are handled by the database.
+ */
+export async function createDocumentRecord(
+  data: Omit<InsertDocument, 'id' | 'createdAt' | 'updatedAt'>,
+): Promise<SelectDocument> {
+  const result = await db.insert(documents).values(data).returning()
+  const record = result[0]
+  if (!record) throw new Error('Document insert returned no rows')
+  return record
+}
+
+/**
+ * Soft-deletes all active (supersededAt = null) documents of a given type for an order.
+ * Called before inserting a replacement upload so old records are kept for audit.
+ */
+export async function supersedePreviousDocuments(
+  orderId: string,
+  type: 'passport' | 'proof_of_address' | 'signed_poa',
+): Promise<void> {
+  await db
+    .update(documents)
+    .set({ supersededAt: new Date(), updatedAt: new Date() })
+    .where(
+      and(
+        eq(documents.orderId, orderId),
+        eq(documents.type, type),
+        isNull(documents.supersededAt),
+      ),
+    )
 }
 
 /**
