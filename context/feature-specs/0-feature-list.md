@@ -622,6 +622,7 @@ Notes:
 - A high-fidelity mockup or design reference should be provided before starting this feature.
 
 **Known issues to address during this feature:**
+
 - `--bg-elevated` is identical to `--bg-surface` (both white) — no elevation contrast between cards and modals. Give `--bg-elevated` a distinct value before the polish pass.
 - The status-subtle background pattern was introduced in Feature 10b cleanup: any surface that carries a status (`pending`, `approved`, `flagged`, etc.) should use `bg-warning-subtle` / `bg-success-subtle` / `bg-error-subtle` as the card background, plus a matching colored border and icon. This pattern is already applied on `DocumentUploadSlot` and the `PersonalDetailsForm` summary card — apply it consistently to any new state-bearing surfaces added in later features.
 - Brand color moments: each major section should have one deliberate brand-color anchor (e.g. brand-tinted background block, brand top border on a card). Currently applied on `AuthCard` (top border) and `HeroSection` stats grid (tinted block). Extend this pattern to new pages during the polish pass.
