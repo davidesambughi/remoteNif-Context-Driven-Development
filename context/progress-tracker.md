@@ -8,7 +8,7 @@
 
 ## Current Phase
 
-Active development. Features 01–07b complete.
+Active development. Features 01–10b complete.
 
 ---
 
@@ -87,11 +87,15 @@ Feature 11 — AI Document Review.
 - **Feature 10b — Document Upload UI** ✓
   `documents` i18n namespace added to all 4 locale files (upload button, state labels, disabled reasons, error messages). `components/dashboard/DocumentUploadSlot.tsx` built as a Client Component: manages `SlotStatus` state machine (`idle → uploading → pending_review | approved`), runs client-side pre-flight (size ≤ 10 MB, allowed MIME types), calls `createUploadSignedUrl` → PUT to signed URL → `uploadDocument`, calls `router.refresh()` on success. `signed_poa` transitions directly to `approved`; passport/proof_of_address go to `pending_review`. `PersonalDetailsForm` updated: placeholder div grids replaced with `DocumentUploadSlot` in both the saved and editing branches; `slots` array computed from live `isSaved`/`poaUrl` state so slots unlock instantly without a page refresh. `npm run build` passes (41 static pages).
 
+- **Design Token Cleanup** ✓
+  Full audit of color token usage across all components. Identified and fixed two categories of violations: (1) color tokens using raw `[var(--...)]` arbitrary syntax instead of the shorthand utilities already defined in `@theme inline` — replaced across all 25+ component and page files; (2) hardcoded Tailwind color classes (`text-gray-500`, `bg-black`, etc.) in `app/error.tsx` — replaced with token equivalents. Spacing/typography/radius/shadow tokens (`[length:var(...)]` syntax) confirmed correct — no shorthand utilities exist for these, so arbitrary syntax is intentional. `bg-[var(--bg-base)]` also intentionally kept as raw var (excluded from `@theme inline` to avoid collision with Tailwind's `text-base` font-size utility). `npm run build` passes.
+
+- **Color & UX Enhancement Pass** ✓
+  `globals.css`: `--border-default` bumped to slate-300 (was slate-200 — near invisible), `--border-subtle` to slate-200 (was slate-100). Added `--status-success-subtle`, `--status-warning-subtle`, `--status-error-subtle` (8% opacity tints) wired into `@theme inline` as `bg-success-subtle` / `bg-warning-subtle` / `bg-error-subtle`. Applied the **status-surface pattern** (state-bearing card gets a tinted background + colored border): `DocumentUploadSlot` (pending=amber tint, approved=green tint, flagged=red tint), `PersonalDetailsForm` summary card (green tint + green border when saved). Applied **brand anchor pattern** (one brand-color moment per major section): `AuthCard` (4px brand-primary top border), `HeroSection` stats grid (`bg-brand-primary-dim` block), `TierCard` featured card (`bg-brand-primary-dim` background), `HowItWorksSection` (section background=`bg-brand-primary-dim`, step cards with `border-t-4 border-t-brand-primary`). `FAQSection`: brand-tinted separators (`border-brand-primary/30`), brand chevrons, question text promoted to `text-base font-semibold`, open-state question turns brand-primary, answer text gets a brand left-border accent. Both `HowItWorksSection` and `FAQSection` headings get a `border-l-4 border-brand-primary` accent. Inline `style={{ opacity: 0.2 }}` on step numbers replaced with `opacity-30` Tailwind class. Both patterns documented in Feature 21 notes in `0-feature-list.md`. `npm run build` passes.
+
 ## In Progress
 
 - Nothing.
-
-
 
 ---
 
@@ -99,7 +103,7 @@ Feature 11 — AI Document Review.
 
 - Q4 — SEO content strategy (keyword clusters, cadence, AI vs human copy) — blocking: no — can decide before launch.
 - Q5 — RESOLVED: `@react-pdf/renderer` selected. No existing template; layout designed from scratch in `lib/pdf/poa-template.tsx`. Draft placeholder copy — fiscal rep must review and confirm before launch.
-- Q6 — Supabase Storage bucket setup (Feature 10): private `documents` bucket with access rules required before document upload. Must be covered in the Feature 10 spec. Blocking: yes, for Feature 10.
+- Q6 — RESOLVED: `documents` bucket pre-existed in Supabase. RLS policies applied. Feature 10a complete.
 
 ---
 
