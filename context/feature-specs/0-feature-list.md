@@ -386,6 +386,38 @@ Depends on: 07.
 
 ---
 
+## 12a-T — Test Coverage (Email & Document Review)
+
+Add automated tests for the email infrastructure and document review logic built in Features 11b and 12a.
+
+Worth testing:
+
+- **`reviewDocument` branching logic** — the most complex piece of business logic in the codebase. Four distinct paths: AI clear → approve + check all-docs-approved; AI flagged first time → store flag; AI flagged second time → escalate to manual_review + notify admin; AI error → manual_review + notify admin. Each path has its own DB writes and conditional email sends. Test with `vi.mock` for DB queries, `reviewDocumentWithAI`, and `sendEmail`.
+- **`uploadDocument` action** — verify ownership check, supersede call, and record creation. Mock `getOrderForUser`, `supersedePreviousDocuments`, `createDocumentRecord`.
+- **`createUploadSignedUrl` action** — verify ownership check and storage client call. Mock Supabase storage.
+- **Stripe webhook handler** (`handleCheckoutSessionCompleted`) — verify order + payment record creation and the fire-and-forget `order_confirmation` email send. Mock Drizzle transaction and `sendEmail`.
+- **`sendEmail` dispatch** — verify the switch correctly routes each `EmailPayload` variant to the right template and subject. Mock `resendClient.emails.send`.
+- **Email subjects and templates** — pure function and render tests already exist in `tests/unit/email/`.
+- **Zod validations** — auth, document, and order schemas already covered in `tests/unit/validations/`.
+- **Pricing and permissions** — already covered in `tests/unit/`.
+
+Done when:
+
+- `vi.mock` infrastructure is set up for DB queries and external clients (Supabase, Resend, AI).
+- `reviewDocument` all four branches are covered.
+- Stripe webhook order creation path is covered.
+- `sendEmail` dispatch is covered.
+- All tests pass with `npx vitest run`.
+
+Notes:
+
+- Do not add integration tests against a real DB — unit tests with mocks are sufficient for this phase.
+- Test files live in `tests/unit/actions/` and `tests/unit/email/`.
+
+Depends on: 11b, 12a.
+
+---
+
 ## 12b — Customer Emails (Document Phase)
 
 Add customer email templates and delivery triggers for the document phase.
@@ -397,6 +429,33 @@ Done when:
 - Emails include deep links back to the dashboard.
 
 Depends on: 11, 12a.
+
+---
+
+## 12b-T — Integration Tests (Database Layer)
+
+Add integration tests that run against a real database to verify DB queries and Server Actions end-to-end, without mocking the data layer.
+
+Worth testing:
+
+- **DB query functions** (`getOrderForUser`, `createDocumentRecord`, `supersedePreviousDocuments`, `getActiveDocumentsForOrder`, `getOrderBasicInfo`, `markOrderDocumentsUnderReview`) — run against a real Supabase test project or a local Postgres instance seeded with known data. Verify the actual SQL: row ownership checks, soft-delete logic, approval aggregation.
+- **`uploadDocument` action end-to-end** — real DB write, verify record appears with correct fields.
+- **`reviewDocument` all-approved path** — insert 3 pre-approved docs and verify `markOrderDocumentsUnderReview` transitions the order status correctly.
+- **Stripe webhook idempotency** — send the same `checkout.session.completed` event twice, verify only one order record is created.
+
+Done when:
+
+- A Supabase test project (or local Postgres) is wired into a separate Vitest workspace config.
+- Seed/teardown scripts exist to isolate each test run.
+- Key query functions and the all-docs-approved path are covered.
+- Tests are excluded from the standard `npx vitest run` (run via a separate script, e.g. `vitest:integration`).
+
+Notes:
+
+- High setup cost — defer until the data layer is stable (after Feature 13b at the earliest).
+- Do not mix these with unit tests; they require a live DB and are slow.
+
+Depends on: 12a-T, 13b (data layer stable).
 
 ---
 
@@ -641,6 +700,35 @@ Notes:
 - Brand color moments: each major section should have one deliberate brand-color anchor (e.g. brand-tinted background block, brand top border on a card). Currently applied on `AuthCard` (top border) and `HeroSection` stats grid (tinted block). Extend this pattern to new pages during the polish pass.
 
 Depends on: 20 (all features complete).
+
+---
+
+## 21b — E2E Tests (Playwright)
+
+Add end-to-end tests covering the critical user flows once the UI is stable.
+
+Worth testing:
+
+- **Full checkout flow** — land on pricing, select a tier, complete Stripe test checkout, land on dashboard with correct order state.
+- **Document upload flow** — upload all three documents, verify AI review badges update, verify order status transitions to `documents_under_review`.
+- **Auth flows** — sign up, sign in, sign out, password reset.
+- **Admin order list** — sign in as admin, verify an order appears in the list with correct status.
+- **Locale switching** — verify that switching locale mid-session preserves the current page and applies translations.
+
+Done when:
+
+- Playwright is installed and configured (`playwright.config.ts`).
+- A test user and test order can be seeded via a setup script.
+- The five flows above have at least a happy-path test each.
+- Tests run in CI against a preview deployment (not localhost).
+
+Notes:
+
+- Only start this after Feature 21 (UI Polish) — running E2E against a moving UI is wasted effort.
+- Use Stripe test mode and Supabase test project throughout.
+- Scope to happy paths only first; edge cases can be added incrementally.
+
+Depends on: 21 (all features and polish complete).
 
 ---
 

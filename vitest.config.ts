@@ -13,7 +13,7 @@ export default defineConfig({
     environment: 'node',
 
     // Where to look for test files.
-    // 'tests/**/*.test.ts' matches any file ending in .test.ts inside the tests/ folder.
-    include: ['tests/**/*.test.ts'],
+    // Includes both .ts and .tsx so email template tests (which use React) are picked up.
+    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
   },
 })
