@@ -17,5 +17,32 @@ export const UploadDocumentSchema = z.object({
   mimeType: z.string().regex(/^(application\/pdf|image\/jpeg|image\/png)$/),
 })
 
+// Finite set of reason keys Gemini may return when flagging a document.
+// The Gemini prompt must list these keys exactly — any other value fails schema validation
+// and is treated as an error, not surfaced to the user as-is.
+export const DOCUMENT_FLAG_REASON_KEYS = [
+  'passport_expired',
+  'passport_blurry',
+  'passport_obscured',
+  'passport_wrong_document',
+  'address_too_old',
+  'address_type_not_accepted',
+  'address_blurry',
+  'address_wrong_document',
+  'address_name_mismatch',
+  'poa_unsigned',
+  'poa_wrong_document',
+  'poa_incomplete',
+] as const
+
+export type DocumentFlagReasonKey = typeof DOCUMENT_FLAG_REASON_KEYS[number]
+
+// Schema for Gemini's JSON response. Use safeParse — never trust LLM output directly.
+export const AiReviewResponseSchema = z.object({
+  status: z.enum(['clear', 'flagged', 'error']),
+  reasonKey: z.enum(DOCUMENT_FLAG_REASON_KEYS).optional(),
+})
+
+export type AiReviewResponse = z.infer<typeof AiReviewResponseSchema>
 export type CreateUploadUrlData = z.infer<typeof CreateUploadUrlSchema>
 export type UploadDocumentData = z.infer<typeof UploadDocumentSchema>

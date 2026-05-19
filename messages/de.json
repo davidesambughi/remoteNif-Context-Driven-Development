@@ -293,8 +293,23 @@
     "states": {
       "uploading": "Wird hochgeladen…",
       "pendingReview": "In Prüfung",
+      "stillReviewing": "Wird noch geprüft… das dauert länger als gewöhnlich.",
       "approved": "Genehmigt",
       "manualReview": "Unser Team wird Ihr Dokument innerhalb von 4 Stunden prüfen"
+    },
+    "flagReasons": {
+      "passport_expired": "Ihr Reisepass ist abgelaufen. Bitte laden Sie einen gültigen Reisepass hoch.",
+      "passport_blurry": "Das Foto Ihres Reisepasses ist zu unscharf. Bitte laden Sie ein klareres Bild hoch.",
+      "passport_obscured": "Ein Teil Ihres Reisepasses ist verdeckt oder abgeschnitten. Bitte laden Sie die vollständige Fotoseite hoch.",
+      "passport_wrong_document": "Dies scheint kein Reisepass zu sein. Bitte laden Sie die Fotoseite Ihres Reisepasses hoch.",
+      "address_too_old": "Ihr Adressnachweis ist älter als 3 Monate. Bitte laden Sie ein aktuelleres Dokument hoch.",
+      "address_type_not_accepted": "Dieser Dokumenttyp wird nicht akzeptiert. Bitte laden Sie eine Strom-, Wasser- oder Gasrechnung, einen Kontoauszug, einen Mietvertrag oder ein offizielles Behördenschreiben hoch.",
+      "address_blurry": "Ihr Dokument ist zu unscharf zum Lesen. Bitte laden Sie ein klareres Bild hoch.",
+      "address_wrong_document": "Dies scheint kein gültiger Adressnachweis zu sein.",
+      "address_name_mismatch": "Der Name auf diesem Dokument entspricht nicht dem, was wir für einen persönlichen Adressnachweis erwarten.",
+      "poa_unsigned": "Auf Ihrer Vollmacht wurde keine Unterschrift erkannt. Bitte unterschreiben Sie das Dokument handschriftlich und laden Sie es erneut hoch.",
+      "poa_wrong_document": "Dies scheint nicht die Vollmacht zu sein. Bitte laden Sie die unterzeichnete Vollmacht hoch.",
+      "poa_incomplete": "Ihre Vollmacht scheint unvollständig zu sein. Stellen Sie sicher, dass alle Felder ausgefüllt sind, bevor Sie unterschreiben und erneut hochladen."
     },
     "disabled": {
       "details": "Vervollständigen Sie zuerst Ihre persönlichen Daten, um den Dokument-Upload freizuschalten",

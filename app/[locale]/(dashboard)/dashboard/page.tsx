@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server'
 import { getCurrentUser } from '@/lib/auth/session'
 import { redirect } from '@/i18n/navigation'
-import { getUserActiveOrder } from '@/lib/db/queries'
+import { getUserActiveOrder, getActiveDocumentsForOrder } from '@/lib/db/queries'
 import { getPoaSignedUrl } from '@/lib/pdf/generator'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -36,10 +36,15 @@ export default async function DashboardPage() {
   const order = await getUserActiveOrder(user.id)
 
   // 4. If the order has a stored POA path, generate a fresh signed URL server-side
-  //    so the download link is ready when the page loads (1-hour TTL is sufficient)
-  const poaSignedUrl = order?.poaGeneratedPath
-    ? await getPoaSignedUrl(order.poaGeneratedPath)
-    : null
+  //    so the download link is ready when the page loads (1-hour TTL is sufficient).
+  //    For documents_pending orders, also fetch active document records to hydrate
+  //    upload slot statuses and enable cross-slot locking.
+  const [poaSignedUrl, documentRecords] = await Promise.all([
+    order?.poaGeneratedPath ? getPoaSignedUrl(order.poaGeneratedPath) : Promise.resolve(null),
+    order?.status === 'documents_pending'
+      ? getActiveDocumentsForOrder(order.id)
+      : Promise.resolve([]),
+  ])
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col bg-[var(--bg-base)]">
@@ -96,6 +101,7 @@ export default async function DashboardPage() {
                   }
                   detailsSaved={order.fullName !== null}
                   poaSignedUrl={poaSignedUrl}
+                  documentRecords={documentRecords}
                 />
               )}
 

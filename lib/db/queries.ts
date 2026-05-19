@@ -6,6 +6,86 @@ import { users, orders, documents } from '@/lib/db/schema'
 import type { SelectUser, SelectOrder, SelectDocument, InsertDocument } from '@/lib/db/schema'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 
+// ---------------------------------------------------------------------------
+// Document queries (Feature 11)
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns all active (not superseded) documents for an order.
+ * Used to hydrate upload slots from DB state and to check if all 3 are approved.
+ */
+export async function getActiveDocumentsForOrder(orderId: string): Promise<SelectDocument[]> {
+  return db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.orderId, orderId), isNull(documents.supersededAt)))
+}
+
+/**
+ * Fetches a single active document by ID with an ownership check.
+ * Returns null if the document doesn't exist, has been superseded, or belongs to a different user.
+ */
+export async function getDocumentByIdForUser(
+  documentId: string,
+  userId: string,
+): Promise<SelectDocument | null> {
+  const result = await db
+    .select()
+    .from(documents)
+    .where(
+      and(
+        eq(documents.id, documentId),
+        eq(documents.userId, userId),
+        isNull(documents.supersededAt),
+      ),
+    )
+    .limit(1)
+  return result[0] ?? null
+}
+
+/**
+ * Writes the AI review outcome to a document in a single atomic update.
+ * Always writes approved + approvedAt together to keep approval state consistent.
+ */
+export async function updateDocumentAiReview(
+  documentId: string,
+  update: {
+    aiReviewStatus: 'clear' | 'flagged' | 'error' | 'manual_review'
+    aiReviewReason: string | null
+    aiReviewAttempts: number
+    approved: boolean
+    approvedAt: Date | null
+  },
+): Promise<void> {
+  await db
+    .update(documents)
+    .set({
+      aiReviewStatus: update.aiReviewStatus,
+      aiReviewReason: update.aiReviewReason,
+      aiReviewAttempts: update.aiReviewAttempts,
+      aiReviewedAt: new Date(),
+      approved: update.approved,
+      approvedAt: update.approvedAt,
+      updatedAt: new Date(),
+    })
+    .where(eq(documents.id, documentId))
+}
+
+/**
+ * Transitions an order to documents_under_review once all 3 documents are approved.
+ * Sets documentsSubmittedAt to the current timestamp (admin SLA clock starts here).
+ */
+export async function markOrderDocumentsUnderReview(orderId: string): Promise<void> {
+  await db
+    .update(orders)
+    .set({
+      status: 'documents_under_review',
+      documentsSubmittedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(orders.id, orderId))
+}
+
 /** Fetches a user record by their primary ID. */
 export async function getUserById(id: string): Promise<SelectUser | null> {
   const result = await db.select().from(users).where(eq(users.id, id)).limit(1)

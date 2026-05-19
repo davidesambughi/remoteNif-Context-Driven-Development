@@ -293,8 +293,23 @@
     "states": {
       "uploading": "Subiendo…",
       "pendingReview": "En revisión",
+      "stillReviewing": "Revisando… esto está tardando más de lo habitual.",
       "approved": "Aprobado",
       "manualReview": "Nuestro equipo revisará tu documento en un plazo de 4 horas"
+    },
+    "flagReasons": {
+      "passport_expired": "Tu pasaporte está caducado. Por favor, sube un pasaporte válido.",
+      "passport_blurry": "La foto de tu pasaporte está demasiado borrosa. Por favor, sube una imagen más nítida.",
+      "passport_obscured": "Parte de tu pasaporte está tapada o cortada. Por favor, sube la página de foto completa.",
+      "passport_wrong_document": "Este documento no parece ser un pasaporte. Por favor, sube la página de foto de tu pasaporte.",
+      "address_too_old": "Tu justificante de domicilio tiene más de 3 meses. Por favor, sube un documento más reciente.",
+      "address_type_not_accepted": "Este tipo de documento no está aceptado. Por favor, sube una factura de electricidad, agua o gas, un extracto bancario, un contrato de alquiler o una carta oficial del gobierno.",
+      "address_blurry": "Tu documento está demasiado borroso para leerlo. Por favor, sube una imagen más nítida.",
+      "address_wrong_document": "Este documento no parece ser un justificante de domicilio válido.",
+      "address_name_mismatch": "El nombre en este documento no coincide con lo que esperamos para un justificante de domicilio personal.",
+      "poa_unsigned": "No se detectó ninguna firma en tu poder notarial. Por favor, fírmalo a mano y vuelve a subirlo.",
+      "poa_wrong_document": "Este documento no parece ser el poder notarial. Por favor, sube el poder notarial firmado.",
+      "poa_incomplete": "Tu poder notarial parece estar incompleto. Asegúrate de que todos los campos estén rellenados antes de firmar y volver a subir."
     },
     "disabled": {
       "details": "Completa primero tus datos personales para desbloquear la subida de documentos",

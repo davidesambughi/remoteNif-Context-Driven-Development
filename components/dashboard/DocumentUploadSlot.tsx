@@ -5,7 +5,11 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { Upload, CheckCircle2, Loader2, AlertCircle, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { createUploadSignedUrl, uploadDocument } from '@/app/actions/documents'
+import {
+  DOCUMENT_FLAG_REASON_KEYS,
+  type DocumentFlagReasonKey,
+} from '@/lib/validations/documents'
+import { createUploadSignedUrl, uploadDocument, reviewDocument } from '@/app/actions/documents'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -23,7 +27,10 @@ interface DocumentUploadSlotProps {
   disabled: boolean
   disabledReason: DisabledReason
   initialStatus: SlotStatus
+  // Stored as a reasonKey in the DB — translated here before display
   initialFlagReason: string | null
+  // Fires whenever this slot's status changes — used by parent for cross-slot locking
+  onStatusChange: (status: SlotStatus) => void
 }
 
 // ---------------------------------------------------------------------------
@@ -32,6 +39,16 @@ interface DocumentUploadSlotProps {
 
 const ACCEPTED_MIME_TYPES = ['application/pdf', 'image/jpeg', 'image/png']
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10 MB
+const SLOW_REVIEW_MS = 30_000
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+// Guards that a string from the DB is one of the predefined reason keys before translating.
+function isValidReasonKey(key: string | null): key is DocumentFlagReasonKey {
+  return key !== null && (DOCUMENT_FLAG_REASON_KEYS as readonly string[]).includes(key)
+}
 
 // ---------------------------------------------------------------------------
 // State → visual config
@@ -90,16 +107,36 @@ export function DocumentUploadSlot({
   disabledReason,
   initialStatus,
   initialFlagReason,
+  onStatusChange,
 }: DocumentUploadSlotProps) {
   const t = useTranslations('documents')
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [status, setStatus] = useState<SlotStatus>(initialStatus)
-  const [flagReason, setFlagReason] = useState<string | null>(initialFlagReason)
+
+  // Translate the reason key from DB on first render; updated on new review results
+  const [flagReason, setFlagReason] = useState<string | null>(
+    isValidReasonKey(initialFlagReason) ? t(`flagReasons.${initialFlagReason}`) : null,
+  )
+
   const [error, setError] = useState<string | null>(null)
 
+  // True only when reviewDocument was called in this session and is still in-flight.
+  // Prevents the spinner from showing for slots hydrated from DB with a stale 'pending' status.
+  const [isReviewing, setIsReviewing] = useState(false)
+
+  // True when the 30s timeout fires before reviewDocument resolves.
+  // Does NOT change SlotStatus — only swaps the status text to the slow message.
+  const [isSlowReview, setIsSlowReview] = useState(false)
+
   const cfg = STATE_CONFIG[status]
+
+  // Wrapper that keeps local state and parent in sync
+  function updateStatus(next: SlotStatus) {
+    setStatus(next)
+    onStatusChange(next)
+  }
 
   function renderIcon() {
     const cls = `h-5 w-5 ${cfg.iconColor}`
@@ -107,17 +144,18 @@ export function DocumentUploadSlot({
     if (status === 'approved') return <CheckCircle2 className={cls} />
     if (status === 'flagged') return <AlertCircle className={cls} />
     if (status === 'pending_review' || status === 'manual_review') return <Clock className={cls} />
-    // idle / disabled
     return <Upload className={`h-5 w-5 ${disabled ? 'text-text-muted' : 'text-text-secondary'}`} />
   }
 
   function getStatusText(): string {
     if (status === 'uploading') return t('states.uploading')
-    if (status === 'pending_review') return t('states.pendingReview')
     if (status === 'approved') return t('states.approved')
     if (status === 'manual_review') return t('states.manualReview')
     if (status === 'flagged') return flagReason ?? ''
-    // idle — show disabled hint or the document description
+    if (status === 'pending_review') {
+      // 30s timeout fires → show the slow-review message while the action is still in flight
+      return isSlowReview ? t('states.stillReviewing') : t('states.pendingReview')
+    }
     if (disabled && disabledReason) return t(`disabled.${disabledReason}`)
     return description
   }
@@ -134,7 +172,7 @@ export function DocumentUploadSlot({
 
     setError(null)
     setFlagReason(null)
-    setStatus('uploading')
+    updateStatus('uploading')
 
     try {
       // Step 1 — get a signed upload URL from the server
@@ -145,7 +183,7 @@ export function DocumentUploadSlot({
       })
       if (!urlResult.success) {
         setError(t('errors.uploadFailed'))
-        setStatus('idle')
+        updateStatus('idle')
         return
       }
 
@@ -157,11 +195,11 @@ export function DocumentUploadSlot({
       })
       if (!uploadResponse.ok) {
         setError(t('errors.uploadFailed'))
-        setStatus('idle')
+        updateStatus('idle')
         return
       }
 
-      // Step 3 — register the upload in the database
+      // Step 3 — register the upload in the database; get back the new document ID
       const docResult = await uploadDocument({
         orderId,
         type,
@@ -172,18 +210,52 @@ export function DocumentUploadSlot({
       })
       if (!docResult.success) {
         setError(t('errors.uploadFailed'))
-        setStatus('idle')
+        updateStatus('idle')
         return
       }
 
-      // signed_poa is approved immediately; passport/proof_of_address wait for AI review (Feature 11)
-      setStatus(type === 'signed_poa' ? 'approved' : 'pending_review')
+      // Step 4 — trigger AI review for all document types
+      updateStatus('pending_review')
+      setIsReviewing(true)
+
+      // Start 30s timeout — shows "still reviewing" message if the action is slow
+      const timeoutId = setTimeout(() => setIsSlowReview(true), SLOW_REVIEW_MS)
+
+      const reviewResult = await reviewDocument(docResult.data.documentId)
+
+      // Clear both flags when the action resolves, even if the timeout already fired
+      clearTimeout(timeoutId)
+      setIsSlowReview(false)
+      setIsReviewing(false)
+
+      if (!reviewResult.success) {
+        // Server action failure — surface as manual review (admin will handle it)
+        updateStatus('manual_review')
+        router.refresh()
+        return
+      }
+
+      const { aiReviewStatus, aiReviewReason } = reviewResult.data
+
+      if (aiReviewStatus === 'clear') {
+        updateStatus('approved')
+      } else if (aiReviewStatus === 'flagged') {
+        // aiReviewReason is a reasonKey — translate before displaying
+        setFlagReason(isValidReasonKey(aiReviewReason) ? t(`flagReasons.${aiReviewReason}`) : null)
+        updateStatus('flagged')
+      } else {
+        // manual_review (error escalation or second failure)
+        updateStatus('manual_review')
+      }
+
+      // Refresh so the parent RSC gets updated document records from DB
       router.refresh()
     } catch {
       setError(t('errors.uploadFailed'))
-      setStatus('idle')
+      setIsReviewing(false)
+      setIsSlowReview(false)
+      updateStatus('idle')
     } finally {
-      // Reset so the same file can be re-selected after an error
       if (inputRef.current) inputRef.current.value = ''
     }
   }
@@ -247,19 +319,19 @@ export function DocumentUploadSlot({
         </Button>
       )}
 
-      {/* Uploading spinner on the right */}
-      {status === 'uploading' && (
+      {/* Spinner only during active operations — not for stale DB-hydrated pending state */}
+      {(status === 'uploading' || isReviewing) && (
         <Loader2 className="h-4 w-4 animate-spin text-text-muted shrink-0" />
       )}
 
-      {/* Hidden file input — display:none is reliable for programmatic .click() */}
+      {/* Hidden file input */}
       <input
         ref={inputRef}
         type="file"
         accept=".pdf,.jpg,.jpeg,.png"
         className="hidden"
         aria-hidden="true"
-        disabled={disabled || status === 'uploading'}
+        disabled={disabled || status === 'uploading' || isReviewing}
         onChange={handleInputChange}
       />
     </div>

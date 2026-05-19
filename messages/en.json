@@ -293,8 +293,23 @@
     "states": {
       "uploading": "Uploading…",
       "pendingReview": "Under review",
+      "stillReviewing": "Still reviewing… this is taking longer than usual.",
       "approved": "Approved",
       "manualReview": "Our team will review your document within 4 hours"
+    },
+    "flagReasons": {
+      "passport_expired": "Your passport is expired. Please upload a valid passport.",
+      "passport_blurry": "Your passport photo is too blurry. Please upload a clearer image.",
+      "passport_obscured": "Part of your passport is obscured or cut off. Please upload the full photo page.",
+      "passport_wrong_document": "This does not appear to be a passport. Please upload your passport photo page.",
+      "address_too_old": "Your proof of address is older than 3 months. Please upload a more recent document.",
+      "address_type_not_accepted": "This document type is not accepted. Please upload a utility bill (electricity, water, or gas), bank statement, rental agreement, or official government letter.",
+      "address_blurry": "Your document is too blurry to read. Please upload a clearer image.",
+      "address_wrong_document": "This does not appear to be a valid proof of address.",
+      "address_name_mismatch": "The name on this document does not match what we expect for a personal proof of address.",
+      "poa_unsigned": "No signature was detected on your POA. Please sign the document by hand and re-upload.",
+      "poa_wrong_document": "This does not appear to be the POA document. Please upload the signed Power of Attorney.",
+      "poa_incomplete": "Your POA appears to be incomplete. Please ensure all fields are filled in before signing and re-uploading."
     },
     "disabled": {
       "details": "Complete your personal details first to unlock document upload",

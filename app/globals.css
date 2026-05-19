@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Exclude docs/context markdown from Tailwind's class scanner to prevent
+   literal Tailwind syntax in documentation text from generating invalid CSS. */
+@source not "../context/**";
+
 /* ============================================
    DESIGN TOKENS
    Two-layer structure:

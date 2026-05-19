@@ -56,9 +56,15 @@ Competitors (nifportugal.com, Bordr, e-residence.com, Novomove) solve the mechan
 
 ### Regulatory Context (Critical)
 
-As of July 1, 2026 — three months from this writing — Portugal's law changes: non-EU residents with **no Portuguese tax obligations** will no longer be legally required to appoint a fiscal representative. This directly undercuts the main recurring revenue model of every competitor.
+**The law has already changed.** Via Decree-Law 44/2022 (Ofício Circulado N.º 90057, July 2022), Portugal relaxed the mandatory fiscal representative requirement for non-residents. The current rules are:
 
-This product must be designed with that shift in mind. Fiscal representation cannot be the primary recurring value. The recurring value must be **compliance confidence**: helping customers stay correctly registered, filing the right declarations, and not getting fined.
+- **EU/EEA residents**: never required to appoint a fiscal representative.
+- **Non-EU/EEA residents with Portuguese tax obligations** (property ownership, rental income, employment, business activity): still legally required to appoint a fiscal representative.
+- **Non-EU/EEA residents with no Portuguese tax obligations**: not required to appoint a fiscal representative, provided they activate electronic notifications (*notificações eletrónicas*) on the Portal das Finanças.
+
+⚠️ The project-overview previously stated this change would happen in July 2026. Research (May 2026) indicates the change already took effect in July 2022. Confirm whether an additional regulatory change is expected in July 2026 before updating any customer-facing copy.
+
+This product must be designed with the current rules in mind. Fiscal representation cannot be marketed as a universal requirement. The recurring value of Standard and Express tiers must be **compliance confidence**: helping customers stay correctly registered, filing the right declarations, and not getting fined — not the act of holding a fiscal rep mandate.
 
 ---
 
@@ -94,7 +100,7 @@ This product must be designed with that shift in mind. Fiscal representation can
 - Express guarantees document review and submission to Finanças within 48 hours of upload — something no competitor explicitly promises. Most advertise fast delivery without explaining what they control. Being honest about the Finanças queue, while committing to a fast submission, builds trust and sets expectations that are realistic to beat."
 - The 48h submission clock starts from document approval, not from payment or upload. This must be stated clearly at checkout: "Your 48-hour window begins once your documents pass review.
 - Standard includes 12 months (not 1 year with ambiguous renewal), clearly stated
-- Essential is for EU citizens who don't legally need fiscal rep — explicitly say so on the UI
+- Essential is for customers who don't need ongoing fiscal representation — this includes all EU/EEA residents, and non-EU residents with no Portuguese tax obligations. Do NOT market Essential as EU-only. Use copy like: "No fiscal representation — suitable if you have no active tax ties in Portugal." Do not imply fiscal rep is a universal requirement — it is not, per Decree-Law 44/2022.
 
 ### Feature: Deadline-Aware Checkout
 
@@ -103,7 +109,7 @@ The pricing page opens with the question "When do you need your NIF?" followed b
 Each card maps to a deadline scenario:
 - **Express** — for customers with an urgent deadline (property closing, visa appointment)
 - **Standard** — for customers who need their NIF within 5 business days
-- **Essential** — for customers with no urgent deadline (EU citizens who don't legally need fiscal rep)
+- **Essential** — for customers with no urgent deadline and no need for ongoing fiscal representation (EU/EEA residents and non-EU customers with no Portuguese tax obligations)
 
 The user picks one card and proceeds to account creation. No extra step.
 

@@ -293,8 +293,23 @@
     "states": {
       "uploading": "Téléversement…",
       "pendingReview": "En cours d'examen",
+      "stillReviewing": "Examen en cours… cela prend plus de temps que d'habitude.",
       "approved": "Approuvé",
       "manualReview": "Notre équipe examinera votre document dans les 4 heures"
+    },
+    "flagReasons": {
+      "passport_expired": "Votre passeport est expiré. Veuillez téléverser un passeport valide.",
+      "passport_blurry": "La photo de votre passeport est trop floue. Veuillez téléverser une image plus nette.",
+      "passport_obscured": "Une partie de votre passeport est masquée ou coupée. Veuillez téléverser la page photo complète.",
+      "passport_wrong_document": "Ce document ne semble pas être un passeport. Veuillez téléverser la page photo de votre passeport.",
+      "address_too_old": "Votre justificatif de domicile date de plus de 3 mois. Veuillez téléverser un document plus récent.",
+      "address_type_not_accepted": "Ce type de document n'est pas accepté. Veuillez téléverser une facture d'électricité, d'eau ou de gaz, un relevé bancaire, un contrat de location ou une lettre officielle du gouvernement.",
+      "address_blurry": "Votre document est trop flou pour être lu. Veuillez téléverser une image plus nette.",
+      "address_wrong_document": "Ce document ne semble pas être un justificatif de domicile valide.",
+      "address_name_mismatch": "Le nom figurant sur ce document ne correspond pas à ce que nous attendons pour un justificatif de domicile personnel.",
+      "poa_unsigned": "Aucune signature n'a été détectée sur votre procuration. Veuillez signer le document à la main et le téléverser à nouveau.",
+      "poa_wrong_document": "Ce document ne semble pas être la procuration. Veuillez téléverser la procuration signée.",
+      "poa_incomplete": "Votre procuration semble incomplète. Veuillez vous assurer que tous les champs sont remplis avant de signer et de téléverser à nouveau."
     },
     "disabled": {
       "details": "Complétez d'abord vos informations personnelles pour déverrouiller le téléversement de documents",

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -32,6 +32,30 @@ import { savePersonalDetails, generatePoa } from '@/app/actions/orders'
 import { COUNTRIES } from '@/lib/utils/countries'
 import { DocumentUploadSlot } from '@/components/dashboard/DocumentUploadSlot'
 
+// Minimal shape of a document record needed by this component — avoids importing
+// the full DB type into a client component.
+interface DocumentRecord {
+  id: string
+  type: 'passport' | 'proof_of_address' | 'signed_poa'
+  aiReviewStatus: 'pending' | 'clear' | 'flagged' | 'error' | 'manual_review' | null
+  aiReviewReason: string | null
+  approved: boolean
+}
+
+type SlotStatus = 'idle' | 'uploading' | 'pending_review' | 'approved' | 'flagged' | 'manual_review'
+
+// Derives the initial slot display status from a document record fetched from DB.
+function deriveSlotStatus(doc: DocumentRecord | undefined): SlotStatus {
+  if (!doc) return 'idle'
+  if (doc.approved) return 'approved'
+  switch (doc.aiReviewStatus) {
+    case 'flagged': return 'flagged'
+    case 'manual_review': return 'manual_review'
+    case 'pending': return 'pending_review'
+    default: return 'idle'
+  }
+}
+
 interface PersonalDetailsFormProps {
   orderId: string
   initialValues: Partial<PersonalDetailsData> | null
@@ -39,6 +63,8 @@ interface PersonalDetailsFormProps {
   detailsSaved: boolean
   // Pre-fetched signed URL from the RSC — null if no POA has been generated yet
   poaSignedUrl: string | null
+  // Active (non-superseded) document records for this order — used to hydrate slot states
+  documentRecords: DocumentRecord[]
 }
 
 // Maps an ISO alpha-2 code to a display name for the saved summary view
@@ -51,6 +77,7 @@ export function PersonalDetailsForm({
   initialValues,
   detailsSaved,
   poaSignedUrl,
+  documentRecords,
 }: PersonalDetailsFormProps) {
   const t = useTranslations('personalDetails')
 
@@ -69,6 +96,26 @@ export function PersonalDetailsForm({
   // Tracks whether the user had a POA and then edited their details — triggers the regenerate notice
   const [hadPoaBefore, setHadPoaBefore] = useState(false)
 
+  // Track each slot's current status so we can compute cross-slot locking immediately,
+  // without waiting for a router.refresh() round-trip.
+  const passportDoc = documentRecords.find((d) => d.type === 'passport')
+  const addressDoc = documentRecords.find((d) => d.type === 'proof_of_address')
+  const poaDoc = documentRecords.find((d) => d.type === 'signed_poa')
+
+  const [slotStatuses, setSlotStatuses] = useState<Record<string, SlotStatus>>({
+    passport: deriveSlotStatus(passportDoc),
+    proof_of_address: deriveSlotStatus(addressDoc),
+    signed_poa: deriveSlotStatus(poaDoc),
+  })
+
+  function handleSlotStatusChange(type: string, status: SlotStatus) {
+    setSlotStatuses((prev) => ({ ...prev, [type]: status }))
+  }
+
+  // Cross-slot locking: if any slot is flagged, all approved slots are locked so
+  // the user focuses on re-uploading the flagged document first.
+  const hasFlaggedSlot = Object.values(slotStatuses).some((s) => s === 'flagged')
+
   // Upload slot definitions — disabled/disabledReason are derived from live state so
   // slots unlock immediately when the user saves details or generates the POA.
   const slots = [
@@ -77,7 +124,8 @@ export function PersonalDetailsForm({
       type: 'passport' as const,
       label: t('docs.passport.title'),
       description: t('docs.passport.description'),
-      disabled: !isSaved,
+      // Locked by details gate OR by cross-slot flagging (only when this slot is approved)
+      disabled: !isSaved || (hasFlaggedSlot && slotStatuses.passport === 'approved'),
       disabledReason: (!isSaved ? 'details' : null) as 'details' | 'poa' | null,
     },
     {
@@ -85,7 +133,7 @@ export function PersonalDetailsForm({
       type: 'proof_of_address' as const,
       label: t('docs.proofOfAddress.title'),
       description: t('docs.proofOfAddress.description'),
-      disabled: !isSaved,
+      disabled: !isSaved || (hasFlaggedSlot && slotStatuses.proof_of_address === 'approved'),
       disabledReason: (!isSaved ? 'details' : null) as 'details' | 'poa' | null,
     },
     {
@@ -93,7 +141,7 @@ export function PersonalDetailsForm({
       type: 'signed_poa' as const,
       label: t('docs.signedPoa.title'),
       description: t('docs.signedPoa.description'),
-      disabled: !isSaved || !poaUrl,
+      disabled: !isSaved || !poaUrl || (hasFlaggedSlot && slotStatuses.signed_poa === 'approved'),
       disabledReason: (!isSaved ? 'details' : !poaUrl ? 'poa' : null) as 'details' | 'poa' | null,
     },
   ]
@@ -276,8 +324,9 @@ export function PersonalDetailsForm({
               description={slot.description}
               disabled={slot.disabled}
               disabledReason={slot.disabledReason}
-              initialStatus="idle"
-              initialFlagReason={null}
+              initialStatus={deriveSlotStatus(documentRecords.find((d) => d.type === slot.type))}
+              initialFlagReason={documentRecords.find((d) => d.type === slot.type)?.aiReviewReason ?? null}
+              onStatusChange={(status) => handleSlotStatusChange(slot.type, status)}
             />
           ))}
         </div>
@@ -332,6 +381,7 @@ export function PersonalDetailsForm({
                         <Input
                           {...field}
                           type="date"
+                          max="9999-12-31"
                           className="rounded-md focus-visible:border-brand-primary"
                         />
                       </FormControl>
@@ -396,6 +446,7 @@ export function PersonalDetailsForm({
                         <Input
                           {...field}
                           type="date"
+                          max="9999-12-31"
                           className="rounded-md focus-visible:border-brand-primary"
                         />
                       </FormControl>
@@ -466,8 +517,9 @@ export function PersonalDetailsForm({
             description={slot.description}
             disabled={slot.disabled}
             disabledReason={slot.disabledReason}
-            initialStatus="idle"
-            initialFlagReason={null}
+            initialStatus={deriveSlotStatus(documentRecords.find((d) => d.type === slot.type))}
+            initialFlagReason={documentRecords.find((d) => d.type === slot.type)?.aiReviewReason ?? null}
+            onStatusChange={(status) => handleSlotStatusChange(slot.type, status)}
           />
         ))}
       </div>
