@@ -100,6 +100,16 @@ Feature 11a — Replace Gemini with Groq (blocked on AI provider). Then Feature 
 - **Hotfix — Date of Birth Year Digit Limit** ✓
   Added `max="9999-12-31"` to both `dateOfBirth` and `passportExpiry` inputs in `PersonalDetailsForm.tsx` to restrict year typing to 4 digits (`YYYY`) in modern browsers. `npm run build` and all tests pass.
 
+- **Feature 12a — Customer Emails (Order Phase)** ✓
+  `resend` and `react-email` (v6 unified package) installed — `@react-email/components` and `@react-email/render` removed (deprecated). `lib/email/resend.ts` exports the Resend client. `lib/email/send.ts` exports `sendEmail`, `EmailLocale`, `EmailTemplateName`, `EmailPayload` — fire-and-forget, errors logged never thrown. `lib/email/templates/order-confirmation.tsx` renders full 4-locale copy (EN/FR/ES/DE) using React Email primitives from `react-email`; subject helper `getOrderConfirmationSubject` co-located. `getUserLanguage` query added to `lib/db/queries.ts`. Stripe webhook handler updated: after transaction commits, fetches user language, formats `amountEur` from Stripe cents, calls `sendEmail` for `order_confirmation`. React element passed via Resend's `react:` prop (no manual `render()` call needed). `npm run build` passes (41 static pages).
+
+---
+
+- **Feature 11b — Manual Review Escalation & Notifications** ✓
+  `ADMIN_EMAIL` env var added to `lib/env.ts` and `.env.local`. `getOrderBasicInfo` query added to `lib/db/queries.ts`. `EmailPayload` extended with `admin_document_escalated` and `admin_order_ready` members; `sendEmail` restructured from if/else to `switch` — exhaustive check in `default` now compiles correctly with 3 union members. Two admin email templates created (`lib/email/templates/admin-document-escalated.tsx`, `admin-order-ready.tsx`) — English only, minimal layout, `<Link>` CTA. `reviewDocument` action wired with three notification triggers: AI error → escalated email, 2nd flag → escalated email, all docs approved → order-ready email. Admin panel link (`/en/admin/orders/{orderId}`) is live in emails but the route doesn't exist until Feature 13a. `npm run build` passes (41 static pages).
+
+---
+
 ## In Progress
 
 - **Feature 11a — Switch AI provider from Gemini to Groq**

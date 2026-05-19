@@ -27,7 +27,10 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\" -Recurse -Depth 2)",
       "Bash(Format-Table -HideTableHeaders)",
       "Bash(python3)",
-      "Bash(powershell *)"
+      "Bash(powershell *)",
+      "Bash(findstr /i \"version\\\\|main\\\\|exports\\\\|description\")",
+      "WebFetch(domain:resend.com)",
+      "Bash(npm uninstall *)"
     ]
   }
 }

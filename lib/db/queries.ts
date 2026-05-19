@@ -5,6 +5,7 @@ import { db } from '@/lib/db'
 import { users, orders, documents } from '@/lib/db/schema'
 import type { SelectUser, SelectOrder, SelectDocument, InsertDocument } from '@/lib/db/schema'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
+import type { EmailLocale } from '@/lib/email/send'
 
 // ---------------------------------------------------------------------------
 // Document queries (Feature 11)
@@ -84,6 +85,34 @@ export async function markOrderDocumentsUnderReview(orderId: string): Promise<vo
       updatedAt: new Date(),
     })
     .where(eq(orders.id, orderId))
+}
+
+/**
+ * Fetches the minimal order info needed to populate admin notification emails.
+ * Returns null if the order does not exist.
+ */
+export async function getOrderBasicInfo(
+  orderId: string,
+): Promise<{ fullName: string | null; tier: 'essential' | 'standard' | 'express' } | null> {
+  const result = await db
+    .select({ fullName: orders.fullName, tier: orders.tier })
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .limit(1)
+  return result[0] ?? null
+}
+
+/**
+ * Returns the user's stored language preference, defaulting to 'en'.
+ * Used to send transactional emails in the customer's language.
+ */
+export async function getUserLanguage(userId: string): Promise<EmailLocale> {
+  const result = await db
+    .select({ language: users.language })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1)
+  return result[0]?.language ?? 'en'
 }
 
 /** Fetches a user record by their primary ID. */

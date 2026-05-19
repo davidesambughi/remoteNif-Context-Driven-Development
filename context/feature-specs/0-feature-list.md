@@ -345,6 +345,8 @@ Notes:
 - The UI must include a 30-second timeout fallback (graceful degradation) transitioning the badge to "Still reviewing…" if the AI is slow.
 - Cross-slot locking (locking other approved document slots when one is flagged) and hydrating the UI from the database should be implemented here, as deferred from 10b.
 
+⚠️ **BLOCKED — AI provider**: Code is complete but Gemini no longer has a usable free tier (`gemini-2.0-flash` returns `limit: 0`). All reviews fall through to `manual_review`. Before resuming: pick a replacement provider with a free tier (Groq with `llama-4-scout-17b-16e-instruct` was the leading candidate — generous free tier, vision support for images, `pdfjs-dist` for PDF text extraction). Changes needed: remove `@google/genai`, install replacement SDK, rewrite `lib/ai/gemini.ts`, swap `GEMINI_API_KEY` → new key in `lib/env.ts` and `.env.local`. No changes to actions, validations, UI, or locale files.
+
 Depends on: 10b.
 
 ---
@@ -363,6 +365,7 @@ Notes:
 
 - Keeps the system robust against AI failures or persistent user upload errors.
 - Ensures admins are kept in the loop only when human intervention is required or when the order is ready to proceed.
+- Admin notification emails link to `/en/admin/orders/{orderId}`. This route does not exist until Feature 13a — the link will be dead until then. No action needed here; just be aware when testing.
 
 Depends on: 11a.
 
@@ -405,6 +408,10 @@ Done when:
 
 - Admins can view and filter orders in a main table view.
 - **Proxy redirect for admin/operator routes is updated.** Currently `proxy.ts` redirects all unauthenticated users (including admins hitting `/admin/*` and operators hitting `/operator/*`) to the customer `/signin` page. Per `user-flows.md` Flow 6d and 6e, they should be redirected to `/admin/signin` and `/operator/signin` respectively. Fix the proxy's redirect logic when building this feature — it requires detecting the route prefix and choosing the correct sign-in destination.
+
+Notes:
+
+- The route `/en/admin/orders/{orderId}` is linked from admin notification emails sent in Feature 11b. Once this route exists, those email CTAs become live automatically — no changes needed in 11b.
 
 Depends on: 11, 12b.
 

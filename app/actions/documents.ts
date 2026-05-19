@@ -10,6 +10,7 @@ import {
   getActiveDocumentsForOrder,
   updateDocumentAiReview,
   markOrderDocumentsUnderReview,
+  getOrderBasicInfo,
 } from '@/lib/db/queries'
 import {
   CreateUploadUrlSchema,
@@ -18,7 +19,16 @@ import {
   type UploadDocumentData,
 } from '@/lib/validations/documents'
 import { reviewDocumentWithAI } from '@/lib/ai/gemini'
+import { sendEmail } from '@/lib/email/send'
+import { env } from '@/lib/env'
 import type { ActionResult } from '@/lib/types'
+
+// Human-readable labels for document types used in admin notification emails
+const DOCUMENT_TYPE_LABELS: Record<'passport' | 'proof_of_address' | 'signed_poa', string> = {
+  passport: 'Passport',
+  proof_of_address: 'Proof of address',
+  signed_poa: 'Signed POA',
+}
 
 /**
  * Generates a short-lived signed upload URL so the browser can PUT a file
@@ -105,10 +115,10 @@ export async function uploadDocument(
  *
  * Rules:
  * - Verifies ownership before touching anything.
- * - Gemini errors → manual_review immediately (not counted as a failed attempt).
+ * - AI errors → manual_review immediately (not counted as a failed attempt) → admin notified.
  * - Flagged result on first attempt → status = flagged, attempts = 1.
- * - Flagged result on second attempt (attempts >= 2) → escalates to manual_review.
- * - Clear result → approved = true, checks if all 3 docs approved → order status transitions.
+ * - Flagged result on second attempt (attempts >= 2) → escalates to manual_review → admin notified.
+ * - Clear result → approved = true, checks if all 3 docs approved → order status transitions → admin notified.
  */
 export async function reviewDocument(
   documentId: string,
@@ -122,7 +132,7 @@ export async function reviewDocument(
   const now = new Date()
   const currentAttempts = doc.aiReviewAttempts
 
-  // --- Gemini unavailable or unrecoverable error ---
+  // --- AI unavailable or unrecoverable error ---
   // Go directly to manual_review. Do NOT increment attempts — the AI failed, not the document.
   if (aiResult.status === 'error') {
     await updateDocumentAiReview(documentId, {
@@ -132,6 +142,19 @@ export async function reviewDocument(
       approved: false,
       approvedAt: null,
     })
+
+    // Notify admin — manual intervention required (fire-and-forget)
+    const orderInfo = await getOrderBasicInfo(doc.orderId)
+    if (orderInfo) {
+      await sendEmail(env.ADMIN_EMAIL, 'en', {
+        template: 'admin_document_escalated',
+        orderId: doc.orderId,
+        customerName: orderInfo.fullName ?? 'Customer',
+        documentType: DOCUMENT_TYPE_LABELS[doc.type],
+        escalationReason: 'AI review failed',
+      })
+    }
+
     return { success: true, data: { aiReviewStatus: 'manual_review', aiReviewReason: null } }
   }
 
@@ -153,6 +176,17 @@ export async function reviewDocument(
 
     if (allThreeApproved) {
       await markOrderDocumentsUnderReview(doc.orderId)
+
+      // Notify admin — all documents cleared, order is in the review queue (fire-and-forget)
+      const orderInfo = await getOrderBasicInfo(doc.orderId)
+      if (orderInfo) {
+        await sendEmail(env.ADMIN_EMAIL, 'en', {
+          template: 'admin_order_ready',
+          orderId: doc.orderId,
+          customerName: orderInfo.fullName ?? 'Customer',
+          tier: orderInfo.tier,
+        })
+      }
     }
 
     return { success: true, data: { aiReviewStatus: 'clear', aiReviewReason: null } }
@@ -171,6 +205,20 @@ export async function reviewDocument(
       approved: false,
       approvedAt: null,
     })
+
+    // Notify admin — manual intervention required (fire-and-forget)
+    const orderInfo = await getOrderBasicInfo(doc.orderId)
+    if (orderInfo) {
+      await sendEmail(env.ADMIN_EMAIL, 'en', {
+        template: 'admin_document_escalated',
+        orderId: doc.orderId,
+        customerName: orderInfo.fullName ?? 'Customer',
+        documentType: DOCUMENT_TYPE_LABELS[doc.type],
+        // aiResult.reasonKey is the last flag reason from this attempt
+        escalationReason: aiResult.reasonKey ?? 'Document flagged twice',
+      })
+    }
+
     return { success: true, data: { aiReviewStatus: 'manual_review', aiReviewReason: null } }
   }
 

@@ -108,6 +108,11 @@ describe('PersonalDetailsSchema — dateOfBirth', () => {
     expect(result.success).toBe(false)
   })
 
+  it('rejects a 5-digit year date', () => {
+    const result = PersonalDetailsSchema.safeParse({ ...VALID, dateOfBirth: '19901-06-15' })
+    expect(result.success).toBe(false)
+  })
+
   it('attaches the correct error key on bad format', () => {
     const result = PersonalDetailsSchema.safeParse({ ...VALID, dateOfBirth: '15/06/1990' })
     if (result.success) throw new Error('Expected failure')
@@ -177,6 +182,11 @@ describe('PersonalDetailsSchema — passportExpiry', () => {
 
   it('rejects an empty string', () => {
     const result = PersonalDetailsSchema.safeParse({ ...VALID, passportExpiry: '' })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects a 5-digit year date', () => {
+    const result = PersonalDetailsSchema.safeParse({ ...VALID, passportExpiry: '20301-12-01' })
     expect(result.success).toBe(false)
   })
 

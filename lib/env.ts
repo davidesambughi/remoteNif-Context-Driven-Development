@@ -19,6 +19,8 @@ const envSchema = z.object({
   GEMINI_API_KEY: z.string().min(1),
 
   CRON_SECRET: z.string().min(1),
+
+  ADMIN_EMAIL: z.string().email(),
 })
 
 export type Env = z.infer<typeof envSchema>
