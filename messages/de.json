@@ -320,5 +320,82 @@
       "invalidType": "Nur PDF-, JPG- und PNG-Dateien werden akzeptiert",
       "uploadFailed": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut."
     }
+  },
+  "admin": {
+    "title": "Orders",
+    "signOut": "Sign out",
+    "columns": {
+      "customer": "Customer",
+      "tier": "Tier",
+      "status": "Status",
+      "ordered": "Ordered",
+      "sla": "SLA"
+    },
+    "filters": {
+      "allStatuses": "All statuses",
+      "allTiers": "All tiers"
+    },
+    "tiers": {
+      "essential": "Essential",
+      "standard": "Standard",
+      "express": "Express"
+    },
+    "statuses": {
+      "documents_pending": "Awaiting documents",
+      "documents_under_review": "Under review",
+      "documents_approved": "Approved",
+      "submitted": "Submitted",
+      "delivered": "Delivered"
+    },
+    "sla": {
+      "overdue": "OVERDUE"
+    },
+    "emptyState": "No orders yet.",
+    "detail": {
+      "back": "All orders",
+      "orderId": "Order ID",
+      "ordered": "Ordered",
+      "payment": "Payment",
+      "documents": "Documents",
+      "notUploaded": "Not yet uploaded",
+      "download": "Download",
+      "aiReview": "AI review",
+      "aiAttempts": "attempt(s)",
+      "adminOverrideBadge": "Admin override",
+      "approveDocument": "Approve",
+      "flagDocument": "Flag",
+      "flagReason": "Reason for flagging",
+      "flagReasonPlaceholder": "Describe the issue clearly — this will be shown to the customer",
+      "flagConfirm": "Flag document",
+      "flagCancel": "Cancel",
+      "approveOrder": "Approve Order",
+      "approveOrderDescription": "Approves the order and notifies the operator to begin submission. For Express orders, the 48h SLA starts now.",
+      "approveOrderConfirmTitle": "Approve this order?",
+      "approveOrderConfirmDescription": "The operator will be notified immediately. For Express orders, the 48h submission SLA starts from this moment.",
+      "approveOrderConfirm": "Yes, approve",
+      "approveOrderCancel": "Cancel",
+      "approveOrderDisabledDocs": "All 3 documents must be approved first",
+      "approveOrderDisabledStatus": "Order is not in review state",
+      "updateStatus": "Update Status",
+      "updateStatusNote": "Note to customer (optional)",
+      "updateStatusNoteRequired": "A note is required when moving the order backward",
+      "updateStatusSubmit": "Update",
+      "updateStatusSuccess": "Status updated",
+      "resendEmail": "Resend Email",
+      "resendSubmit": "Resend",
+      "resendSuccess": "Email sent",
+      "customerEmail": "Email",
+      "slaRemaining": "SLA remaining:",
+      "documentTypes": {
+        "passport": "Passport",
+        "proof_of_address": "Proof of Address",
+        "signed_poa": "Signed Power of Attorney"
+      },
+      "emailTypes": {
+        "order_confirmation": "Order Confirmation",
+        "documents_approved_customer": "Documents Approved"
+      }
+    }
   }
+
 }

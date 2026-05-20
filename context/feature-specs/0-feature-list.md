@@ -345,7 +345,7 @@ Notes:
 - The UI must include a 30-second timeout fallback (graceful degradation) transitioning the badge to "Still reviewing…" if the AI is slow.
 - Cross-slot locking (locking other approved document slots when one is flagged) and hydrating the UI from the database should be implemented here, as deferred from 10b.
 
-⚠️ **BLOCKED — AI provider**: Code is complete but Gemini no longer has a usable free tier (`gemini-2.0-flash` returns `limit: 0`). All reviews fall through to `manual_review`. Before resuming: pick a replacement provider with a free tier (Groq with `llama-4-scout-17b-16e-instruct` was the leading candidate — generous free tier, vision support for images, `pdfjs-dist` for PDF text extraction). Changes needed: remove `@google/genai`, install replacement SDK, rewrite `lib/ai/gemini.ts`, swap `GEMINI_API_KEY` → new key in `lib/env.ts` and `.env.local`. No changes to actions, validations, UI, or locale files.
+⚠️ **BLOCKED — AI provider**: Code is complete but Gemini no longer has a usable free tier (`gemini-2.0-flash` returns `limit: 0`). **RESOLVED** : GROQ 11A
 
 Depends on: 10b.
 
@@ -485,6 +485,11 @@ Done when:
 - Order detail views show customer and document data.
 - Admin actions update order/document state.
 - Key actions are logged.
+
+Constraints:
+- server component by default
+- mobile first
+- shacn when possible
 
 Depends on: 13a.
 

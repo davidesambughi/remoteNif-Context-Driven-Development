@@ -1,9 +1,9 @@
 // Reusable DB queries — populated by feature specs as each feature is built.
 
-import { eq, desc, and, isNull } from 'drizzle-orm'
+import { eq, desc, and, isNull, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
-import { users, orders, documents } from '@/lib/db/schema'
-import type { SelectUser, SelectOrder, SelectDocument, InsertDocument } from '@/lib/db/schema'
+import { users, orders, documents, payments, auditLog, operatorNotifications } from '@/lib/db/schema'
+import type { SelectUser, SelectOrder, SelectDocument, InsertDocument, InsertAuditLog, InsertOperatorNotification } from '@/lib/db/schema'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 import type { EmailLocale } from '@/lib/email/send'
 
@@ -227,6 +227,55 @@ export async function supersedePreviousDocuments(
     )
 }
 
+// ---------------------------------------------------------------------------
+// Admin queries (Feature 13a)
+// ---------------------------------------------------------------------------
+
+/** Shape returned by getAdminOrderList — includes the customer email from the users join. */
+export interface AdminOrderListItem {
+  id: string
+  tier: 'essential' | 'standard' | 'express'
+  status: string
+  fullName: string | null
+  email: string
+  createdAt: Date
+  documentsApprovedAt: Date | null
+}
+
+/**
+ * Returns all orders joined with their owner's email for the admin order list.
+ * Express documents_approved rows sort first (SLA urgency), then by createdAt DESC.
+ * Accepts optional status and tier filters — omitting either returns all values.
+ */
+export async function getAdminOrderList(filters?: {
+  status?: SelectOrder['status']
+  tier?: SelectOrder['tier']
+}): Promise<AdminOrderListItem[]> {
+  const conditions = []
+  if (filters?.status) conditions.push(eq(orders.status, filters.status))
+  if (filters?.tier) conditions.push(eq(orders.tier, filters.tier))
+
+  return db
+    .select({
+      id: orders.id,
+      tier: orders.tier,
+      status: orders.status,
+      fullName: orders.fullName,
+      email: users.email,
+      createdAt: orders.createdAt,
+      documentsApprovedAt: orders.documentsApprovedAt,
+    })
+    .from(orders)
+    .innerJoin(users, eq(orders.userId, users.id))
+    .where(conditions.length > 0 ? and(...conditions) : undefined)
+    .orderBy(
+      // Express documents_approved rows float to the top — highest SLA urgency
+      sql`CASE WHEN ${orders.tier} = 'express' AND ${orders.status} = 'documents_approved' THEN 0 ELSE 1 END`,
+      sql`${orders.documentsApprovedAt} ASC NULLS LAST`,
+      desc(orders.createdAt),
+    )
+}
+
 /**
  * Updates the personal details of an order.
  * Enforces ownership by checking both orderId and userId.
@@ -253,4 +302,205 @@ export async function updateOrderPersonalDetails(
   if (result.length === 0) {
     throw new Error('Order not found or ownership check failed')
   }
+}
+
+// ---------------------------------------------------------------------------
+// Admin queries (Feature 13b)
+// ---------------------------------------------------------------------------
+
+export interface AdminOrderDetail {
+  // Order fields
+  id: string
+  tier: 'essential' | 'standard' | 'express'
+  status: SelectOrder['status']
+  fullName: string | null
+  dateOfBirth: string | null
+  nationality: string | null
+  passportNumber: string | null
+  passportExpiry: string | null
+  address: string | null
+  createdAt: Date
+  documentsApprovedAt: Date | null
+  // Customer
+  customerEmail: string
+  customerId: string
+  customerLanguage: 'en' | 'fr' | 'es' | 'de'
+  // Payment (latest)
+  paymentAmountCents: number | null
+  paymentStatus: string | null
+  // Documents (all 3 active records — may be fewer if not yet uploaded)
+  documents: AdminDocumentDetail[]
+}
+
+export interface AdminDocumentDetail {
+  id: string
+  type: 'passport' | 'proof_of_address' | 'signed_poa'
+  filePath: string
+  fileName: string
+  fileSize: number
+  mimeType: string
+  aiReviewStatus: SelectDocument['aiReviewStatus']
+  aiReviewReason: string | null
+  aiReviewAttempts: number
+  adminOverride: boolean
+  adminOverrideBy: string | null
+  adminOverrideReason: string | null
+  adminOverrideAt: Date | null
+  approved: boolean
+  approvedAt: Date | null
+  createdAt: Date
+}
+
+/**
+ * Fetches the full composite detail for an order.
+ */
+export async function getAdminOrderDetail(orderId: string): Promise<AdminOrderDetail | null> {
+  const orderResult = await db
+    .select({
+      id: orders.id,
+      tier: orders.tier,
+      status: orders.status,
+      fullName: orders.fullName,
+      dateOfBirth: orders.dateOfBirth,
+      nationality: orders.nationality,
+      passportNumber: orders.passportNumber,
+      passportExpiry: orders.passportExpiry,
+      address: orders.address,
+      createdAt: orders.createdAt,
+      documentsApprovedAt: orders.documentsApprovedAt,
+      customerEmail: users.email,
+      customerId: users.id,
+      customerLanguage: users.language,
+    })
+    .from(orders)
+    .innerJoin(users, eq(orders.userId, users.id))
+    .where(eq(orders.id, orderId))
+    .limit(1)
+
+  const order = orderResult[0]
+  if (!order) return null
+
+  const paymentResult = await db
+    .select({
+      amount: payments.amount,
+      status: payments.status,
+    })
+    .from(payments)
+    .where(eq(payments.orderId, orderId))
+    .orderBy(desc(payments.createdAt))
+    .limit(1)
+
+  const latestPayment = paymentResult[0]
+
+  const docs = await db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.orderId, orderId), isNull(documents.supersededAt)))
+
+  return {
+    ...order,
+    paymentAmountCents: latestPayment?.amount ?? null,
+    paymentStatus: latestPayment?.status ?? null,
+    documents: docs.map(doc => ({
+      id: doc.id,
+      type: doc.type,
+      filePath: doc.filePath,
+      fileName: doc.fileName,
+      fileSize: doc.fileSize,
+      mimeType: doc.mimeType,
+      aiReviewStatus: doc.aiReviewStatus,
+      aiReviewReason: doc.aiReviewReason,
+      aiReviewAttempts: doc.aiReviewAttempts,
+      adminOverride: doc.adminOverride,
+      adminOverrideBy: doc.adminOverrideBy,
+      adminOverrideReason: doc.adminOverrideReason,
+      adminOverrideAt: doc.adminOverrideAt,
+      approved: doc.approved,
+      approvedAt: doc.approvedAt,
+      createdAt: doc.createdAt,
+    })),
+  }
+}
+
+/** Fetches all operator users for notifications. */
+export async function getOperatorUsers(): Promise<Array<{ id: string; email: string }>> {
+  return db
+    .select({ id: users.id, email: users.email })
+    .from(users)
+    .where(eq(users.role, 'operator'))
+}
+
+/** Sets a document as approved via admin override. */
+export async function adminSetDocumentApproved(documentId: string, adminId: string): Promise<void> {
+  await db
+    .update(documents)
+    .set({
+      adminOverride: true,
+      adminOverrideBy: adminId,
+      adminOverrideAt: new Date(),
+      adminOverrideReason: null,
+      approved: true,
+      approvedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(documents.id, documentId))
+}
+
+/** Sets a document as flagged via admin override. */
+export async function adminSetDocumentFlagged(documentId: string, adminId: string, reason: string): Promise<void> {
+  await db
+    .update(documents)
+    .set({
+      adminOverride: true,
+      adminOverrideBy: adminId,
+      adminOverrideAt: new Date(),
+      adminOverrideReason: reason,
+      aiReviewStatus: 'flagged',
+      approved: false,
+      approvedAt: null,
+      updatedAt: new Date(),
+    })
+    .where(eq(documents.id, documentId))
+}
+
+/** Transitions an order to the approved state. */
+export async function adminTransitionOrderToApproved(orderId: string): Promise<void> {
+  await db
+    .update(orders)
+    .set({
+      status: 'documents_approved',
+      documentsApprovedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(orders.id, orderId))
+}
+
+/** Updates the status and optional timestamps of an order. */
+export async function adminUpdateOrderStatusQuery(
+  orderId: string,
+  newStatus: SelectOrder['status'],
+  timestamps: Partial<Pick<SelectOrder, 'documentsApprovedAt' | 'submittedToFinancasAt' | 'deliveredAt'>>
+): Promise<void> {
+  await db
+    .update(orders)
+    .set({
+      status: newStatus,
+      ...timestamps,
+      updatedAt: new Date(),
+    })
+    .where(eq(orders.id, orderId))
+}
+
+/** Inserts an entry into the append-only audit log. Fails silently to prevent breaking main logic. */
+export async function insertAuditLog(entry: Omit<InsertAuditLog, 'id' | 'createdAt'>): Promise<void> {
+  try {
+    await db.insert(auditLog).values(entry)
+  } catch (error) {
+    console.error('Failed to insert audit log:', error)
+  }
+}
+
+/** Inserts a record for an operator notification. */
+export async function insertOperatorNotification(data: Omit<InsertOperatorNotification, 'id' | 'createdAt'>): Promise<void> {
+  await db.insert(operatorNotifications).values(data)
 }

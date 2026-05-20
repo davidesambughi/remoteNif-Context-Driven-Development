@@ -36,7 +36,9 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:pricepertoken.com)",
       "WebFetch(domain:tokenmix.ai)",
-      "Bash(Test-Path *)"
+      "Bash(Test-Path *)",
+      "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\\\\app\\\\[locale]\\\\admin\\\\\\(panel\\)\\\\orders\\\\[id]\")",
+      "Bash(Out-Null)"
     ]
   }
 }

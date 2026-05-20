@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { getOrderConfirmationSubject } from '@/lib/email/templates/order-confirmation'
 import { getAdminDocumentEscalatedSubject } from '@/lib/email/templates/admin-document-escalated'
 import { getAdminOrderReadySubject } from '@/lib/email/templates/admin-order-ready'
+import { getDocumentsApprovedCustomerSubject } from '@/lib/email/templates/documents-approved-customer'
+import { getOperatorSubmissionReadySubject } from '@/lib/email/templates/operator-submission-ready'
 
 describe('getOrderConfirmationSubject', () => {
   const orderId = 'abc-123'
@@ -63,5 +65,30 @@ describe('getAdminOrderReadySubject', () => {
     const subject = getAdminOrderReadySubject('Test User', 'xyz-789')
     expect(subject).toContain('Test User')
     expect(subject).toContain('xyz-789')
+  })
+})
+
+describe('getDocumentsApprovedCustomerSubject', () => {
+  it('returns a non-empty subject for every locale', () => {
+    const locales = ['en', 'fr', 'es', 'de'] as const
+    for (const locale of locales) {
+      expect(getDocumentsApprovedCustomerSubject(locale)).toBeTruthy()
+    }
+  })
+
+  it('returns distinct subjects per locale', () => {
+    const subjects = (['en', 'fr', 'es', 'de'] as const).map(getDocumentsApprovedCustomerSubject)
+    const unique = new Set(subjects)
+    expect(unique.size).toBe(4)
+  })
+})
+
+describe('getOperatorSubmissionReadySubject', () => {
+  it('includes the customer name', () => {
+    expect(getOperatorSubmissionReadySubject('Maria Santos')).toContain('Maria Santos')
+  })
+
+  it('returns a non-empty string', () => {
+    expect(getOperatorSubmissionReadySubject('Test User')).toBeTruthy()
   })
 })

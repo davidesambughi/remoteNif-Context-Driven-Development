@@ -14,12 +14,22 @@ import {
   AdminOrderReadyEmail,
   getAdminOrderReadySubject,
 } from './templates/admin-order-ready'
+import {
+  DocumentsApprovedCustomerEmail,
+  getDocumentsApprovedCustomerSubject,
+} from './templates/documents-approved-customer'
+import {
+  OperatorSubmissionReadyEmail,
+  getOperatorSubmissionReadySubject,
+} from './templates/operator-submission-ready'
 
 export type EmailLocale = 'en' | 'fr' | 'es' | 'de'
 export type EmailTemplateName =
   | 'order_confirmation'
   | 'admin_document_escalated'
   | 'admin_order_ready'
+  | 'documents_approved_customer'
+  | 'operator_submission_ready'
 
 // Discriminated union — add a new member here when a new template is introduced,
 // then add a matching case in the switch below.
@@ -27,6 +37,8 @@ export type EmailPayload =
   | { template: 'order_confirmation'; orderId: string; tier: string; amountEur: string }
   | { template: 'admin_document_escalated'; orderId: string; customerName: string; documentType: string; escalationReason: string }
   | { template: 'admin_order_ready'; orderId: string; customerName: string; tier: string }
+  | { template: 'documents_approved_customer'; customerName: string; tier: string }
+  | { template: 'operator_submission_ready'; customerName: string; tier: string; orderId: string; slaNote?: string }
 
 /**
  * Central email sending helper. All outbound emails go through here — never call
@@ -78,6 +90,28 @@ export async function sendEmail(
           customerName: payload.customerName,
           tier: payload.tier,
           adminOrderUrl,
+        })
+        break
+      }
+      case 'documents_approved_customer': {
+        subject = getDocumentsApprovedCustomerSubject(locale)
+        reactElement = DocumentsApprovedCustomerEmail({
+          locale,
+          customerName: payload.customerName,
+          tier: payload.tier,
+          dashboardUrl,
+        })
+        break
+      }
+      case 'operator_submission_ready': {
+        const operatorQueueUrl = `${env.NEXT_PUBLIC_APP_URL}/en/operator`
+        subject = getOperatorSubmissionReadySubject(payload.customerName)
+        reactElement = OperatorSubmissionReadyEmail({
+          customerName: payload.customerName,
+          tier: payload.tier,
+          orderId: payload.orderId,
+          operatorQueueUrl,
+          slaNote: payload.slaNote,
         })
         break
       }

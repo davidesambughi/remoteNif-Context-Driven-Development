@@ -7,6 +7,8 @@ const handleI18n = createMiddleware(routing)
 
 // Routes that require an authenticated session (session presence only — role checks are in pages/actions)
 const PROTECTED = /\/(dashboard|admin|operator)(\/|$)/
+// Dedicated sign-in pages for internal roles are public — exclude them from the session guard.
+const AUTH_PAGES = /\/(admin|operator)\/signin(\/|$)/
 // Only dashboard routes preserve the original URL for post-login redirect.
 // Admin/operator routes have dedicated sign-in pages (/admin/signin, /operator/signin)
 // and SignInForm already redirects by role — redirectTo would be redundant there.
@@ -18,7 +20,7 @@ export default async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  if (PROTECTED.test(pathname) && !hasValidSession) {
+  if (PROTECTED.test(pathname) && !AUTH_PAGES.test(pathname) && !hasValidSession) {
     const localeFromPath = routing.locales.find(
       (l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`,
     )

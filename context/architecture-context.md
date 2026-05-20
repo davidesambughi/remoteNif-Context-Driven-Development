@@ -365,7 +365,7 @@ export const config = {
 
 3. **Auth and ownership are verified at every mutation boundary** — never trust client-supplied IDs without checking, always verify user has permission.
 
-4. **Client components (`"use client"`) are used only when necessary** — when the component needs browser APIs, event handlers, or React hooks. Default to Server Components.
+4. **Server Components are the default** — every component starts as a Server Component. Add `"use client"` only when the component specifically needs browser APIs, event handlers, or React hooks. If in doubt, keep it server-side.
 
 5. **Business logic belongs in `lib/`** — Server Actions and API routes are thin, complex logic is extracted to reusable functions in `lib/`.
 
@@ -388,5 +388,9 @@ export const config = {
 14. **Email templates are React components** — use React Email for all transactional emails, never string concatenation.
 
 15. **Environment variables are validated at startup** — use Zod to validate all env vars in a single place, fail fast if misconfigured.
+
+16. **shadcn/ui components are the default** — always reach for a shadcn component before writing a custom one. Build custom components only when no shadcn primitive fits; custom components must still use design tokens (no raw colors, no hardcoded spacing).
+
+17. **Mobile-first layout** — all layouts are built for mobile first. Add `md:` / `lg:` breakpoint variants only where the layout actually changes. Never design desktop-first and patch mobile afterward.
 
 ---
