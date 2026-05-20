@@ -4,13 +4,13 @@
 
 ## Current Phase
 
-Active development. Features 01–13a complete.
+Active development. Features 01–13b complete.
 
 ---
 
 ## Current Goal
 
-Feature 13b — Admin Panel (Order Detail).
+Feature 14 (next unbuilt feature — check feature list).
 
 ---
 
@@ -39,6 +39,9 @@ Feature 13b — Admin Panel (Order Detail).
 - **Hotfix — FK Cascade** — `.onDelete('cascade')` on all FK refs, migration `0002` applied.
 - **Hotfix — DOB Year Digit Limit** — `max="9999-12-31"` on date inputs.
 - **Testing features scoped** — `12a-T` (vi.mock unit tests), `12b-T` (DB integration), `21b` (Playwright E2E) added to feature list.
+- **Feature 12b-T — Integration Tests** — 3 test files, 23 tests, 0 failures. Docker Postgres on port 5433, psql-based migration script (drizzle-kit hangs on Windows). Covers: all 6 query functions (getOrderForUser, createDocumentRecord, supersedePreviousDocuments, getActiveDocumentsForOrder, markOrderDocumentsUnderReview, getOrderBasicInfo), uploadDocument (happy path + supersede correctness), reviewDocument all-approved path (real DB write chain), handleCheckoutSessionCompleted (idempotency + missing metadata). Run with `npm run test:integration` (requires Docker running).
+- **Feature 12a-T — Unit Test Coverage** — 198 tests, 0 failures. Covers: all 5 admin actions, `createUploadSignedUrl`, `uploadDocument`, `reviewDocument` (5 branches A–E), `handleCheckoutSessionCompleted` (idempotency + email routing), `sendEmail` dispatch (all 5 templates), all 5 email template smoke tests in EN/FR/ES/DE.
+- **Feature 13b — Admin Panel: Order Detail** — `getAdminOrderDetail` query (orders + users + payments + documents join), all 5 admin actions (`adminApproveDocument`, `adminFlagDocument`, `adminApproveOrder`, `adminUpdateOrderStatus`, `adminResendEmail`), `OrderDetailHeader`, `DocumentReviewCard`, `ApproveOrderSection` (inline confirmation, no `window.confirm`), `StatusUpdateSection`, `EmailResendSection`, `DocumentOverrideButtons`. Full EN/FR/ES/DE translations under `admin.detail` namespace.
 
 ---
 

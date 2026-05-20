@@ -3,21 +3,26 @@
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { usePathname } from 'next/navigation'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import type { SelectOrder } from '@/lib/db/schema'
 
 interface Props {
-  currentStatus?: string
-  currentTier?: string
+  currentStatus?: SelectOrder['status']
+  currentTier?: SelectOrder['tier']
 }
 
-const STATUS_VALUES = [
+const STATUS_VALUES: SelectOrder['status'][] = [
   'documents_pending',
   'documents_under_review',
   'documents_approved',
   'submitted',
   'delivered',
-] as const
+]
 
-const TIER_VALUES = ['essential', 'standard', 'express'] as const
+const TIER_VALUES: SelectOrder['tier'][] = ['essential', 'standard', 'express']
+
+// Sentinel value for "show all" — shadcn Select requires a non-empty string value
+const ALL = '__all__'
 
 /** Status and tier filter bar — updates URL search params, triggers server re-render. */
 export function OrderFilters({ currentStatus, currentTier }: Props) {
@@ -26,14 +31,14 @@ export function OrderFilters({ currentStatus, currentTier }: Props) {
   const pathname = usePathname()
 
   // Explicit label maps — next-intl requires literal key strings
-  const statusLabels: Record<(typeof STATUS_VALUES)[number], string> = {
+  const statusLabels: Record<SelectOrder['status'], string> = {
     documents_pending: t('statuses.documents_pending'),
     documents_under_review: t('statuses.documents_under_review'),
     documents_approved: t('statuses.documents_approved'),
     submitted: t('statuses.submitted'),
     delivered: t('statuses.delivered'),
   }
-  const tierLabels: Record<(typeof TIER_VALUES)[number], string> = {
+  const tierLabels: Record<SelectOrder['tier'], string> = {
     essential: t('tiers.essential'),
     standard: t('tiers.standard'),
     express: t('tiers.express'),
@@ -41,47 +46,47 @@ export function OrderFilters({ currentStatus, currentTier }: Props) {
 
   function update(key: 'status' | 'tier', value: string) {
     const params = new URLSearchParams()
+    const effectiveValue = value === ALL ? '' : value
     if (key === 'status') {
-      if (value) params.set('status', value)
+      if (effectiveValue) params.set('status', effectiveValue)
       if (currentTier) params.set('tier', currentTier)
     } else {
       if (currentStatus) params.set('status', currentStatus)
-      if (value) params.set('tier', value)
+      if (effectiveValue) params.set('tier', effectiveValue)
     }
     const qs = params.toString()
     router.push(qs ? `${pathname}?${qs}` : pathname)
   }
 
-  const selectClass =
-    'bg-surface border border-[var(--border-default)] rounded-md px-3 py-1.5 text-sm text-[var(--text-primary)] cursor-pointer focus:outline-none focus:border-[var(--brand-primary)]'
-
   return (
     <div className="flex flex-wrap gap-3 mb-6">
-      <select
-        value={currentStatus ?? ''}
-        onChange={(e) => update('status', e.target.value)}
-        className={selectClass}
-      >
-        <option value="">{t('filters.allStatuses')}</option>
-        {STATUS_VALUES.map((s) => (
-          <option key={s} value={s}>
-            {statusLabels[s]}
-          </option>
-        ))}
-      </select>
+      <Select value={currentStatus ?? ALL} onValueChange={(v) => update('status', v)}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value={ALL}>{t('filters.allStatuses')}</SelectItem>
+          {STATUS_VALUES.map((s) => (
+            <SelectItem key={s} value={s}>
+              {statusLabels[s]}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
-      <select
-        value={currentTier ?? ''}
-        onChange={(e) => update('tier', e.target.value)}
-        className={selectClass}
-      >
-        <option value="">{t('filters.allTiers')}</option>
-        {TIER_VALUES.map((tier) => (
-          <option key={tier} value={tier}>
-            {tierLabels[tier]}
-          </option>
-        ))}
-      </select>
+      <Select value={currentTier ?? ALL} onValueChange={(v) => update('tier', v)}>
+        <SelectTrigger className="w-[160px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value={ALL}>{t('filters.allTiers')}</SelectItem>
+          {TIER_VALUES.map((tier) => (
+            <SelectItem key={tier} value={tier}>
+              {tierLabels[tier]}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   )
 }

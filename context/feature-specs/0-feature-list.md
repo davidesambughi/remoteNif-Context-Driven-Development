@@ -390,6 +390,14 @@ Depends on: 07.
 
 Add automated tests for the email infrastructure and document review logic built in Features 11b and 12a.
 
+**Start here first** — pure unit tests with `vi.mock`, no infrastructure or live DB needed. Fastest confidence boost.
+
+**Before writing tests, do a pre-flight consistency audit of the admin components built in 13b:**
+- Check for any remaining `any` types across `app/actions/admin.ts` and `components/admin/`.
+- Verify every Server Component uses `getTranslations` (next-intl/server), not `useTranslations` — the latter is for Client Components only.
+- Check that every `"use client"` directive in `components/admin/` has a real reason (event handlers, hooks, browser APIs). Remove it if the component doesn't need it.
+- Replace `window.confirm` in `ApproveOrderSection` with a shadcn `AlertDialog` — `window.confirm` is a browser blocking call, inconsistent with the design system, and not mobile-friendly.
+
 Worth testing:
 
 - **`reviewDocument` branching logic** — the most complex piece of business logic in the codebase. Four distinct paths: AI clear → approve + check all-docs-approved; AI flagged first time → store flag; AI flagged second time → escalate to manual_review + notify admin; AI error → manual_review + notify admin. Each path has its own DB writes and conditional email sends. Test with `vi.mock` for DB queries, `reviewDocumentWithAI`, and `sendEmail`.
@@ -403,6 +411,7 @@ Worth testing:
 
 Done when:
 
+- Pre-flight consistency audit complete and any issues fixed.
 - `vi.mock` infrastructure is set up for DB queries and external clients (Supabase, Resend, AI).
 - `reviewDocument` all four branches are covered.
 - Stripe webhook order creation path is covered.
@@ -452,6 +461,8 @@ Done when:
 
 Notes:
 
+- **Decide on test DB strategy before writing a single test** — options are: (a) a dedicated Supabase test project, (b) a local Postgres instance via Docker seeded with migrations, (c) a separate schema in the dev Supabase project. Each has different setup cost and isolation guarantees. Lock this in first or you'll end up rewriting tests when the infra changes.
+- All 12a-T unit tests should be passing before starting here — integration tests are only valuable once the business logic layer is already verified.
 - High setup cost — defer until the data layer is stable (after Feature 13b at the earliest).
 - Do not mix these with unit tests; they require a live DB and are slow.
 

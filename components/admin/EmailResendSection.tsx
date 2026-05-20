@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, CheckCircle2 } from 'lucide-react'
-import { adminResendEmail } from '@/app/actions/admin'
+import { adminResendEmail, type AdminEmailType } from '@/app/actions/admin'
 
 interface EmailResendSectionProps {
   orderId: string
@@ -15,7 +15,7 @@ interface EmailResendSectionProps {
 export function EmailResendSection({ orderId }: EmailResendSectionProps) {
   const t = useTranslations('admin.detail')
   const [isPending, startTransition] = useTransition()
-  const [emailType, setEmailType] = useState<'order_confirmation' | 'documents_approved_customer'>('order_confirmation')
+  const [emailType, setEmailType] = useState<AdminEmailType>('order_confirmation')
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -39,7 +39,7 @@ export function EmailResendSection({ orderId }: EmailResendSectionProps) {
         <CardTitle className="text-base">{t('resendEmail')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Select value={emailType} onValueChange={(v) => setEmailType(v as typeof emailType)} disabled={isPending}>
+        <Select value={emailType} onValueChange={(v) => setEmailType(v as AdminEmailType)} disabled={isPending}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>

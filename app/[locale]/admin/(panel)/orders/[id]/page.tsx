@@ -67,7 +67,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
 
           <StatusUpdateSection
             orderId={order.id}
-            currentStatus={order.status as 'documents_pending' | 'documents_under_review' | 'documents_approved' | 'submitted' | 'delivered'}
+            currentStatus={order.status}
           />
 
           <EmailResendSection orderId={order.id} />

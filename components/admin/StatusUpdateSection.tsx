@@ -8,15 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { Loader2, CheckCircle2 } from 'lucide-react'
 import { adminUpdateOrderStatus } from '@/app/actions/admin'
-
-type OrderStatus = 'documents_pending' | 'documents_under_review' | 'documents_approved' | 'submitted' | 'delivered'
+import type { SelectOrder } from '@/lib/db/schema'
 
 interface StatusUpdateSectionProps {
   orderId: string
-  currentStatus: OrderStatus
+  currentStatus: SelectOrder['status']
 }
 
-const statusOrder: OrderStatus[] = [
+const statusOrder: SelectOrder['status'][] = [
   'documents_pending',
   'documents_under_review',
   'documents_approved',
@@ -27,7 +26,7 @@ const statusOrder: OrderStatus[] = [
 export function StatusUpdateSection({ orderId, currentStatus }: StatusUpdateSectionProps) {
   const t = useTranslations('admin.detail')
   const [isPending, startTransition] = useTransition()
-  const [status, setStatus] = useState<OrderStatus>(currentStatus)
+  const [status, setStatus] = useState<SelectOrder['status']>(currentStatus)
   const [note, setNote] = useState('')
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -61,7 +60,7 @@ export function StatusUpdateSection({ orderId, currentStatus }: StatusUpdateSect
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Select value={status} onValueChange={(v) => setStatus(v as OrderStatus)} disabled={isPending}>
+          <Select value={status} onValueChange={(v) => setStatus(v as SelectOrder['status'])} disabled={isPending}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>

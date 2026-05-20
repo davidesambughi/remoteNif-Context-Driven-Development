@@ -47,6 +47,12 @@ const ResendEmailSchema = z.object({
 })
 
 // ---------------------------------------------------------------------------
+// Exported Types (inferred from schemas — do not duplicate)
+// ---------------------------------------------------------------------------
+
+export type AdminEmailType = z.infer<typeof ResendEmailSchema>['emailType']
+
+// ---------------------------------------------------------------------------
 // Response Type
 // ---------------------------------------------------------------------------
 
@@ -184,8 +190,8 @@ export async function adminApproveOrder(orderId: string): Promise<ActionResult> 
 
 /** Manually updates order status. */
 export async function adminUpdateOrderStatus(
-  orderId: string, 
-  newStatus: 'documents_pending' | 'documents_under_review' | 'documents_approved' | 'submitted' | 'delivered', 
+  orderId: string,
+  newStatus: SelectOrder['status'],
   note?: string
 ): Promise<ActionResult> {
   try {
@@ -249,7 +255,7 @@ export async function adminUpdateOrderStatus(
 }
 
 /** Resends an email to the customer. */
-export async function adminResendEmail(orderId: string, emailType: 'order_confirmation' | 'documents_approved_customer'): Promise<ActionResult> {
+export async function adminResendEmail(orderId: string, emailType: AdminEmailType): Promise<ActionResult> {
   try {
     const admin = await requireRole('admin')
     

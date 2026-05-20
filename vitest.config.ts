@@ -14,6 +14,7 @@ export default defineConfig({
 
     // Where to look for test files.
     // Includes both .ts and .tsx so email template tests (which use React) are picked up.
-    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
+    // Only run unit tests — integration tests are gated behind npm run test:integration
+    include: ['tests/unit/**/*.test.ts', 'tests/unit/**/*.test.tsx'],
   },
 })

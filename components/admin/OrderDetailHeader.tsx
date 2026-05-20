@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { Card } from '@/components/ui/card'
 import { SlaCountdown } from '@/components/admin/SlaCountdown'
 import type { AdminOrderDetail } from '@/lib/db/queries'
@@ -7,8 +7,8 @@ interface OrderDetailHeaderProps {
   order: AdminOrderDetail
 }
 
-export function OrderDetailHeader({ order }: OrderDetailHeaderProps) {
-  const t = useTranslations('admin.detail')
+export async function OrderDetailHeader({ order }: OrderDetailHeaderProps) {
+  const t = await getTranslations('admin.detail')
 
   const statusColors: Record<string, string> = {
     documents_pending: 'bg-warning-subtle text-warning border-warning',

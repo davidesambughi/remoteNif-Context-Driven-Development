@@ -376,6 +376,7 @@
       "approveOrderCancel": "Cancel",
       "approveOrderDisabledDocs": "All 3 documents must be approved first",
       "approveOrderDisabledStatus": "Order is not in review state",
+      "approveOrderSuccess": "Order approved",
       "updateStatus": "Update Status",
       "updateStatusNote": "Note to customer (optional)",
       "updateStatusNoteRequired": "A note is required when moving the order backward",
