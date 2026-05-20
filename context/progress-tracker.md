@@ -8,13 +8,13 @@
 
 ## Current Phase
 
-Active development. Features 01–10b complete.
+Active development. Features 01–12a, 11a (Groq), 11b complete.
 
 ---
 
 ## Current Goal
 
-Feature 12a-T — Unit test coverage for email infrastructure and document review actions (vi.mock layer for DB queries, Resend, and AI). Then unblock Feature 11a (Groq replacement).
+Feature 12a-T — Unit test coverage for email infrastructure and document review actions (vi.mock layer for DB queries, Resend, and AI).
 
 ---
 
@@ -97,7 +97,8 @@ Feature 12a-T — Unit test coverage for email infrastructure and document revie
   `@google/genai` installed. `DOCUMENT_FLAG_REASON_KEYS` (12 predefined keys, including 3 new POA keys) and `AiReviewResponseSchema` added to `lib/validations/documents.ts`. `lib/ai/gemini.ts` built: downloads file from Supabase Storage (admin client), sends to `gemini-2.0-flash` as inline base64 data, strips markdown fences, validates JSON response with `z.safeParse()` — any unexpected key or parse failure returns `{ status: 'error' }`. Four new queries in `lib/db/queries.ts`: `getActiveDocumentsForOrder`, `getDocumentByIdForUser`, `updateDocumentAiReview`, `markOrderDocumentsUnderReview`. `uploadDocument` action now returns `ActionResult<{ documentId: string }>`. New `reviewDocument` action: ownership check → AI → escalation logic (error → manual_review immediately, no attempts incremented; flagged × 2 → manual_review; clear → checks all 3 docs approved → transitions order to `documents_under_review`). `DocumentUploadSlot` updated: calls `reviewDocument` after upload, 30s `isSlowReview` timeout, `onStatusChange` callback for cross-slot locking, translates reasonKey from DB before display. `PersonalDetailsForm` updated: accepts `documentRecords` prop, derives initial slot statuses from DB, tracks live statuses via `slotStatuses` state, locks approved slots when any slot is flagged. Dashboard page fetches `getActiveDocumentsForOrder` in parallel with POA URL. All 4 locale files updated with `documents.states.stillReviewing` and `documents.flagReasons.*` (12 keys). `signed_poa` now goes through AI review (was previously auto-approved) with 3 dedicated flag reason keys (`poa_unsigned`, `poa_wrong_document`, `poa_incomplete`). `npm run build` passes (41 static pages).
 
 - **Feature 11a — Switch AI provider from Gemini to Groq** ✓
-  Replaced `lib/ai/gemini.ts` with `lib/ai/document-review.ts` using `groq-sdk` + `meta-llama/llama-4-scout-17b-16e-instruct`. PDFs use `pdfjs-dist` text extraction (worker disabled for Node.js); scanned/image-only PDFs that yield no text fall to `{ status: 'error' }` → `manual_review` upstream. `GEMINI_API_KEY` removed from `lib/env.ts`; `GROQ_API_KEY` added. `@google/genai` uninstalled; `groq-sdk` and `pdfjs-dist` installed. Import in `app/actions/documents.ts` updated. `npm run build` passes.
+  Replaced `lib/ai/gemini.ts` with `lib/ai/document-review.ts` using `groq-sdk` + `meta-llama/llama-4-scout-17b-16e-instruct`. PDFs use `pdfjs-dist/legacy/build/pdf.mjs` text extraction; scanned/image-only PDFs fall to `{ status: 'error' }` → `manual_review` upstream. `GEMINI_API_KEY` removed from `lib/env.ts`; `GROQ_API_KEY` added. `@google/genai` uninstalled; `groq-sdk` and `pdfjs-dist` installed. Import in `app/actions/documents.ts` updated.
+  Three Windows-specific fixes required post-implementation: (1) `pdfjs-dist` added to `serverExternalPackages` in `next.config.ts` — Turbopack was bundling it, making the worker script unreachable; (2) import changed to `legacy/build/pdf.mjs` — the main entry requires browser APIs (`DOMMatrix` etc.) not available in Node.js; (3) `workerSrc` set via `pathToFileURL(join(...)).href` — Windows absolute paths (`C:\...`) are rejected by the ESM loader; must be `file:///C:/...`. `npm run build` passes. Verified end-to-end: PDFs extract text correctly, images sent as base64 vision input, Groq returns structured JSON validated through `AiReviewResponseSchema`.
 
 - **Hotfix — Date of Birth Year Digit Limit** ✓
   Added `max="9999-12-31"` to both `dateOfBirth` and `passportExpiry` inputs in `PersonalDetailsForm.tsx` to restrict year typing to 4 digits (`YYYY`) in modern browsers. `npm run build` and all tests pass.

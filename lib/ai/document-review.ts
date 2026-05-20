@@ -1,5 +1,7 @@
 import Groq from 'groq-sdk'
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs'
+import { join } from 'path'
+import { pathToFileURL } from 'url'
 import { env } from '@/lib/env'
 import { createAdminClient } from '@/lib/supabase/admin'
 import {
@@ -8,8 +10,12 @@ import {
   type DocumentFlagReasonKey,
 } from '@/lib/validations/documents'
 
-// Disable the PDF.js web worker — required when running in Node.js (no Worker API)
-pdfjsLib.GlobalWorkerOptions.workerSrc = ''
+// Point to the real worker file so Node.js can spawn it as a Worker thread.
+// pdfjs-dist must be in serverExternalPackages (next.config.ts) for this path to resolve correctly.
+// pathToFileURL converts C:\... to file:///C:/... — required by the ESM loader on Windows
+pdfjsLib.GlobalWorkerOptions.workerSrc = pathToFileURL(
+  join(process.cwd(), 'node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs'),
+).href
 
 export interface AiReviewResult {
   status: 'clear' | 'flagged' | 'error'
