@@ -18,7 +18,7 @@ import {
   type CreateUploadUrlData,
   type UploadDocumentData,
 } from '@/lib/validations/documents'
-import { reviewDocumentWithAI } from '@/lib/ai/gemini'
+import { reviewDocumentWithAI } from '@/lib/ai/document-review'
 import { sendEmail } from '@/lib/email/send'
 import { env } from '@/lib/env'
 import type { ActionResult } from '@/lib/types'

@@ -14,7 +14,7 @@ Active development. Features 01–10b complete.
 
 ## Current Goal
 
-Feature 11a — Replace Gemini with Groq (blocked on AI provider). Then Feature 11b.
+Feature 12a-T — Unit test coverage for email infrastructure and document review actions (vi.mock layer for DB queries, Resend, and AI). Then unblock Feature 11a (Groq replacement).
 
 ---
 
@@ -93,9 +93,11 @@ Feature 11a — Replace Gemini with Groq (blocked on AI provider). Then Feature 
 - **Color & UX Enhancement Pass** ✓
   `globals.css`: `--border-default` bumped to slate-300 (was slate-200 — near invisible), `--border-subtle` to slate-200 (was slate-100). Added `--status-success-subtle`, `--status-warning-subtle`, `--status-error-subtle` (8% opacity tints) wired into `@theme inline` as `bg-success-subtle` / `bg-warning-subtle` / `bg-error-subtle`. Applied the **status-surface pattern** (state-bearing card gets a tinted background + colored border): `DocumentUploadSlot` (pending=amber tint, approved=green tint, flagged=red tint), `PersonalDetailsForm` summary card (green tint + green border when saved). Applied **brand anchor pattern** (one brand-color moment per major section): `AuthCard` (4px brand-primary top border), `HeroSection` stats grid (`bg-brand-primary-dim` block), `TierCard` featured card (`bg-brand-primary-dim` background), `HowItWorksSection` (section background=`bg-brand-primary-dim`, step cards with `border-t-4 border-t-brand-primary`). `FAQSection`: brand-tinted separators (`border-brand-primary/30`), brand chevrons, question text promoted to `text-base font-semibold`, open-state question turns brand-primary, answer text gets a brand left-border accent. Both `HowItWorksSection` and `FAQSection` headings get a `border-l-4 border-brand-primary` accent. Inline `style={{ opacity: 0.2 }}` on step numbers replaced with `opacity-30` Tailwind class. Both patterns documented in Feature 21 notes in `0-feature-list.md`. `npm run build` passes.
 
-- **Feature 11a — Automated AI Document Review** ✓ (code complete, AI provider blocked — see In Progress)
+- **Feature 11a — Automated AI Document Review** ✓
   `@google/genai` installed. `DOCUMENT_FLAG_REASON_KEYS` (12 predefined keys, including 3 new POA keys) and `AiReviewResponseSchema` added to `lib/validations/documents.ts`. `lib/ai/gemini.ts` built: downloads file from Supabase Storage (admin client), sends to `gemini-2.0-flash` as inline base64 data, strips markdown fences, validates JSON response with `z.safeParse()` — any unexpected key or parse failure returns `{ status: 'error' }`. Four new queries in `lib/db/queries.ts`: `getActiveDocumentsForOrder`, `getDocumentByIdForUser`, `updateDocumentAiReview`, `markOrderDocumentsUnderReview`. `uploadDocument` action now returns `ActionResult<{ documentId: string }>`. New `reviewDocument` action: ownership check → AI → escalation logic (error → manual_review immediately, no attempts incremented; flagged × 2 → manual_review; clear → checks all 3 docs approved → transitions order to `documents_under_review`). `DocumentUploadSlot` updated: calls `reviewDocument` after upload, 30s `isSlowReview` timeout, `onStatusChange` callback for cross-slot locking, translates reasonKey from DB before display. `PersonalDetailsForm` updated: accepts `documentRecords` prop, derives initial slot statuses from DB, tracks live statuses via `slotStatuses` state, locks approved slots when any slot is flagged. Dashboard page fetches `getActiveDocumentsForOrder` in parallel with POA URL. All 4 locale files updated with `documents.states.stillReviewing` and `documents.flagReasons.*` (12 keys). `signed_poa` now goes through AI review (was previously auto-approved) with 3 dedicated flag reason keys (`poa_unsigned`, `poa_wrong_document`, `poa_incomplete`). `npm run build` passes (41 static pages).
-  **Known issue**: Gemini free tier has quota limit of 0 for `gemini-2.0-flash` — all reviews fall through to `manual_review`. Decision made to replace Gemini with Groq (see In Progress).
+
+- **Feature 11a — Switch AI provider from Gemini to Groq** ✓
+  Replaced `lib/ai/gemini.ts` with `lib/ai/document-review.ts` using `groq-sdk` + `meta-llama/llama-4-scout-17b-16e-instruct`. PDFs use `pdfjs-dist` text extraction (worker disabled for Node.js); scanned/image-only PDFs that yield no text fall to `{ status: 'error' }` → `manual_review` upstream. `GEMINI_API_KEY` removed from `lib/env.ts`; `GROQ_API_KEY` added. `@google/genai` uninstalled; `groq-sdk` and `pdfjs-dist` installed. Import in `app/actions/documents.ts` updated. `npm run build` passes.
 
 - **Hotfix — Date of Birth Year Digit Limit** ✓
   Added `max="9999-12-31"` to both `dateOfBirth` and `passportExpiry` inputs in `PersonalDetailsForm.tsx` to restrict year typing to 4 digits (`YYYY`) in modern browsers. `npm run build` and all tests pass.
@@ -112,14 +114,6 @@ Feature 11a — Replace Gemini with Groq (blocked on AI provider). Then Feature 
 
 ## In Progress
 
-- **Feature 11a — Switch AI provider from Gemini to Groq**
-  Gemini free tier has `limit: 0` for `gemini-2.0-flash` — unusable without paid billing. Decision: replace with Groq (`groq-sdk` + `meta-llama/llama-4-scout-17b-16e-instruct`), which has a generous free tier.
-  PDF challenge: Groq vision models accept images only, not PDFs natively. Plan:
-  - JPEG/PNG → send as base64 to Groq vision model (same as Gemini).
-  - PDF → extract text with `pdfjs-dist` (pure JS, no native deps, Vercel-safe), send as text-only prompt.
-  - PDF with no extractable text (scanned image PDF) → `{ status: 'error' }` → `manual_review`.
-  Files to change: remove `@google/genai`, install `groq-sdk` + `pdfjs-dist`. Rewrite `lib/ai/gemini.ts` (rename or replace). Swap `GEMINI_API_KEY` → `GROQ_API_KEY` in `lib/env.ts` and `.env.local`. No changes to actions, validations, UI, or locale files.
-
 ---
 
 ## Open Questions
@@ -135,6 +129,15 @@ Feature 11a — Replace Gemini with Groq (blocked on AI provider). Then Feature 
 - Q1: Deadline selector and tier cards are one screen, not two steps — reduces friction.
 - Q2: Document review is async with badge state progression (Uploading → Reviewing → Approved); 30s timeout → manual review fallback.
 - Q3: Fiscal rep renewal uses a new Stripe Checkout session per renewal email — no card storage at this stage.
+
+---
+
+- **Testing features added to feature list** ✓
+  Three testing features added to `0-feature-list.md`:
+  - `12a-T` — unit tests with `vi.mock` for `reviewDocument` (4 branches), Stripe webhook, `sendEmail` dispatch, `uploadDocument`. Next to implement.
+  - `12b-T` — integration tests against a real DB (deferred until after 13b).
+  - `21b` — Playwright E2E for the 5 critical flows (deferred until after Feature 21 UI polish).
+  Existing tests already cover: email subjects, template renders, Zod schemas (auth/documents/orders), pricing constants, permission helpers.
 
 ---
 

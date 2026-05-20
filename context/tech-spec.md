@@ -320,7 +320,7 @@ CREATE INDEX idx_audit_log_created_at ON audit_log(created_at DESC);
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | Stripe dashboard → Developers → Webhooks |
 | `RESEND_API_KEY` | Resend API key | resend.com → API Keys |
 | `RESEND_FROM_EMAIL` | From address for all emails | Verified domain in Resend |
-| `GEMINI_API_KEY` | Gemini Vision API key | Google AI Studio → Get API Key |
+| `GROQ_API_KEY` | Groq API key | console.groq.com |
 | `CRON_SECRET` | Auth token for Vercel Cron → `/api/cron/*` | Generate any long random string |
 
 ### Zod Schema (`lib/env.ts`)
@@ -344,7 +344,7 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string().startsWith('re_'),
   RESEND_FROM_EMAIL: z.string().email(),
 
-  GEMINI_API_KEY: z.string().min(1),
+  GROQ_API_KEY: z.string().min(1),
 
   CRON_SECRET: z.string().min(1),
 })
@@ -376,7 +376,7 @@ RESEND_API_KEY=re_...
 RESEND_FROM_EMAIL=noreply@remotenif.com
 
 # AI
-GEMINI_API_KEY=AIzaSy...
+GROQ_API_KEY=gsk_...
 
 # Cron
 CRON_SECRET=your-long-random-secret

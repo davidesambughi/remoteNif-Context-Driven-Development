@@ -1,26 +1,26 @@
 import { z } from 'zod'
 
 const envSchema = z.object({
-  NEXT_PUBLIC_APP_URL: z.string().url(),
+  NEXT_PUBLIC_APP_URL: z.url(),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+  NEXT_PUBLIC_SUPABASE_URL: z.url(),
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
   SUPABASE_SERVICE_SECRET_KEY: z.string().min(1),
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.url(),
 
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().startsWith('pk_'),
   STRIPE_SECRET_KEY: z.string().startsWith('sk_'),
   STRIPE_WEBHOOK_SECRET: z.string().startsWith('whsec_'),
 
   RESEND_API_KEY: z.string().startsWith('re_'),
-  RESEND_FROM_EMAIL: z.string().email(),
+  RESEND_FROM_EMAIL: z.email(),
 
-  GEMINI_API_KEY: z.string().min(1),
+  GROQ_API_KEY: z.string().min(1),
 
   CRON_SECRET: z.string().min(1),
 
-  ADMIN_EMAIL: z.string().email(),
+  ADMIN_EMAIL: z.email(),
 })
 
 export type Env = z.infer<typeof envSchema>

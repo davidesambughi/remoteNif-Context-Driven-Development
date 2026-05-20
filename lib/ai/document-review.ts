@@ -1,4 +1,5 @@
-import { GoogleGenAI } from '@google/genai'
+import Groq from 'groq-sdk'
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs'
 import { env } from '@/lib/env'
 import { createAdminClient } from '@/lib/supabase/admin'
 import {
@@ -7,12 +8,16 @@ import {
   type DocumentFlagReasonKey,
 } from '@/lib/validations/documents'
 
+// Disable the PDF.js web worker — required when running in Node.js (no Worker API)
+pdfjsLib.GlobalWorkerOptions.workerSrc = ''
+
 export interface AiReviewResult {
   status: 'clear' | 'flagged' | 'error'
   reasonKey?: DocumentFlagReasonKey
 }
 
-const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY })
+// Initialise Groq client once at module load using the validated env key
+const groq = new Groq({ apiKey: env.GROQ_API_KEY })
 
 // Builds a document-type-specific prompt that explicitly enumerates the valid reasonKeys.
 // The model is instructed to return ONLY a JSON object — no prose, no markdown fences.
@@ -84,9 +89,29 @@ Key definitions:
 }
 
 /**
- * Downloads a document from Supabase Storage and sends it to Gemini for review.
+ * Extracts plain text from a PDF buffer using pdfjs-dist.
+ * Returns empty string if extraction fails — caller is responsible for treating that as an error.
+ */
+async function extractPdfText(data: Uint8Array): Promise<string> {
+  // getDocument expects a typed array; workerSrc must already be disabled at module level
+  const pdf = await pdfjsLib.getDocument({ data }).promise
+  let text = ''
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i)
+    const content = await page.getTextContent()
+    // 'str' only exists on TextItem, not TextMarkedContent — guard with 'in' check
+    text += content.items.map((item) => ('str' in item ? item.str : '')).join(' ')
+  }
+  return text
+}
+
+/**
+ * Downloads a document from Supabase Storage and sends it to Groq (llama-4-scout) for review.
+ * - Images (jpeg/png): encoded as base64 and sent as an image_url content block.
+ * - PDFs: text is extracted with pdfjs-dist and sent as plain text. Scanned/image-only
+ *   PDFs that yield no text fall through to { status: 'error' } → triggers manual_review upstream.
  * Returns a structured result validated against AiReviewResponseSchema.
- * Any failure (download, parse, or schema mismatch) returns { status: 'error' }.
+ * Any failure (download, parse, schema mismatch) returns { status: 'error' } — never throws.
  */
 export async function reviewDocumentWithAI(
   filePath: string,
@@ -101,28 +126,67 @@ export async function reviewDocumentWithAI(
       .download(filePath)
 
     if (downloadError || !blob) {
-      console.error('[gemini] Storage download failed:', downloadError)
+      console.error('[document-review] Storage download failed:', downloadError)
       return { status: 'error' }
     }
 
     const buffer = await blob.arrayBuffer()
-    const base64 = Buffer.from(buffer).toString('base64')
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            { inlineData: { mimeType, data: base64 } },
-            { text: buildPrompt(documentType) },
-          ],
-        },
-      ],
-    })
+    // Build the Groq message depending on whether this is an image or a PDF
+    let completion: Awaited<ReturnType<typeof groq.chat.completions.create>>
 
-    // Strip markdown code fences Gemini sometimes adds despite instructions
-    const rawText = (response.text ?? '').trim()
+    if (mimeType === 'image/jpeg' || mimeType === 'image/png') {
+      // Encode binary to base64 and send as an inline image_url data URI
+      const base64 = Buffer.from(buffer).toString('base64')
+
+      completion = await groq.chat.completions.create({
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: buildPrompt(documentType) },
+              {
+                type: 'image_url',
+                image_url: { url: `data:${mimeType};base64,${base64}` },
+              },
+            ],
+          },
+        ],
+      })
+    } else if (mimeType === 'application/pdf') {
+      // Extract text with pdfjs-dist; fall back to error for scanned/image-only PDFs
+      let extractedText: string
+      try {
+        extractedText = await extractPdfText(new Uint8Array(buffer))
+      } catch (pdfErr) {
+        console.error('[document-review] PDF text extraction threw:', pdfErr)
+        return { status: 'error' }
+      }
+
+      if (!extractedText.trim()) {
+        // No selectable text — likely a scanned document; escalate to manual review via error
+        console.warn('[document-review] PDF contained no extractable text — returning error')
+        return { status: 'error' }
+      }
+
+      completion = await groq.chat.completions.create({
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        messages: [
+          {
+            role: 'user',
+            content: `${buildPrompt(documentType)}\n\nDocument text:\n${extractedText}`,
+          },
+        ],
+      })
+    } else {
+      // Unsupported MIME type — return error rather than silently accepting
+      console.error('[document-review] Unsupported mimeType:', mimeType)
+      return { status: 'error' }
+    }
+
+    // Strip markdown code fences the model sometimes adds despite instructions
+    const rawText = (completion.choices[0]?.message?.content ?? '').trim()
     const jsonText = rawText
       .replace(/^```(?:json)?\s*/i, '')
       .replace(/\s*```$/, '')
@@ -132,7 +196,7 @@ export async function reviewDocumentWithAI(
     try {
       parsed = JSON.parse(jsonText)
     } catch {
-      console.error('[gemini] Response is not valid JSON:', rawText)
+      console.error('[document-review] Response is not valid JSON:', rawText)
       return { status: 'error' }
     }
 
@@ -140,7 +204,11 @@ export async function reviewDocumentWithAI(
     // never a raw string surfaced to the user
     const validated = AiReviewResponseSchema.safeParse(parsed)
     if (!validated.success) {
-      console.error('[gemini] Response failed schema validation:', parsed, validated.error.issues)
+      console.error(
+        '[document-review] Response failed schema validation:',
+        parsed,
+        validated.error.issues,
+      )
       return { status: 'error' }
     }
 
@@ -149,7 +217,7 @@ export async function reviewDocumentWithAI(
       reasonKey: validated.data.reasonKey,
     }
   } catch (err) {
-    console.error('[gemini] Unexpected error during document review:', err)
+    console.error('[document-review] Unexpected error during document review:', err)
     return { status: 'error' }
   }
 }

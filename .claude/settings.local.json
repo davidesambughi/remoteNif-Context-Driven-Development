@@ -30,7 +30,13 @@
       "Bash(powershell *)",
       "Bash(findstr /i \"version\\\\|main\\\\|exports\\\\|description\")",
       "WebFetch(domain:resend.com)",
-      "Bash(npm uninstall *)"
+      "Bash(npm uninstall *)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:console.groq.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:pricepertoken.com)",
+      "WebFetch(domain:tokenmix.ai)",
+      "Bash(Test-Path *)"
     ]
   }
 }
