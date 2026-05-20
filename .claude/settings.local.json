@@ -42,7 +42,9 @@
       "Bash(where docker *)",
       "Bash(Get-Command docker *)",
       "Bash(Select-Object Source)",
-      "Bash(docker exec *)"
+      "Bash(docker exec *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
