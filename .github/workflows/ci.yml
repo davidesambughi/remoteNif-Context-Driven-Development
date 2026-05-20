@@ -1,0 +1,97 @@
+# CI — runs on every push and pull request.
+#
+# Two jobs:
+#   unit      — fast, no external services, runs on every push
+#   integration — spins up a real Postgres container, runs the DB-level tests
+#
+# Both must pass before a pull request can be merged (configure this in
+# GitHub → Settings → Branches → Branch protection rules).
+
+name: CI
+
+on:
+  push:
+    branches: ["**"]   # every branch you push
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Job 1 — Unit tests (198 tests, ~15s, no Docker needed)
+  # ---------------------------------------------------------------------------
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+        # npm test → vitest run → tests/unit/**  (integration tests excluded)
+
+  # ---------------------------------------------------------------------------
+  # Job 2 — Integration tests (real Postgres via Docker service)
+  # ---------------------------------------------------------------------------
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+
+    # GitHub Actions spins up this container alongside the job runner.
+    # The runner can reach it at localhost:5433.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: nif3_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5433:5432
+        # Wait until Postgres is ready before running any steps
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply migrations
+        # Use psql directly — same approach as scripts/apply-test-migrations.mjs
+        # but without needing docker exec (Postgres is already reachable at localhost:5433).
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -p 5433 -U postgres -d nif3_test \
+            -f lib/db/migrations/0000_whole_triathlon.sql
+          psql -h localhost -p 5433 -U postgres -d nif3_test \
+            -f lib/db/migrations/0002_flowery_amphibian.sql
+          psql -h localhost -p 5433 -U postgres -d nif3_test \
+            -f lib/db/migrations/0003_even_katie_power.sql
+          # 0001_handle_new_user.sql is Supabase Auth specific (auth.users trigger)
+          # and is intentionally skipped — plain Postgres has no auth schema.
+
+      - name: Run integration tests
+        run: npx vitest run --config vitest.integration.config.ts

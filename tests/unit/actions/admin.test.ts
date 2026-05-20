@@ -47,8 +47,12 @@ const ADMIN = { id: 'c3d4e5f6-a1b2-4c3d-ae4e-5f6a7b8c9d0e', role: 'admin' as con
 const VALID_DOC_ID = 'a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d'
 const VALID_ORDER_ID = 'b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e'
 
-function makeOrder(overrides: Partial<ReturnType<typeof baseOrder>> = {}) {
-  return { ...baseOrder(), ...overrides }
+// Use the real AdminOrderDetail type so overrides accept any valid status/tier/timestamp —
+// not just the literal values locked into baseOrder().
+type OrderFixture = NonNullable<Awaited<ReturnType<typeof queries.getAdminOrderDetail>>>
+
+function makeOrder(overrides: Partial<OrderFixture> = {}): OrderFixture {
+  return { ...baseOrder(), ...overrides } as OrderFixture
 }
 
 function baseOrder() {
