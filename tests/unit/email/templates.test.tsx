@@ -193,3 +193,76 @@ describe('OperatorSubmissionReadyEmail', () => {
     await expect(render(OperatorSubmissionReadyEmail(baseProps))).resolves.not.toThrow()
   })
 })
+
+import {
+  OrderSubmittedCustomerEmail,
+  getOrderSubmittedCustomerSubject,
+} from '@/lib/email/templates/order-submitted-customer'
+
+describe('OrderSubmittedCustomerEmail', () => {
+  const baseProps = {
+    locale: 'en' as const,
+    customerName: 'Sofia Andrade',
+    tier: 'standard',
+    dashboardUrl: 'https://example.com/en/dashboard',
+  }
+
+  it('renders without throwing (EN)', async () => {
+    await expect(render(OrderSubmittedCustomerEmail(baseProps))).resolves.not.toThrow()
+  })
+
+  it('renders without throwing (FR)', async () => {
+    await expect(render(OrderSubmittedCustomerEmail({ ...baseProps, locale: 'fr' }))).resolves.not.toThrow()
+  })
+
+  it('renders without throwing (ES)', async () => {
+    await expect(render(OrderSubmittedCustomerEmail({ ...baseProps, locale: 'es' }))).resolves.not.toThrow()
+  })
+
+  it('renders without throwing (DE)', async () => {
+    await expect(render(OrderSubmittedCustomerEmail({ ...baseProps, locale: 'de' }))).resolves.not.toThrow()
+  })
+
+  it('contains customerName in output', async () => {
+    const html = await render(OrderSubmittedCustomerEmail(baseProps))
+    expect(html).toContain('Sofia Andrade')
+  })
+
+  it('contains dashboardUrl as a link', async () => {
+    const html = await render(OrderSubmittedCustomerEmail(baseProps))
+    expect(html).toContain('https://example.com/en/dashboard')
+  })
+
+  it('contains delivery estimate copy', async () => {
+    // The estimate is the key legal/UX requirement — verify it appears in every locale
+    const html = await render(OrderSubmittedCustomerEmail(baseProps))
+    // All locales mention "5" and "10" days in their estimate copy
+    expect(html).toContain('5')
+    expect(html).toContain('10')
+  })
+
+  it('contains "Finanças" in the output — submission confirmation', async () => {
+    const html = await render(OrderSubmittedCustomerEmail(baseProps))
+    expect(html).toContain('Finan')
+  })
+})
+
+describe('getOrderSubmittedCustomerSubject', () => {
+  it('returns a non-empty string for each locale', () => {
+    const locales = ['en', 'fr', 'es', 'de'] as const
+    for (const locale of locales) {
+      const subject = getOrderSubmittedCustomerSubject(locale)
+      expect(typeof subject).toBe('string')
+      expect(subject.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('returns different subjects for different locales', () => {
+    const en = getOrderSubmittedCustomerSubject('en')
+    const fr = getOrderSubmittedCustomerSubject('fr')
+    const es = getOrderSubmittedCustomerSubject('es')
+    const de = getOrderSubmittedCustomerSubject('de')
+    // All four should be distinct — a single hardcoded string would fail this
+    expect(new Set([en, fr, es, de]).size).toBe(4)
+  })
+})

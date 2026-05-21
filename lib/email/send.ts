@@ -22,6 +22,10 @@ import {
   OperatorSubmissionReadyEmail,
   getOperatorSubmissionReadySubject,
 } from './templates/operator-submission-ready'
+import {
+  OrderSubmittedCustomerEmail,
+  getOrderSubmittedCustomerSubject,
+} from './templates/order-submitted-customer'
 
 export type EmailLocale = 'en' | 'fr' | 'es' | 'de'
 export type EmailTemplateName =
@@ -30,6 +34,7 @@ export type EmailTemplateName =
   | 'admin_order_ready'
   | 'documents_approved_customer'
   | 'operator_submission_ready'
+  | 'order_submitted_customer'
 
 // Discriminated union — add a new member here when a new template is introduced,
 // then add a matching case in the switch below.
@@ -39,6 +44,7 @@ export type EmailPayload =
   | { template: 'admin_order_ready'; orderId: string; customerName: string; tier: string }
   | { template: 'documents_approved_customer'; customerName: string; tier: string }
   | { template: 'operator_submission_ready'; customerName: string; tier: string; orderId: string; slaNote?: string }
+  | { template: 'order_submitted_customer'; customerName: string; tier: string }
 
 /**
  * Central email sending helper. All outbound emails go through here — never call
@@ -112,6 +118,17 @@ export async function sendEmail(
           orderId: payload.orderId,
           operatorQueueUrl,
           slaNote: payload.slaNote,
+        })
+        break
+      }
+      case 'order_submitted_customer': {
+        // Notify the customer that their application has been submitted to Finanças
+        subject = getOrderSubmittedCustomerSubject(locale)
+        reactElement = OrderSubmittedCustomerEmail({
+          locale,
+          customerName: payload.customerName,
+          tier: payload.tier,
+          dashboardUrl,
         })
         break
       }

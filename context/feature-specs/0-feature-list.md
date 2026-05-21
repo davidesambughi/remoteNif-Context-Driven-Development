@@ -506,16 +506,37 @@ Depends on: 13a.
 
 ---
 
-## 14a — Operator Queue (Packaging & Submission)
+## 14a-1 — Operator Queue UI & Submission ✅ COMPLETE
 
-Build the operator priority queue and submission workflow.
+Operator shell layout, priority queue display, SLA countdown, and mark-as-submitted action.
 
 Done when:
 
-- Operators see the queue in the correct priority order.
-- Orders can be packaged and submitted.
+- Operators see the queue in the correct priority order (Express first, then Standard FIFO).
+- SLA countdown renders in color-coded text (green > 24h, amber 8–24h, red < 8h, red bold overdue).
+- "Mark as submitted" fires a Server Action with an AlertDialog confirmation; success toast + row removal.
+- 33 unit tests passing.
+
+Spec: `context/feature-specs/14a-1-operator-queue-ui.md`
 
 Depends on: 13b.
+
+---
+
+## 14a-2 — Operator Package Download ✅ COMPLETE
+
+ZIP download of all approved documents + a cover sheet PDF for each order in the queue.
+
+Done when:
+
+- Clicking "Download Package" in `QueueRow` downloads a ZIP file containing all approved documents and a generated cover sheet PDF.
+- API route `app/api/operator/package/[orderId]/route.ts` exists and streams the ZIP response.
+- Cover sheet is generated with `@react-pdf/renderer` (uses `StyleSheet.create()` — not web inline styles).
+- Route is protected: operator role required, orderId validated.
+
+Spec: `context/feature-specs/14a-2-operator-package-download.md`
+
+Depends on: 14a-1.
 
 ---
 
@@ -533,6 +554,34 @@ Notes:
 - **"Submitted to Finanças" customer email goes here.** When `markOrderAsSubmitted` runs (14a-1), it transitions the order status to `submitted` but deliberately does not send a customer email — that email is added in this feature. Wire a `sendEmail` call (type `order_submitted`) into the `markOrderAsSubmitted` action, using the existing `sendEmail` infrastructure from Feature 12a. The email should confirm the application has been submitted to Finanças and include the estimated delivery estimate copy ("Typically 5–10 business days…"). Add the template to `lib/email/templates/` and the translation keys to all four locale files.
 
 Depends on: 14a.
+
+---
+
+## 14c — App-Wide Navigation
+
+Design and implement consistent navigation across all three authenticated route groups and the public marketing section.
+
+The `OperatorNav` tab bar built in Feature 14b is a placeholder — it is not consistent with the rest of the product and needs to be rethought as part of a unified navigation design.
+
+Done when:
+
+- Each route group has a coherent, intentional navigation: marketing header (already exists, review), customer dashboard header, admin panel sidebar or header, operator panel header.
+- Navigation is mobile-first: desktop layout and mobile hamburger/drawer variants are defined for each group.
+- All nav links are locale-aware (use `Link` from `@/i18n/navigation`).
+- The operator nav correctly highlights the active section (Queue / Archive / Preferences) without false positives.
+- Design is consistent with the design token system — no raw Tailwind color classes.
+- shadcn when possible 
+- use Links instead of anchor tag when optimal
+
+Notes:
+
+- The three route groups — `(dashboard)`, `(admin)`, `(operator)` — have different audiences and different nav needs. Do not force a single nav shell on all three. Define the right pattern for each before building.
+- The marketing header already exists and is likely sufficient — review, don't rewrite.
+- The operator panel is an internal tool (no customer-facing copy), so the nav can be simpler and English-only.
+- Consider whether any nav state (collapsed sidebar, mobile open) needs to persist across route changes — avoid over-engineering; a simple stateless header is fine unless a clear need exists.
+- High-fidelity mockups or wireframes should be reviewed before starting implementation.
+
+Depends on: 14b.
 
 ---
 
@@ -642,6 +691,7 @@ Depends on: 18a.
 ## 19 — UX Improvements & Corrections
 
 Fix accumulated UX gaps and misleading states discovered during testing.
+Consider Splittig in more manageable sub-features 
 
 Done when:
 

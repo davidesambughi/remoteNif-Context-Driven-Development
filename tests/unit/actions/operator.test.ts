@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { markOrderAsSubmitted } from '@/app/actions/operator'
+import { markOrderAsSubmitted, updateOperatorPreferences } from '@/app/actions/operator'
 
 // ---------------------------------------------------------------------------
 // Mocks — same pattern as admin.test.ts
@@ -9,6 +9,9 @@ vi.mock('@/lib/db/queries', () => ({
   getOrderStatusById: vi.fn(),
   markOrderSubmitted: vi.fn(),
   insertAuditLog: vi.fn(),
+  getOrderDataForSubmissionEmail: vi.fn(),
+  getOperatorPreferencesOrDefaults: vi.fn(),
+  upsertOperatorPreferences: vi.fn(),
 }))
 
 vi.mock('@/lib/auth/session', () => ({
@@ -19,8 +22,14 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
 
+// Mock sendEmail to prevent Resend client initialization in tests
+vi.mock('@/lib/email/send', () => ({
+  sendEmail: vi.fn(),
+}))
+
 import * as queries from '@/lib/db/queries'
 import * as session from '@/lib/auth/session'
+import * as emailSend from '@/lib/email/send'
 import { revalidatePath } from 'next/cache'
 
 // ---------------------------------------------------------------------------
@@ -34,10 +43,17 @@ beforeEach(() => {
   vi.clearAllMocks()
   // Default: authenticated as operator
   vi.mocked(session.requireRole).mockResolvedValue(OPERATOR as never)
+  // Default: email data available for submission email
+  vi.mocked(queries.getOrderDataForSubmissionEmail).mockResolvedValue({
+    customerEmail: 'customer@example.com',
+    customerLanguage: 'en',
+    fullName: 'Jane Doe',
+    tier: 'standard',
+  })
 })
 
 // ---------------------------------------------------------------------------
-// Input validation
+// markOrderAsSubmitted — input validation
 // ---------------------------------------------------------------------------
 
 describe('markOrderAsSubmitted — input validation', () => {
@@ -58,7 +74,7 @@ describe('markOrderAsSubmitted — input validation', () => {
 })
 
 // ---------------------------------------------------------------------------
-// Order state checks
+// markOrderAsSubmitted — order state checks
 // ---------------------------------------------------------------------------
 
 describe('markOrderAsSubmitted — order state', () => {
@@ -86,7 +102,7 @@ describe('markOrderAsSubmitted — order state', () => {
 })
 
 // ---------------------------------------------------------------------------
-// Success path
+// markOrderAsSubmitted — success path
 // ---------------------------------------------------------------------------
 
 describe('markOrderAsSubmitted — success path', () => {
@@ -121,19 +137,38 @@ describe('markOrderAsSubmitted — success path', () => {
     )
   })
 
-  it('calls revalidatePath to refresh the operator queue', async () => {
+  it('revalidates both the queue and archive pages', async () => {
     await markOrderAsSubmitted(VALID_ORDER_ID)
     expect(revalidatePath).toHaveBeenCalledWith('/operator', 'page')
+    expect(revalidatePath).toHaveBeenCalledWith('/operator/submitted', 'page')
   })
 
   it('verifies requireRole is called with "operator"', async () => {
     await markOrderAsSubmitted(VALID_ORDER_ID)
     expect(session.requireRole).toHaveBeenCalledWith('operator')
   })
+
+  it('fetches order data for the submission email after marking submitted', async () => {
+    await markOrderAsSubmitted(VALID_ORDER_ID)
+    // Allow the fire-and-forget promise to settle
+    await vi.waitFor(() =>
+      expect(queries.getOrderDataForSubmissionEmail).toHaveBeenCalledWith(VALID_ORDER_ID),
+    )
+  })
+
+  it('skips email silently when order email data is missing', async () => {
+    vi.mocked(queries.getOrderDataForSubmissionEmail).mockResolvedValue(null)
+    const result = await markOrderAsSubmitted(VALID_ORDER_ID)
+    // Action still succeeds — missing email data is not a blocking error
+    expect(result).toEqual({ success: true })
+    await vi.waitFor(() =>
+      expect(emailSend.sendEmail).not.toHaveBeenCalled(),
+    )
+  })
 })
 
 // ---------------------------------------------------------------------------
-// Ordering guarantees — validate → auth → DB, never the other way around
+// markOrderAsSubmitted — call ordering
 // ---------------------------------------------------------------------------
 
 describe('markOrderAsSubmitted — call ordering', () => {
@@ -154,5 +189,109 @@ describe('markOrderAsSubmitted — call ordering', () => {
     vi.mocked(queries.getOrderStatusById).mockResolvedValue({ status: 'submitted' })
     await markOrderAsSubmitted(VALID_ORDER_ID)
     expect(queries.markOrderSubmitted).not.toHaveBeenCalled()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// updateOperatorPreferences — input validation
+// ---------------------------------------------------------------------------
+
+describe('updateOperatorPreferences — input validation', () => {
+  it('returns error for missing required fields', async () => {
+    // @ts-expect-error — intentionally passing wrong shape
+    const result = await updateOperatorPreferences({})
+    expect(result).toEqual({ success: false, error: 'Invalid preferences data.' })
+  })
+
+  it('returns error when SMS is enabled but phone number is empty', async () => {
+    const result = await updateOperatorPreferences({
+      emailNotifications: true,
+      smsNotifications: true,
+      phoneNumber: '',
+    })
+    expect(result).toEqual({
+      success: false,
+      error: 'A phone number is required when SMS notifications are enabled.',
+    })
+  })
+
+  it('returns error when SMS is enabled but phone number is null', async () => {
+    const result = await updateOperatorPreferences({
+      emailNotifications: true,
+      smsNotifications: true,
+      phoneNumber: null,
+    })
+    expect(result).toEqual({
+      success: false,
+      error: 'A phone number is required when SMS notifications are enabled.',
+    })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// updateOperatorPreferences — success path
+// ---------------------------------------------------------------------------
+
+describe('updateOperatorPreferences — success path', () => {
+  beforeEach(() => {
+    vi.mocked(queries.upsertOperatorPreferences).mockResolvedValue(undefined)
+    vi.mocked(queries.insertAuditLog).mockResolvedValue(undefined)
+  })
+
+  it('returns { success: true } with valid data (SMS off)', async () => {
+    const result = await updateOperatorPreferences({
+      emailNotifications: true,
+      smsNotifications: false,
+      phoneNumber: null,
+    })
+    expect(result).toEqual({ success: true })
+  })
+
+  it('returns { success: true } with SMS on and a phone number', async () => {
+    const result = await updateOperatorPreferences({
+      emailNotifications: true,
+      smsNotifications: true,
+      phoneNumber: '+351912345678',
+    })
+    expect(result).toEqual({ success: true })
+  })
+
+  it('calls upsertOperatorPreferences with the correct data', async () => {
+    await updateOperatorPreferences({
+      emailNotifications: false,
+      smsNotifications: true,
+      phoneNumber: '+351912345678',
+    })
+    expect(queries.upsertOperatorPreferences).toHaveBeenCalledWith(
+      OPERATOR.id,
+      expect.objectContaining({
+        emailNotifications: false,
+        smsNotifications: true,
+        phoneNumber: '+351912345678',
+      }),
+    )
+  })
+
+  it('writes an audit log entry with action "operator.preferences.updated"', async () => {
+    await updateOperatorPreferences({
+      emailNotifications: true,
+      smsNotifications: false,
+      phoneNumber: null,
+    })
+    expect(queries.insertAuditLog).toHaveBeenCalledWith(
+      expect.objectContaining({ action: 'operator.preferences.updated', userId: OPERATOR.id }),
+    )
+  })
+
+  it('passes null phoneNumber when SMS is off, regardless of input', async () => {
+    await updateOperatorPreferences({
+      emailNotifications: true,
+      smsNotifications: false,
+      phoneNumber: '+351912345678', // should be nulled when SMS is off
+    })
+    expect(queries.upsertOperatorPreferences).toHaveBeenCalledWith(
+      OPERATOR.id,
+      expect.objectContaining({ phoneNumber: null }),
+    )
   })
 })

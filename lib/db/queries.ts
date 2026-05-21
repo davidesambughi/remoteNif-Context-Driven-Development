@@ -2,8 +2,8 @@
 
 import { eq, desc, and, isNull, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
-import { users, orders, documents, payments, auditLog, operatorNotifications } from '@/lib/db/schema'
-import type { SelectUser, SelectOrder, SelectDocument, InsertDocument, InsertAuditLog, InsertOperatorNotification } from '@/lib/db/schema'
+import { users, orders, documents, payments, auditLog, operatorNotifications, operatorPreferences } from '@/lib/db/schema'
+import type { SelectUser, SelectOrder, SelectDocument, InsertDocument, InsertAuditLog, InsertOperatorNotification, InsertOperatorPreferences } from '@/lib/db/schema'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 import type { EmailLocale } from '@/lib/email/send'
 
@@ -683,4 +683,122 @@ export async function markOrderSubmitted(orderId: string): Promise<void> {
       updatedAt: new Date(),
     })
     .where(eq(orders.id, orderId))
+}
+
+// ---------------------------------------------------------------------------
+// Feature 14b — Operator archive, preferences, submission email
+// ---------------------------------------------------------------------------
+
+/**
+ * Shaped return type for getOrderDataForSubmissionEmail.
+ * Provides the customer contact details needed to send the submission notification.
+ */
+export interface OrderDataForSubmissionEmail {
+  customerEmail: string
+  customerLanguage: EmailLocale
+  fullName: string | null
+  tier: string
+}
+
+/**
+ * Fetches the customer contact info needed to send the "submitted to Finanças" email.
+ * Joins orders + users. Returns null if the order does not exist.
+ */
+export async function getOrderDataForSubmissionEmail(
+  orderId: string,
+): Promise<OrderDataForSubmissionEmail | null> {
+  const [row] = await db
+    .select({
+      customerEmail: users.email,
+      customerLanguage: users.language,
+      fullName: orders.fullName,
+      tier: orders.tier,
+    })
+    .from(orders)
+    .innerJoin(users, eq(orders.userId, users.id))
+    .where(eq(orders.id, orderId))
+    .limit(1)
+  return row ?? null
+}
+
+/**
+ * Shaped return type for getSubmittedOrders — the operator archive list.
+ */
+export interface SubmittedOrderItem {
+  id: string
+  fullName: string | null
+  tier: 'essential' | 'standard' | 'express'
+  submittedToFinancasAt: Date
+}
+
+/**
+ * Returns all orders with status = 'submitted', newest first.
+ * Used for the operator archive view — read-only, no SLA pressure.
+ */
+export async function getSubmittedOrders(): Promise<SubmittedOrderItem[]> {
+  const rows = await db
+    .select({
+      id: orders.id,
+      fullName: orders.fullName,
+      tier: orders.tier,
+      submittedToFinancasAt: orders.submittedToFinancasAt,
+    })
+    .from(orders)
+    .where(eq(orders.status, 'submitted'))
+    .orderBy(desc(orders.submittedToFinancasAt))
+
+  // submittedToFinancasAt is guaranteed non-null on 'submitted' rows
+  return rows.map((r) => ({
+    ...r,
+    submittedToFinancasAt: r.submittedToFinancasAt as Date,
+  }))
+}
+
+/**
+ * Shaped return type for getOperatorPreferencesOrDefaults.
+ * Mirrors the relevant columns of operator_preferences.
+ */
+export interface OperatorPreferencesData {
+  emailNotifications: boolean
+  smsNotifications: boolean
+  phoneNumber: string | null
+}
+
+/**
+ * Returns the operator's notification preferences.
+ * If no row exists yet (first-time operator), returns schema defaults without inserting.
+ */
+export async function getOperatorPreferencesOrDefaults(
+  userId: string,
+): Promise<OperatorPreferencesData> {
+  const [row] = await db
+    .select({
+      emailNotifications: operatorPreferences.emailNotifications,
+      smsNotifications: operatorPreferences.smsNotifications,
+      phoneNumber: operatorPreferences.phoneNumber,
+    })
+    .from(operatorPreferences)
+    .where(eq(operatorPreferences.userId, userId))
+    .limit(1)
+
+  // Return schema defaults if no preferences row exists yet
+  return row ?? { emailNotifications: true, smsNotifications: true, phoneNumber: null }
+}
+
+/**
+ * Upserts operator notification preferences.
+ * Inserts on first save; updates on conflict with existing userId.
+ * Data param uses Pick from InsertOperatorPreferences — avoids duplicating the schema shape.
+ */
+export async function upsertOperatorPreferences(
+  userId: string,
+  data: Pick<InsertOperatorPreferences, 'emailNotifications' | 'smsNotifications' | 'phoneNumber'>,
+): Promise<void> {
+  await db
+    .insert(operatorPreferences)
+    .values({ userId, ...data })
+    .onConflictDoUpdate({
+      target: operatorPreferences.userId,
+      set: { ...data, updatedAt: new Date() },
+    })
 }

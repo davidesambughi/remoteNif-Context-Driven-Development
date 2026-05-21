@@ -428,6 +428,28 @@
       },
       "submitSuccess": "Order marked as submitted.",
       "submitError": "Failed to mark order as submitted. Please try again."
+    },
+    "submitted": {
+      "title": "Submitted Orders",
+      "empty": "No submitted orders yet.",
+      "columns": {
+        "customer": "Customer",
+        "tier": "Tier",
+        "submitted": "Submitted",
+        "orderId": "Order ID"
+      }
+    },
+    "preferences": {
+      "title": "Notification Preferences",
+      "emailLabel": "Email notifications",
+      "emailDescription": "Email me when a new order is ready to submit.",
+      "smsLabel": "SMS notifications",
+      "smsDescription": "Express orders only — you must provide a phone number.",
+      "phoneLabel": "Phone number",
+      "phonePlaceholder": "+351 912 345 678",
+      "save": "Save preferences",
+      "saveSuccess": "Preferences saved.",
+      "saveError": "Failed to save preferences. Please try again."
     }
   }
 }

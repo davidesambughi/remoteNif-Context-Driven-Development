@@ -123,6 +123,33 @@ describe('sendEmail dispatch routing', () => {
     expect(resendClient.emails.send).toHaveBeenCalledOnce()
   })
 
+  it('routes order_submitted_customer to the correct template and subject', async () => {
+    await sendEmail(TO, LOCALE, {
+      template: 'order_submitted_customer',
+      customerName: CUSTOMER_NAME,
+      tier: 'standard',
+    })
+
+    expect(resendClient.emails.send).toHaveBeenCalledOnce()
+    const [call] = vi.mocked(resendClient.emails.send).mock.calls
+    expect(call![0].react).toBeTruthy()
+    expect(call![0].subject).toBeTruthy()
+    expect(call![0].from).toBe('noreply@remotenif.com')
+    expect(call![0].to).toBe(TO)
+  })
+
+  it('routes order_submitted_customer with FR locale without throwing', async () => {
+    await expect(
+      sendEmail(TO, 'fr', {
+        template: 'order_submitted_customer',
+        customerName: CUSTOMER_NAME,
+        tier: 'express',
+      }),
+    ).resolves.toBeUndefined()
+
+    expect(resendClient.emails.send).toHaveBeenCalledOnce()
+  })
+
   it('swallows Resend API errors — sendEmail always resolves', async () => {
     vi.mocked(resendClient.emails.send).mockResolvedValue({ data: null, error: { message: 'rate limited' } } as any)
 

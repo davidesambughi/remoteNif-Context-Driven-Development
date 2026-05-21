@@ -4,15 +4,34 @@
 
 ## Current Phase
 
-Active development. Features 01–14a-1 complete. Manually verified end-to-end.
+Active development. Features 01–14b complete.
 
 ---
 
 ## Current Goal
 
-Feature 14a-3 — Operator Submitted Orders archive (`/operator/submitted`).
+Feature 15 — NIF Delivery.
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
+
+---
+
+## Handoff Note (read before starting next session)
+
+**Next feature is 15** — NIF delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
+
+**Key context for 15:**
+- `nifNumber` is immutable once set per tech-spec.md — the action must enforce this (check for existing value before writing).
+- `deliveredAt` and `fiscalRepExpiresAt` (deliveredAt + 12 months, Standard/Express only) must be set in the same DB update.
+- Customer dashboard `delivered` state already has a placeholder view from Feature 08b — wire up the real `nifNumber` field.
+- Admin action lives in `app/actions/admin.ts`, new query in `lib/db/queries.ts`.
+
+**Operator test account:** promote your own user account via `UPDATE public.users SET role = 'operator' WHERE email = 'YOUR_EMAIL'`, sign out, sign back in.
+
+**Test order:** `0f449877-f56c-4411-9f5c-eef0190d606e` — reset to `documents_approved` if needed:
+```sql
+UPDATE public.orders SET status = 'documents_approved', tier = 'express', documents_approved_at = now() - interval '10 hours' WHERE id = '0f449877-f56c-4411-9f5c-eef0190d606e';
+```
 
 ---
 
@@ -46,10 +65,12 @@ Feature 14a-3 — Operator Submitted Orders archive (`/operator/submitted`).
 - **Feature 13b — Admin Panel: Order Detail** — `getAdminOrderDetail` query (orders + users + payments + documents join), all 5 admin actions (`adminApproveDocument`, `adminFlagDocument`, `adminApproveOrder`, `adminUpdateOrderStatus`, `adminResendEmail`), `OrderDetailHeader`, `DocumentReviewCard`, `ApproveOrderSection` (inline confirmation, no `window.confirm`), `StatusUpdateSection`, `EmailResendSection`, `DocumentOverrideButtons`. Full EN/FR/ES/DE translations under `admin.detail` namespace.
 - **Quality Audit + Red Fixes** — full audit documented in `context/quality-audit.md`; 3 red violations fixed: (1) duplicate `ActionResult` in `admin.ts` deleted, now imported from `lib/types.ts`; (2) wrong token names (`text-primary`/`text-muted`) corrected to `text-text-primary`/`text-text-muted` in `PersonalDetailsForm.tsx`; (3) Stripe redirect URLs made locale-aware via `locale` field added to `CheckoutSessionSchema` and passed from `CheckoutButton`. 198 unit tests still passing.
 - **Quality Audit — Yellow Fixes (batch 1)** — 4 yellow smells resolved: (1) `ORDER_STATUS_SEQUENCE` constant exported from `lib/db/schema.ts`, replacing hardcoded `statusOrder` arrays in `admin.ts` and `StatusUpdateSection.tsx`; (2) admin filter Zod schema now derives from `orderStatusEnum.enumValues` / `tierEnum.enumValues` instead of duplicating string literals; (3) `DocumentReviewCard.tsx` token syntax unified to shorthand throughout; (4) AI status label casing fixed — consistent Title Case via `aiStatusLabel` map, eliminating the `replace(/_/g,' ')` vs `toUpperCase()` inconsistency. 198 unit tests still passing.
-- **Feature 14a-1 — Operator Queue UI & Submission** — operator shell layout with role guard, `getOperatorQueue()` / `getOrderStatusById()` / `markOrderSubmitted()` queries in `lib/db/queries.ts`, `markOrderAsSubmitted` Server Action in `app/actions/operator.ts` (validate → requireRole → status check → update → audit log → revalidate), `SlaCountdown` client component (48h, color-coded, ticks every 60s), `QueueRow` client component with shadcn `AlertDialog` (success toast via Sonner, inline error on failure), `OperatorQueue` server component (Express / Standard sections with `Badge` + `Separator`), `/operator` page. Installed shadcn `alert-dialog`, `badge`, `separator`, `sonner`. Full EN/FR/ES/DE `operator.queue` translations. TypeScript compiles cleanly; env ZodError on `STRIPE_WEBHOOK_SECRET` is pre-existing local config issue. **Manually verified**: SLA color thresholds (green >24h, amber 8–24h, red <8h, red bold overdue), submit flow (AlertDialog → Server Action → toast → row disappears), empty state for both sections.
-- **Feature 19 UX items added** — no Google login, no password visibility toggle, operator user seeding gotcha (raw SQL insert does not produce valid Supabase Auth session; promote existing account instead).
+- **Feature 14a-1 — Operator Queue UI & Submission** — operator shell layout with role guard, `getOperatorQueue()` / `getOrderStatusById()` / `markOrderSubmitted()` queries in `lib/db/queries.ts`, `markOrderAsSubmitted` Server Action in `app/actions/operator.ts` (validate → requireRole → status check → update → audit log → revalidate), `SlaCountdown` client component (48h, color-coded, ticks every 60s), `QueueRow` client component with shadcn `AlertDialog` (success toast via Sonner, inline error on failure), `OperatorQueue` server component (Express / Standard sections with `Badge` + `Separator`), `/operator` page. Installed shadcn `alert-dialog`, `badge`, `separator`, `sonner`. Full EN/FR/ES/DE `operator.queue` translations. **Manually verified**: SLA color thresholds (green >24h, amber 8–24h, red <8h, red bold overdue), submit flow (AlertDialog → Server Action → toast → row disappears), empty state for both sections.
 - **Feature 14a-2 — Operator Package Download** — `GET /api/operator/package/[orderId]` returns `application/zip`. Implemented: `resolveCountry` moved from `poa-template.tsx` into `lib/utils/countries.ts` (shared by both PDF templates); `getOperatorPackageData` query added to `lib/db/queries.ts` (gates on `documents_approved` status + 3 approved docs + all personal-detail fields non-null); `lib/operator/CoverSheet.tsx` PDF template with `renderCoverSheetPdf`; `lib/operator/packageBuilder.ts` with `buildOperatorPackage` (downloads docs via service-role client, zips with jszip 3.10.1); API route with Zod param validation, 401/403/404/500 error paths. TypeScript compiles cleanly; 264 unit tests passing.
+- **Feature 19 UX items added** — no Google login, no password visibility toggle, operator user seeding gotcha (raw SQL insert does not produce valid Supabase Auth session; promote existing account instead).
 - **Feature 14a-2-T — Tests** — 33 new tests across 3 files: `tests/unit/lib/operator/packageBuilder.test.ts` (ZIP structure, MIME→ext mapping, cover sheet content, storage error paths), `tests/unit/api/operator/package.test.ts` (400/401/403/404/500/200 route handler paths), `tests/integration/db/operator-package.test.ts` (18 cases for `getOperatorPackageData` — null on wrong status, incomplete details, missing/superseded/unapproved docs; success with correct shape). Both suites run automatically in CI on every push. Integration tests require Docker — confirmed working pattern (same as existing integration suite).
+- **Feature 14b — Operator Archive, Preferences & Submission Email** — `lib/utils/dates.ts` created with `formatSubmissionDate`; 4 new DB queries (`getOrderDataForSubmissionEmail`, `getSubmittedOrders`, `getOperatorPreferencesOrDefaults`, `upsertOperatorPreferences`); `lib/email/templates/order-submitted-customer.tsx` in 4 locales; `send.ts` extended with `order_submitted_customer` template; `markOrderAsSubmitted` wired with fire-and-forget email + second `revalidatePath` for archive; `updateOperatorPreferences` Server Action (validate → role check → phone guard → upsert → audit log); shadcn `Switch` installed; `OperatorNav` client component with locale-aware active detection; operator layout updated with nav; `/operator/submitted` page (read-only archive table); `/operator/preferences` page + `PreferencesForm` client component; translation keys added to all 4 locale files; operator test file updated (sendEmail mock, new queries mock) + 16 new tests for both actions. 274 unit tests passing, `npm run build` passes.
+- **Feature 14b — Tests** — 18 new unit tests: `formatSubmissionDate` (6 cases in `tests/unit/lib/utils/dates.test.ts`), `OrderSubmittedCustomerEmail` template smoke tests in 4 locales + key content assertions + `getOrderSubmittedCustomerSubject` locale uniqueness (10 cases appended to `templates.test.tsx`), `sendEmail` dispatch for `order_submitted_customer` in 2 locales (appended to `send.test.ts`). 23 new integration tests in `tests/integration/db/operator-14b.test.ts`: `getSubmittedOrders` (empty, filter, exclusion, ordering, shape), `getOperatorPreferencesOrDefaults` (defaults when missing, stored values, read-only guarantee), `upsertOperatorPreferences` (insert, ON CONFLICT update, phone number), `getOrderDataForSubmissionEmail` (null for missing, join shape, null fullName, all 4 locales). 292 unit tests passing.
 
 ---
 
@@ -58,7 +79,7 @@ Feature 14a-3 — Operator Submitted Orders archive (`/operator/submitted`).
 - Q4 — SEO content strategy — not blocking launch.
 - Q5 — RESOLVED: `@react-pdf/renderer`, POA copy needs fiscal rep review before launch.
 - Q6 — RESOLVED: `documents` Supabase bucket pre-existed, RLS applied.
-- Q7 — "Submitted to Finanças" customer email: assigned to Feature 14b per feature list note. No action needed in 14a-1 or 14a-2.
+- Q7 — RESOLVED: "Submitted to Finanças" customer email implemented in Feature 14b (`order_submitted_customer` template, fired from `markOrderAsSubmitted`).
 
 ---
 
