@@ -3,7 +3,9 @@
     "appName": "RemoteNIF",
     "nav": {
       "signIn": "Iniciar sesión",
-      "getStarted": "Empezar"
+      "getStarted": "Empezar",
+      "signOut": "Cerrar sesión",
+      "accountSettings": "Configuración de la cuenta"
     },
     "footer": {
       "copyright": "© 2026 RemoteNIF Portugal. Tramitación de NIF segura y transparente.",

@@ -4,13 +4,13 @@
 
 ## Current Phase
 
-Active development. Features 01–14b complete.
+Active development. Features 01–14c complete.
 
 ---
 
 ## Current Goal
 
-Feature 15 — NIF Delivery.
+Feature 15 — NIF Delivery (next).
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
@@ -18,7 +18,9 @@ Feature 15 — NIF Delivery.
 
 ## Handoff Note (read before starting next session)
 
-**Next feature is 15** — NIF delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
+**Next feature is 15** — NIF Delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
+
+**After 14c, next is 15** — NIF delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
 
 **Key context for 15:**
 - `nifNumber` is immutable once set per tech-spec.md — the action must enforce this (check for existing value before writing).
@@ -71,6 +73,7 @@ UPDATE public.orders SET status = 'documents_approved', tier = 'express', docume
 - **Feature 14a-2-T — Tests** — 33 new tests across 3 files: `tests/unit/lib/operator/packageBuilder.test.ts` (ZIP structure, MIME→ext mapping, cover sheet content, storage error paths), `tests/unit/api/operator/package.test.ts` (400/401/403/404/500/200 route handler paths), `tests/integration/db/operator-package.test.ts` (18 cases for `getOperatorPackageData` — null on wrong status, incomplete details, missing/superseded/unapproved docs; success with correct shape). Both suites run automatically in CI on every push. Integration tests require Docker — confirmed working pattern (same as existing integration suite).
 - **Feature 14b — Operator Archive, Preferences & Submission Email** — `lib/utils/dates.ts` created with `formatSubmissionDate`; 4 new DB queries (`getOrderDataForSubmissionEmail`, `getSubmittedOrders`, `getOperatorPreferencesOrDefaults`, `upsertOperatorPreferences`); `lib/email/templates/order-submitted-customer.tsx` in 4 locales; `send.ts` extended with `order_submitted_customer` template; `markOrderAsSubmitted` wired with fire-and-forget email + second `revalidatePath` for archive; `updateOperatorPreferences` Server Action (validate → role check → phone guard → upsert → audit log); shadcn `Switch` installed; `OperatorNav` client component with locale-aware active detection; operator layout updated with nav; `/operator/submitted` page (read-only archive table); `/operator/preferences` page + `PreferencesForm` client component; translation keys added to all 4 locale files; operator test file updated (sendEmail mock, new queries mock) + 16 new tests for both actions. 274 unit tests passing, `npm run build` passes.
 - **Feature 14b — Tests** — 18 new unit tests: `formatSubmissionDate` (6 cases in `tests/unit/lib/utils/dates.test.ts`), `OrderSubmittedCustomerEmail` template smoke tests in 4 locales + key content assertions + `getOrderSubmittedCustomerSubject` locale uniqueness (10 cases appended to `templates.test.tsx`), `sendEmail` dispatch for `order_submitted_customer` in 2 locales (appended to `send.test.ts`). 23 new integration tests in `tests/integration/db/operator-14b.test.ts`: `getSubmittedOrders` (empty, filter, exclusion, ordering, shape), `getOperatorPreferencesOrDefaults` (defaults when missing, stored values, read-only guarantee), `upsertOperatorPreferences` (insert, ON CONFLICT update, phone number), `getOrderDataForSubmissionEmail` (null for missing, join shape, null fullName, all 4 locales). 292 unit tests passing.
+- **Feature 14c — App-Wide Navigation** — `DashboardSignOutButton` (client), `DashboardHeader` (server, sticky, brand link + LanguageSwitcher + sign-out), `DashboardLayout` (new `app/[locale]/(dashboard)/layout.tsx` — auth guard + header shell); `OperatorNavLinks` (client, tab nav with active indicator replacing `OperatorNav`); `AdminNavLinks` (client, same pattern); operator layout rewritten to single sticky bar (brand + tabs inline); admin layout rewritten to single sticky bar (brand + tabs inline); `OperatorNav.tsx` deleted; i18n keys `nav.signOut` / `nav.accountSettings` added to all 4 locale files. Build: clean. 292 unit tests passing.
 
 ---
 

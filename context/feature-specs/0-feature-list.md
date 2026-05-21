@@ -570,11 +570,13 @@ Done when:
 - All nav links are locale-aware (use `Link` from `@/i18n/navigation`).
 - The operator nav correctly highlights the active section (Queue / Archive / Preferences) without false positives.
 - Design is consistent with the design token system — no raw Tailwind color classes.
-- shadcn when possible 
-- use Links instead of anchor tag when optimal
+
 
 Notes:
 
+- shadcn when possible 
+- use Links instead of anchor tag when optimal
+- design tokens , not inline style
 - The three route groups — `(dashboard)`, `(admin)`, `(operator)` — have different audiences and different nav needs. Do not force a single nav shell on all three. Define the right pattern for each before building.
 - The marketing header already exists and is likely sufficient — review, don't rewrite.
 - The operator panel is an internal tool (no customer-facing copy), so the nav can be simpler and English-only.

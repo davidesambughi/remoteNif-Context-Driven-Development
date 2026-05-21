@@ -3,7 +3,9 @@
     "appName": "RemoteNIF",
     "nav": {
       "signIn": "Sign In",
-      "getStarted": "Get Started"
+      "getStarted": "Get Started",
+      "signOut": "Sign out",
+      "accountSettings": "Account settings"
     },
     "footer": {
       "copyright": "© 2026 RemoteNIF Portugal. Secure & Transparent NIF Processing.",

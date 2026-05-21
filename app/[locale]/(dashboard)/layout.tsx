@@ -1,0 +1,30 @@
+import { getLocale } from 'next-intl/server'
+import { redirect } from '@/i18n/navigation'
+import { getCurrentUser } from '@/lib/auth/session'
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+
+interface Props {
+  children: React.ReactNode
+}
+
+/** Locale type alias — matches next-intl config. */
+type Locale = 'en' | 'fr' | 'es' | 'de'
+
+/**
+ * Dashboard shell — requires any authenticated user.
+ * Redirects to /signin (locale-aware) if unauthenticated.
+ * No role restriction: customers, operators, and admins may all view the dashboard.
+ */
+export default async function DashboardLayout({ children }: Props) {
+  const [user, locale] = await Promise.all([getCurrentUser(), getLocale()])
+
+  // Unauthenticated → locale-aware sign-in page
+  if (!user) redirect({ href: '/signin', locale: locale as Locale })
+
+  return (
+    <div className="min-h-screen bg-[var(--bg-base)]">
+      <DashboardHeader />
+      <main>{children}</main>
+    </div>
+  )
+}
