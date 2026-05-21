@@ -1,14 +1,9 @@
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
-import { COUNTRIES } from '@/lib/utils/countries'
+import { resolveCountry } from '@/lib/utils/countries'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 
 interface PoaDocumentProps extends PersonalDetailsData {
   generatedDate: string
-}
-
-/** Resolves an ISO alpha-2 code to an English country name for the PDF. */
-function resolveCountry(code: string): string {
-  return COUNTRIES.find((c) => c.code === code)?.name ?? code
 }
 
 const s = StyleSheet.create({

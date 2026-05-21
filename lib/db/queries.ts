@@ -566,6 +566,110 @@ export async function getOrderStatusById(
   return row ?? null
 }
 
+// ---------------------------------------------------------------------------
+// Operator package queries (Feature 14a-2)
+// ---------------------------------------------------------------------------
+
+/**
+ * Shaped return type for getOperatorPackageData.
+ * Note: dateOfBirth and passportExpiry are ISO date strings (Drizzle `date()` returns string,
+ * not Date). The cover sheet template receives them as strings and renders them as-is.
+ */
+export interface OperatorPackageData {
+  order: {
+    id: string
+    tier: string
+    fullName: string
+    dateOfBirth: string
+    nationality: string
+    passportNumber: string
+    passportExpiry: string
+    address: string
+  }
+  documents: Array<{
+    type: 'passport' | 'proof_of_address' | 'signed_poa'
+    filePath: string
+    mimeType: string
+  }>
+}
+
+/**
+ * Fetches all data needed to build an operator download package.
+ * Returns null in any of these cases — the caller returns 404:
+ *  - Order does not exist
+ *  - Order is not in `documents_approved` status
+ *  - Any required personal-detail field is null (order is incomplete)
+ *  - Fewer than exactly 3 active approved documents exist
+ */
+export async function getOperatorPackageData(
+  orderId: string,
+): Promise<OperatorPackageData | null> {
+  // Fetch order — gate on status and personal-details completeness in one go
+  const orderRows = await db
+    .select({
+      id: orders.id,
+      tier: orders.tier,
+      status: orders.status,
+      fullName: orders.fullName,
+      dateOfBirth: orders.dateOfBirth,
+      nationality: orders.nationality,
+      passportNumber: orders.passportNumber,
+      passportExpiry: orders.passportExpiry,
+      address: orders.address,
+    })
+    .from(orders)
+    .where(and(eq(orders.id, orderId), eq(orders.status, 'documents_approved')))
+    .limit(1)
+
+  const order = orderRows[0]
+  if (!order) return null
+
+  // Guard: all personal-detail fields must be present before we can generate the cover sheet
+  if (
+    !order.fullName ||
+    !order.dateOfBirth ||
+    !order.nationality ||
+    !order.passportNumber ||
+    !order.passportExpiry ||
+    !order.address
+  ) {
+    return null
+  }
+
+  // Fetch the 3 active approved documents
+  const docs = await db
+    .select({
+      type: documents.type,
+      filePath: documents.filePath,
+      mimeType: documents.mimeType,
+    })
+    .from(documents)
+    .where(
+      and(
+        eq(documents.orderId, orderId),
+        isNull(documents.supersededAt),
+        eq(documents.approved, true),
+      ),
+    )
+
+  // Must have exactly 3 approved documents (passport + proof_of_address + signed_poa)
+  if (docs.length !== 3) return null
+
+  return {
+    order: {
+      id: order.id,
+      tier: order.tier,
+      fullName: order.fullName,
+      dateOfBirth: order.dateOfBirth,
+      nationality: order.nationality,
+      passportNumber: order.passportNumber,
+      passportExpiry: order.passportExpiry,
+      address: order.address,
+    },
+    documents: docs,
+  }
+}
+
 /**
  * Transitions an order from documents_approved → submitted.
  * Sets submittedToFinancasAt timestamp.

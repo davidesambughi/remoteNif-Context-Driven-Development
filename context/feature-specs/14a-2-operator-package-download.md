@@ -21,7 +21,7 @@ No web UI work in this unit — the only change to existing UI is wiring a butto
 - DB query for package data: `getOperatorPackageData(orderId, operatorId)` added to `lib/db/queries.ts`. Fetches the order, personal details, and the 3 active document records (file paths only) in one query.
 - File retrieval: use the Supabase **admin client** (`lib/supabase/admin.ts`) to download documents from Supabase Storage — operator does not own these files, so the service-role client bypasses RLS.
 - Cover sheet PDF: reuse `@react-pdf/renderer` (already installed from Feature 09b). New template file at `lib/operator/CoverSheet.tsx`.
-- ZIP creation: `jszip` — stream the ZIP to the response using `jszip.generateNodeStream()` piped into a `ReadableStream`.
+- ZIP creation: `jszip` — generate the ZIP fully in memory using `zip.generateAsync({ type: 'nodebuffer' })` and return the resulting `Buffer` directly in the `Response`. Do not use `generateNodeStream()` or pipe to a `ReadableStream` — in-memory generation is correct and sufficient for the small payloads in this flow (see Scope Limits).
 - No files are persisted to Supabase Storage as part of this flow — generate, stream, done.
 
 ### TypeScript
@@ -38,9 +38,11 @@ No web UI work in this unit — the only change to existing UI is wiring a butto
 const ParamsSchema = z.object({
   orderId: z.string().uuid(),
 })
+// Derive the typed result — do not redeclare orderId: string manually
+type Params = z.infer<typeof ParamsSchema>
 ```
 
-No form input — the only input is the `orderId` path parameter.
+No form input — the only input is the `orderId` path parameter. Use `ParamsSchema.parse(params)` and destructure the typed result; do not cast or redeclare the type.
 
 ### i18n
 
@@ -110,7 +112,15 @@ nif-application-{orderId}/
 2. **Create `lib/operator/CoverSheet.tsx`.**
 
    - React component using `@react-pdf/renderer` (`Document`, `Page`, `View`, `Text` from `@react-pdf/renderer`).
-   - Props: the `order` shape from `OperatorPackageData`.
+   - Props: derive from `OperatorPackageData` — do NOT redefine the shape:
+     ```typescript
+     import type { OperatorPackageData } from '@/lib/db/queries'
+
+     interface CoverSheetProps {
+       order: OperatorPackageData['order']
+     }
+     ```
+   - **Nationality conversion:** the DB stores an ISO alpha-2 code (e.g. `'US'`). The cover sheet must display the full country name. Move the `resolveCountry(code: string): string` helper from `lib/pdf/poa-template.tsx` into `lib/utils/countries.ts` (exported alongside `COUNTRIES`) so both PDF templates share it. Import from there — do not write a third resolver.
    - Renders a clean, print-ready PDF — see Design section for layout.
    - Utility function `renderCoverSheetPdf(order): Promise<Buffer>` exported from this file. Uses `renderToBuffer` from `@react-pdf/renderer`.
 
@@ -186,10 +196,11 @@ Install: `jszip`
 
 - `GET /api/operator/package/{validOrderId}` returns a `200` response with `Content-Type: application/zip` when called by an authenticated operator.
 - The downloaded ZIP contains exactly 4 files: `cover-sheet.pdf` + 3 document files with correct extensions.
-- `cover-sheet.pdf` includes the customer's full name, date of birth, nationality, passport number, passport expiry, address, tier, and order ID.
+- `cover-sheet.pdf` includes the customer's full name, date of birth, **full country name** (not ISO code), passport number, passport expiry, address, tier, and order ID.
 - `GET /api/operator/package/{orderId}` returns `401` for unauthenticated requests.
 - `GET /api/operator/package/{orderId}` returns `403` for non-operator users.
 - `GET /api/operator/package/{orderId}` returns `404` for an order not in `documents_approved` status.
 - `GET /api/operator/package/{invalidUuid}` returns `400`.
 - Clicking "Download package" in the operator queue triggers a file download in the browser.
 - `npm run build` passes.
+- `npm test` passes (unit tests for `renderCoverSheetPdf`, `buildOperatorPackage`, `getOperatorPackageData`, and the API route 400/401/403/404 paths are deferred to spec **14a-2-T**; this unit's acceptance is manual verification of the items above).

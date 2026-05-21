@@ -17,7 +17,7 @@ on:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # Job 1 — Unit tests (198 tests, ~15s, no Docker needed)
+  # Job 1 — Unit tests (264 tests, ~17s, no Docker needed)
   # ---------------------------------------------------------------------------
   unit:
     name: Unit tests

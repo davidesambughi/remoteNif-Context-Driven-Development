@@ -19,3 +19,12 @@ export const COUNTRIES = [
   { code: 'PT', name: 'Portugal' },
   { code: 'US', name: 'United States' },
 ].sort((a, b) => a.name.localeCompare(b.name))
+
+/**
+ * Resolves an ISO alpha-2 country code to its English display name.
+ * Falls back to the raw code if it is not in the COUNTRIES list.
+ * Shared by all PDF templates that need to display nationality.
+ */
+export function resolveCountry(code: string): string {
+  return COUNTRIES.find((c) => c.code === code)?.name ?? code
+}
