@@ -4,13 +4,13 @@
 
 ## Current Phase
 
-Active development. Features 01–13b complete.
+Active development. Features 01–14a-1 complete. Manually verified end-to-end.
 
 ---
 
 ## Current Goal
 
-Feature 14 (next unbuilt feature — check feature list).
+Feature 14a-2 — Operator Package Download (ZIP + cover sheet PDF).
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
@@ -46,6 +46,8 @@ Feature 14 (next unbuilt feature — check feature list).
 - **Feature 13b — Admin Panel: Order Detail** — `getAdminOrderDetail` query (orders + users + payments + documents join), all 5 admin actions (`adminApproveDocument`, `adminFlagDocument`, `adminApproveOrder`, `adminUpdateOrderStatus`, `adminResendEmail`), `OrderDetailHeader`, `DocumentReviewCard`, `ApproveOrderSection` (inline confirmation, no `window.confirm`), `StatusUpdateSection`, `EmailResendSection`, `DocumentOverrideButtons`. Full EN/FR/ES/DE translations under `admin.detail` namespace.
 - **Quality Audit + Red Fixes** — full audit documented in `context/quality-audit.md`; 3 red violations fixed: (1) duplicate `ActionResult` in `admin.ts` deleted, now imported from `lib/types.ts`; (2) wrong token names (`text-primary`/`text-muted`) corrected to `text-text-primary`/`text-text-muted` in `PersonalDetailsForm.tsx`; (3) Stripe redirect URLs made locale-aware via `locale` field added to `CheckoutSessionSchema` and passed from `CheckoutButton`. 198 unit tests still passing.
 - **Quality Audit — Yellow Fixes (batch 1)** — 4 yellow smells resolved: (1) `ORDER_STATUS_SEQUENCE` constant exported from `lib/db/schema.ts`, replacing hardcoded `statusOrder` arrays in `admin.ts` and `StatusUpdateSection.tsx`; (2) admin filter Zod schema now derives from `orderStatusEnum.enumValues` / `tierEnum.enumValues` instead of duplicating string literals; (3) `DocumentReviewCard.tsx` token syntax unified to shorthand throughout; (4) AI status label casing fixed — consistent Title Case via `aiStatusLabel` map, eliminating the `replace(/_/g,' ')` vs `toUpperCase()` inconsistency. 198 unit tests still passing.
+- **Feature 14a-1 — Operator Queue UI & Submission** — operator shell layout with role guard, `getOperatorQueue()` / `getOrderStatusById()` / `markOrderSubmitted()` queries in `lib/db/queries.ts`, `markOrderAsSubmitted` Server Action in `app/actions/operator.ts` (validate → requireRole → status check → update → audit log → revalidate), `SlaCountdown` client component (48h, color-coded, ticks every 60s), `QueueRow` client component with shadcn `AlertDialog` (success toast via Sonner, inline error on failure), `OperatorQueue` server component (Express / Standard sections with `Badge` + `Separator`), `/operator` page. Installed shadcn `alert-dialog`, `badge`, `separator`, `sonner`. Full EN/FR/ES/DE `operator.queue` translations. TypeScript compiles cleanly; env ZodError on `STRIPE_WEBHOOK_SECRET` is pre-existing local config issue. **Manually verified**: SLA color thresholds (green >24h, amber 8–24h, red <8h, red bold overdue), submit flow (AlertDialog → Server Action → toast → row disappears), empty state for both sections.
+- **Feature 19 UX items added** — no Google login, no password visibility toggle, operator user seeding gotcha (raw SQL insert does not produce valid Supabase Auth session; promote existing account instead).
 
 ---
 
@@ -54,6 +56,7 @@ Feature 14 (next unbuilt feature — check feature list).
 - Q4 — SEO content strategy — not blocking launch.
 - Q5 — RESOLVED: `@react-pdf/renderer`, POA copy needs fiscal rep review before launch.
 - Q6 — RESOLVED: `documents` Supabase bucket pre-existed, RLS applied.
+- Q7 — "Submitted to Finanças" customer email: assigned to Feature 14b per feature list note. No action needed in 14a-1 or 14a-2.
 
 ---
 

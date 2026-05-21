@@ -397,6 +397,37 @@
         "documents_approved_customer": "Documents Approved"
       }
     }
+  },
+  "operator": {
+    "queue": {
+      "title": "Submission Queue",
+      "expressSection": "Express Orders",
+      "standardSection": "Standard Orders",
+      "emptyExpress": "No express orders pending submission.",
+      "emptyStandard": "No standard orders pending submission.",
+      "columns": {
+        "customer": "Customer",
+        "ordered": "Ordered",
+        "sla": "Time remaining",
+        "actions": "Actions"
+      },
+      "actions": {
+        "downloadPackage": "Download package",
+        "markSubmitted": "Mark as submitted",
+        "submitting": "Submitting…"
+      },
+      "sla": {
+        "hoursRemaining": "{hours}h {minutes}m remaining",
+        "expired": "SLA EXPIRED"
+      },
+      "submitConfirm": {
+        "title": "Mark as submitted?",
+        "description": "Confirm that you have submitted this application to ebalcão. This cannot be undone.",
+        "confirm": "Yes, mark as submitted",
+        "cancel": "Cancel"
+      },
+      "submitSuccess": "Order marked as submitted.",
+      "submitError": "Failed to mark order as submitted. Please try again."
+    }
   }
-
 }

@@ -9,8 +9,6 @@
      Only list the files actually relevant to this unit.
      Always include AGENTS.md and progress-tracker.md. Add others only as needed. -->
 
-Read `context/AGENTS.md`, `context/progress-tracker.md` before starting.
-
 <!-- One-sentence summary (required): what this unit does, in plain language.
      Write it as a statement of outcome, not a list of tasks.
      Example: "Replace the canvas placeholder with a Liveblocks-backed React Flow canvas." -->
@@ -43,6 +41,7 @@ Rules that always apply to UI work in this project:
 - Mobile-first. Add breakpoint variants only where layout actually changes.
 - Border radius from scale: `--radius-sm` / `md` / `lg` / `xl` / `2xl` / `full`.
 - Shadows from scale: `--shadow-sm` / `md` / `lg` / `xl`.
+- Shadcn components when possible
 
 ### Architecture
 <!-- Copy the exact patterns and boundaries that apply to this feature.
@@ -153,4 +152,5 @@ Install: `package-name`, `other-package`
 - [Specific, verifiable condition]
 - [Specific, verifiable condition]
 - [Specific, verifiable condition]
+-  create or run unit and/or integration tests
 - `npm run build` passes.

@@ -528,6 +528,10 @@ Done when:
 - Submitted orders move into an archive view.
 - Operator notification preferences can be updated.
 
+Notes:
+
+- **"Submitted to Finanças" customer email goes here.** When `markOrderAsSubmitted` runs (14a-1), it transitions the order status to `submitted` but deliberately does not send a customer email — that email is added in this feature. Wire a `sendEmail` call (type `order_submitted`) into the `markOrderAsSubmitted` action, using the existing `sendEmail` infrastructure from Feature 12a. The email should confirm the application has been submitted to Finanças and include the estimated delivery estimate copy ("Typically 5–10 business days…"). Add the template to `lib/email/templates/` and the translation keys to all four locale files.
+
 Depends on: 14a.
 
 ---
@@ -655,6 +659,9 @@ Known items to address:
 - **Timeline missing "Payment received" step and not reactive during partial upload (discovered: Feature 11a testing)**: the timeline starts at "Upload" with no indication that payment was already confirmed. "Payment received" should be step 1, always shown as complete once the user reaches the dashboard. Additionally, the timeline does not visually progress while the user uploads documents one by one — it only advances when the order status changes, which only happens after all 3 documents are approved. Consider showing partial progress within the `documents_pending` state.
 - **`manual_review` copy promises a 4-hour SLA (discovered: Feature 11a testing)**: the message "Our team will review your document within 4 hours" makes a specific time commitment that is not guaranteed and misleads users. Fix: replace with something like "Our team has been notified and will review this document manually." — no time promise.
 - **Pricing page — fiscal representation issue**: Ask the user before writing any copy or making changes regarding who needs fiscal representation (EU/EEA vs non-EU, active tax ties, etc.).
+- **Auth — no Google / social login**: all sign-in forms are email + password only. No OAuth provider is wired up. Add Google login (at minimum) before launch — especially important for checkout funnel conversion.
+- **Auth — no password visibility toggle**: sign-in and sign-up forms have no "show password" eye icon. Standard UX expectation: press-and-hold (or toggle) to reveal the password in plain text. Add to all password inputs across auth flows (`/signin`, `/signup`, `/operator/signin`, `/admin/signin`, password reset).
+- **Operator user seeding — raw SQL insert does not produce a valid Supabase Auth session**: inserting directly into `auth.users` with `crypt()` creates a row but the password hash format is not accepted by Supabase's auth system at sign-in. To create operator/admin test users: (1) promote an existing account via `UPDATE public.users SET role = 'operator'`, then sign out and back in to get a fresh session token; (2) note that role changes to an active session are NOT reflected until the user signs out and signs back in.
 - Add further items here as they are discovered during feature testing.
 
 Notes:

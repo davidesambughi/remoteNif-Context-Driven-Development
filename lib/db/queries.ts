@@ -504,3 +504,79 @@ export async function insertAuditLog(entry: Omit<InsertAuditLog, 'id' | 'created
 export async function insertOperatorNotification(data: Omit<InsertOperatorNotification, 'id' | 'createdAt'>): Promise<void> {
   await db.insert(operatorNotifications).values(data)
 }
+
+// ---------------------------------------------------------------------------
+// Operator queue queries (Feature 14a-1)
+// ---------------------------------------------------------------------------
+
+/** Shape returned by getOperatorQueue. documentsApprovedAt is non-null at this status. */
+export interface OperatorQueueItem {
+  id: string
+  tier: 'essential' | 'standard' | 'express'
+  fullName: string | null
+  email: string
+  createdAt: Date
+  documentsApprovedAt: Date
+}
+
+/**
+ * Returns all orders in `documents_approved` status for the operator queue.
+ * Express orders sort first; within Express sorted by SLA urgency (oldest approval = least time
+ * remaining). Standard orders sort by createdAt ASC (FIFO).
+ */
+export async function getOperatorQueue(): Promise<OperatorQueueItem[]> {
+  const rows = await db
+    .select({
+      id: orders.id,
+      tier: orders.tier,
+      fullName: orders.fullName,
+      email: users.email,
+      createdAt: orders.createdAt,
+      documentsApprovedAt: orders.documentsApprovedAt,
+    })
+    .from(orders)
+    .innerJoin(users, eq(orders.userId, users.id))
+    .where(eq(orders.status, 'documents_approved'))
+    .orderBy(
+      // Express rows float to the top
+      sql`CASE WHEN ${orders.tier} = 'express' THEN 0 ELSE 1 END`,
+      // Express: sort by oldest approval first (nearest SLA deadline).
+      // Standard: sort by oldest order first (FIFO).
+      sql`CASE WHEN ${orders.tier} = 'express' THEN ${orders.documentsApprovedAt} ELSE ${orders.createdAt} END ASC NULLS LAST`,
+    )
+
+  // Cast documentsApprovedAt: guaranteed non-null on documents_approved rows
+  return rows.map((r) => ({
+    ...r,
+    documentsApprovedAt: r.documentsApprovedAt as Date,
+  }))
+}
+
+/**
+ * Fetches a single order's status by ID.
+ * Returns null if not found.
+ */
+export async function getOrderStatusById(
+  orderId: string,
+): Promise<{ status: SelectOrder['status'] } | null> {
+  const [row] = await db
+    .select({ status: orders.status })
+    .from(orders)
+    .where(eq(orders.id, orderId))
+  return row ?? null
+}
+
+/**
+ * Transitions an order from documents_approved → submitted.
+ * Sets submittedToFinancasAt timestamp.
+ */
+export async function markOrderSubmitted(orderId: string): Promise<void> {
+  await db
+    .update(orders)
+    .set({
+      status: 'submitted',
+      submittedToFinancasAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(orders.id, orderId))
+}
