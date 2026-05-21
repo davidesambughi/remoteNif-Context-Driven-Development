@@ -29,6 +29,10 @@ export const orderStatusEnum = pgEnum('order_status', [
   'delivered',
 ])
 
+// Canonical forward-only progression — import this instead of re-declaring the array.
+// Derived from the DB enum so any future status addition is automatically reflected here.
+export const ORDER_STATUS_SEQUENCE = orderStatusEnum.enumValues
+
 export const tierEnum = pgEnum('tier', ['essential', 'standard', 'express'])
 
 export const documentTypeEnum = pgEnum('document_type', [

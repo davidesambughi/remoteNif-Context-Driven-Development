@@ -132,7 +132,8 @@ describe('adminFlagDocument', () => {
   it('returns a validation error when reason is fewer than 10 characters', async () => {
     const result = await adminFlagDocument(VALID_DOC_ID, 'too short')
     expect(result.success).toBe(false)
-    expect(result.error).toMatch(/10/)
+    // Narrow the discriminated union so TypeScript knows .error is available
+    if (!result.success) expect(result.error).toMatch(/10/)
   })
 
   it('returns a validation error when reason exceeds 500 characters', async () => {

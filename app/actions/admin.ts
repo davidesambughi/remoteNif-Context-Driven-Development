@@ -13,8 +13,10 @@ import {
   insertOperatorNotification,
 } from '@/lib/db/queries'
 import type { SelectOrder } from '@/lib/db/schema'
+import { ORDER_STATUS_SEQUENCE } from '@/lib/db/schema'
 import { requireRole } from '@/lib/auth/session'
 import { sendEmail } from '@/lib/email/send'
+import type { ActionResult } from '@/lib/types'
 
 // ---------------------------------------------------------------------------
 // Validation Schemas
@@ -51,16 +53,6 @@ const ResendEmailSchema = z.object({
 // ---------------------------------------------------------------------------
 
 export type AdminEmailType = z.infer<typeof ResendEmailSchema>['emailType']
-
-// ---------------------------------------------------------------------------
-// Response Type
-// ---------------------------------------------------------------------------
-
-export interface ActionResult<T = void> {
-  success: boolean
-  data?: T
-  error?: string
-}
 
 // ---------------------------------------------------------------------------
 // Actions
@@ -202,16 +194,8 @@ export async function adminUpdateOrderStatus(
     const order = await getAdminOrderDetail(orderId)
     if (!order) return { success: false, error: 'order_not_found' }
 
-    const statusOrder = [
-      'documents_pending',
-      'documents_under_review',
-      'documents_approved',
-      'submitted',
-      'delivered',
-    ]
-    
-    const currentIndex = statusOrder.indexOf(order.status)
-    const newIndex = statusOrder.indexOf(validated.newStatus)
+    const currentIndex = ORDER_STATUS_SEQUENCE.indexOf(order.status)
+    const newIndex = ORDER_STATUS_SEQUENCE.indexOf(validated.newStatus)
     
     if (newIndex < currentIndex && !validated.note) {
       return { success: false, error: 'note_required_for_backward_move' }

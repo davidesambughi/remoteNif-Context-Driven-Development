@@ -5,19 +5,13 @@ import { OrderFilters } from '@/components/admin/OrderFilters'
 import { OrderRow } from '@/components/admin/OrderRow'
 import { SlaCountdown } from '@/components/admin/SlaCountdown'
 import type { SelectOrder } from '@/lib/db/schema'
+import { orderStatusEnum, tierEnum } from '@/lib/db/schema'
 
-// Validates URL search params — invalid values are silently discarded
+// Validates URL search params — invalid values are silently discarded.
+// Derived from DB enums so any future status/tier addition is automatically covered.
 const AdminOrderFiltersSchema = z.object({
-  status: z
-    .enum([
-      'documents_pending',
-      'documents_under_review',
-      'documents_approved',
-      'submitted',
-      'delivered',
-    ])
-    .optional(),
-  tier: z.enum(['essential', 'standard', 'express']).optional(),
+  status: z.enum(orderStatusEnum.enumValues).optional(),
+  tier: z.enum(tierEnum.enumValues).optional(),
 })
 
 interface Props {

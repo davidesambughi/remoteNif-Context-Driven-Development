@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { createCheckoutSession } from '@/app/actions/checkout'
 import type { Tier } from '@/lib/pricing'
 import { Loader2 } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 interface CheckoutButtonProps {
   tier: Tier
@@ -24,14 +24,16 @@ export function CheckoutButton({ tier, cta, ctaVariant }: CheckoutButtonProps) {
   // Root translator — Server Actions return full-path i18n keys (e.g. 'checkout.errors.generic')
   // that span namespaces, so we translate at the root level rather than scoping to 'checkout'.
   const t = useTranslations()
+  // Current locale passed to the action so Stripe redirect URLs land in the user's language.
+  const locale = useLocale()
 
   const handleCheckout = async () => {
     setIsLoading(true)
     setErrorMsg(null)
-    
+
     try {
       // Trigger the server action to get a Stripe Checkout URL
-      const result = await createCheckoutSession({ tier })
+      const result = await createCheckoutSession({ tier, locale })
       
       if (result.success && result.data?.url) {
         // Redirect the browser directly to the Stripe-hosted checkout page

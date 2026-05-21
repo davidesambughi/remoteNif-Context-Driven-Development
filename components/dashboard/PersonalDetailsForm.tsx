@@ -266,20 +266,20 @@ export function PersonalDetailsForm({
             <div className="mt-6 pt-6 border-t border-border-default">
               <div className="flex items-center gap-2 mb-1">
                 <FileText className="h-4 w-4 text-text-secondary" />
-                <h3 className="text-sm font-semibold text-primary">{t('poa.sectionTitle')}</h3>
+                <h3 className="text-sm font-semibold text-text-primary">{t('poa.sectionTitle')}</h3>
               </div>
-              <p className="text-sm text-muted mb-4">{t('poa.sectionDescription')}</p>
+              <p className="text-sm text-text-muted mb-4">{t('poa.sectionDescription')}</p>
 
               {/* Regenerate notice — shown after editing details that had a previously generated POA */}
               {hadPoaBefore && !poaUrl && (
-                <p className="text-sm text-muted mb-3 italic">{t('poa.regenerateNote')}</p>
+                <p className="text-sm text-text-muted mb-3 italic">{t('poa.regenerateNote')}</p>
               )}
 
               {/* State: POA ready — show download link */}
               {poaUrl ? (
                 <div className="flex items-center gap-3">
                   <CheckCircle2 className="h-5 w-5 text-success shrink-0" />
-                  <span className="text-sm text-primary">{t('poa.ready')}</span>
+                  <span className="text-sm text-text-primary">{t('poa.ready')}</span>
                   <Button variant="outline" size="sm" asChild>
                     <a href={poaUrl} target="_blank" rel="noopener noreferrer">
                       <Download className="h-4 w-4 mr-2" />

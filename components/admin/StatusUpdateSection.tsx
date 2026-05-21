@@ -9,19 +9,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { Loader2, CheckCircle2 } from 'lucide-react'
 import { adminUpdateOrderStatus } from '@/app/actions/admin'
 import type { SelectOrder } from '@/lib/db/schema'
+import { ORDER_STATUS_SEQUENCE } from '@/lib/db/schema'
 
 interface StatusUpdateSectionProps {
   orderId: string
   currentStatus: SelectOrder['status']
 }
 
-const statusOrder: SelectOrder['status'][] = [
-  'documents_pending',
-  'documents_under_review',
-  'documents_approved',
-  'submitted',
-  'delivered',
-]
+// Derived from the DB enum — single source of truth shared with the admin action.
+const statusOrder = ORDER_STATUS_SEQUENCE
 
 export function StatusUpdateSection({ orderId, currentStatus }: StatusUpdateSectionProps) {
   const t = useTranslations('admin.detail')
