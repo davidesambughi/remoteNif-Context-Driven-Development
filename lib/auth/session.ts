@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getUserById } from '@/lib/db/queries'
@@ -5,13 +6,15 @@ import type { SelectUser } from '@/lib/db/schema'
 
 // Returns the public.users row for the currently authenticated user, or null.
 // Uses getClaims() (validates JWT locally) rather than getSession() which does not revalidate.
-export async function getCurrentUser(): Promise<SelectUser | null> {
+// Wrapped in React cache() — deduplicates this DB call within a single server render.
+// layout.tsx (auth guard) and page.tsx share one round-trip. Cache clears between requests.
+export const getCurrentUser = cache(async (): Promise<SelectUser | null> => {
   const supabase = await createClient()
   const { data } = await supabase.auth.getClaims()
   // getClaims() returns { claims, header, signature } — sub is the user's UUID
   if (!data?.claims?.sub) return null
   return getUserById(data.claims.sub)
-}
+})
 
 // Like getCurrentUser() but redirects to /signin if there is no session.
 export async function requireAuth(): Promise<SelectUser> {

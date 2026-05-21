@@ -10,7 +10,7 @@ Active development. Features 01–14c complete.
 
 ## Current Goal
 
-Feature 14d — Performance (loading states + auth caching), then Feature 15 — NIF Delivery.
+Feature 15 — NIF Delivery.
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
@@ -18,9 +18,7 @@ Feature 14d — Performance (loading states + auth caching), then Feature 15 —
 
 ## Handoff Note (read before starting next session)
 
-**Next feature is 14d** — Performance: add `loading.tsx` skeletons to all operator pages (`/operator`, `/operator/submitted`, `/operator/preferences`) and auth pages (`/signin`, `/signup`); wrap `getCurrentUser()` in React `cache()` to deduplicate the DB call within a single request. Spec: `context/feature-specs/0-feature-list.md` § 14d.
-
-**After 14d, next is 15** — NIF Delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
+**Next feature is 15** — NIF Delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
 
 **After 14c, next is 15** — NIF delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
 
@@ -76,6 +74,7 @@ UPDATE public.orders SET status = 'documents_approved', tier = 'express', docume
 - **Feature 14b — Operator Archive, Preferences & Submission Email** — `lib/utils/dates.ts` created with `formatSubmissionDate`; 4 new DB queries (`getOrderDataForSubmissionEmail`, `getSubmittedOrders`, `getOperatorPreferencesOrDefaults`, `upsertOperatorPreferences`); `lib/email/templates/order-submitted-customer.tsx` in 4 locales; `send.ts` extended with `order_submitted_customer` template; `markOrderAsSubmitted` wired with fire-and-forget email + second `revalidatePath` for archive; `updateOperatorPreferences` Server Action (validate → role check → phone guard → upsert → audit log); shadcn `Switch` installed; `OperatorNav` client component with locale-aware active detection; operator layout updated with nav; `/operator/submitted` page (read-only archive table); `/operator/preferences` page + `PreferencesForm` client component; translation keys added to all 4 locale files; operator test file updated (sendEmail mock, new queries mock) + 16 new tests for both actions. 274 unit tests passing, `npm run build` passes.
 - **Feature 14b — Tests** — 18 new unit tests: `formatSubmissionDate` (6 cases in `tests/unit/lib/utils/dates.test.ts`), `OrderSubmittedCustomerEmail` template smoke tests in 4 locales + key content assertions + `getOrderSubmittedCustomerSubject` locale uniqueness (10 cases appended to `templates.test.tsx`), `sendEmail` dispatch for `order_submitted_customer` in 2 locales (appended to `send.test.ts`). 23 new integration tests in `tests/integration/db/operator-14b.test.ts`: `getSubmittedOrders` (empty, filter, exclusion, ordering, shape), `getOperatorPreferencesOrDefaults` (defaults when missing, stored values, read-only guarantee), `upsertOperatorPreferences` (insert, ON CONFLICT update, phone number), `getOrderDataForSubmissionEmail` (null for missing, join shape, null fullName, all 4 locales). 292 unit tests passing.
 - **Feature 14c — App-Wide Navigation** — `DashboardSignOutButton` (client), `DashboardHeader` (server, sticky, brand link + LanguageSwitcher + sign-out), `DashboardLayout` (new `app/[locale]/(dashboard)/layout.tsx` — auth guard + header shell); `OperatorNavLinks` (client, tab nav with active indicator replacing `OperatorNav`); `AdminNavLinks` (client, same pattern); operator layout rewritten to single sticky bar (brand + tabs inline); admin layout rewritten to single sticky bar (brand + tabs inline); `OperatorNav.tsx` deleted; i18n keys `nav.signOut` / `nav.accountSettings` added to all 4 locale files. Build: clean. 292 unit tests passing.
+- **Feature 14d — Performance: Loading States & Auth Caching** — `getCurrentUser()` wrapped in React `cache()` in `lib/auth/session.ts` (deduplicates layout + page DB calls per request); `loading.tsx` skeletons added for `/operator`, `/operator/submitted`, `/operator/preferences`, `/signin`, `/signup`. Note: `unstable_instant` (Next.js 16.2) was researched and specced but requires `cacheComponents: true` in `next.config.ts` — enabling it is an architectural decision deferred to a future feature. Skeletons deliver their core UX benefit without it. 292 unit tests passing, build clean.
 
 ---
 
