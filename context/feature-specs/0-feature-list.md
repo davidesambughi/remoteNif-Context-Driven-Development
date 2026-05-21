@@ -587,6 +587,24 @@ Depends on: 14b.
 
 ---
 
+## 14d — Performance: Loading States & Auth Caching
+
+Fix two root causes of perceived slowness identified during 14c testing.
+
+**Problem 1 — No `loading.tsx` on operator and auth pages.** Without skeleton screens, Next.js holds the previous page frozen until the full server render completes. The dashboard already has one; operator pages and auth pages have none.
+
+**Problem 2 — `getCurrentUser()` called twice per request.** The layout calls it once, then any Server Action in the same render calls `requireRole()` which calls it again — two DB round-trips for what should be one. Wrapping `getCurrentUser()` in React's `cache()` deduplicates it within a single request at zero cost.
+
+Done when:
+
+- `loading.tsx` skeleton screens exist for all operator pages (`/operator`, `/operator/submitted`, `/operator/preferences`) and the auth pages (`/signin`, `/signup`).
+- `getCurrentUser()` is wrapped with React `cache()` so layout + action share one DB call per request.
+- No other behaviour changes.
+
+Depends on: 14c.
+
+---
+
 ## 15 — NIF Delivery
 
 Add final NIF delivery handling.

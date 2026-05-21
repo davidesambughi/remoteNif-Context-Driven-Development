@@ -10,7 +10,7 @@ Active development. Features 01–14c complete.
 
 ## Current Goal
 
-Feature 15 — NIF Delivery (next).
+Feature 14d — Performance (loading states + auth caching), then Feature 15 — NIF Delivery.
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
@@ -18,7 +18,9 @@ Feature 15 — NIF Delivery (next).
 
 ## Handoff Note (read before starting next session)
 
-**Next feature is 15** — NIF Delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
+**Next feature is 14d** — Performance: add `loading.tsx` skeletons to all operator pages (`/operator`, `/operator/submitted`, `/operator/preferences`) and auth pages (`/signin`, `/signup`); wrap `getCurrentUser()` in React `cache()` to deduplicate the DB call within a single request. Spec: `context/feature-specs/0-feature-list.md` § 14d.
+
+**After 14d, next is 15** — NIF Delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
 
 **After 14c, next is 15** — NIF delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
 
