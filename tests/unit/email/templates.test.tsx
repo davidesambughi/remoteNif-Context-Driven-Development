@@ -266,3 +266,82 @@ describe('getOrderSubmittedCustomerSubject', () => {
     expect(new Set([en, fr, es, de]).size).toBe(4)
   })
 })
+
+// ---------------------------------------------------------------------------
+// NifDeliveredEmail (Feature 16)
+// ---------------------------------------------------------------------------
+
+import {
+  NifDeliveredEmail,
+  getNifDeliveredSubject,
+} from '@/lib/email/templates/nif-delivered'
+
+describe('NifDeliveredEmail', () => {
+  const baseProps = {
+    locale: 'en' as const,
+    customerName: 'Carlos Mendes',
+    nifNumber: '123456789',
+    dashboardUrl: 'https://example.com/en/dashboard',
+  }
+
+  it('renders without throwing (EN)', async () => {
+    await expect(render(NifDeliveredEmail(baseProps))).resolves.not.toThrow()
+  })
+
+  it('renders without throwing (FR)', async () => {
+    await expect(render(NifDeliveredEmail({ ...baseProps, locale: 'fr' }))).resolves.not.toThrow()
+  })
+
+  it('renders without throwing (ES)', async () => {
+    await expect(render(NifDeliveredEmail({ ...baseProps, locale: 'es' }))).resolves.not.toThrow()
+  })
+
+  it('renders without throwing (DE)', async () => {
+    await expect(render(NifDeliveredEmail({ ...baseProps, locale: 'de' }))).resolves.not.toThrow()
+  })
+
+  it('contains the NIF number in the rendered output', async () => {
+    const html = await render(NifDeliveredEmail(baseProps))
+    expect(html).toContain('123456789')
+  })
+
+  it('contains the customer name in the rendered output', async () => {
+    const html = await render(NifDeliveredEmail(baseProps))
+    expect(html).toContain('Carlos Mendes')
+  })
+
+  it('contains the dashboard URL as a link', async () => {
+    const html = await render(NifDeliveredEmail(baseProps))
+    expect(html).toContain('https://example.com/en/dashboard')
+  })
+
+  it('contains the dashboard URL as a link', async () => {
+    const html = await render(NifDeliveredEmail(baseProps))
+    expect(html).toContain('https://example.com/en/dashboard')
+  })
+
+  it('does not contain guide content (bank, property, NHR removed — v2 website feature)', async () => {
+    const html = await render(NifDeliveredEmail(baseProps))
+    expect(html).not.toContain('Wise')
+    expect(html).not.toContain('NHR')
+  })
+})
+
+describe('getNifDeliveredSubject', () => {
+  it('returns a non-empty string for each locale', () => {
+    const locales = ['en', 'fr', 'es', 'de'] as const
+    for (const locale of locales) {
+      const subject = getNifDeliveredSubject(locale)
+      expect(typeof subject).toBe('string')
+      expect(subject.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('returns different subjects for different locales — no copy-paste error', () => {
+    const en = getNifDeliveredSubject('en')
+    const fr = getNifDeliveredSubject('fr')
+    const es = getNifDeliveredSubject('es')
+    const de = getNifDeliveredSubject('de')
+    expect(new Set([en, fr, es, de]).size).toBe(4)
+  })
+})

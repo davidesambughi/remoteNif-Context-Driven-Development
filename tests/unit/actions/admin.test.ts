@@ -439,6 +439,9 @@ describe('adminDeliverNif', () => {
     vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
       nifNumber: '987654321',
       tier: 'standard',
+      customerEmail: 'customer@example.com',
+      customerLanguage: 'en',
+      fullName: 'Test Customer',
     })
 
     const result = await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
@@ -451,6 +454,9 @@ describe('adminDeliverNif', () => {
     vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
       nifNumber: null,
       tier: 'standard',
+      customerEmail: 'customer@example.com',
+      customerLanguage: 'en',
+      fullName: 'Test Customer',
     })
     vi.mocked(queries.deliverNifNumber).mockResolvedValue(undefined)
 
@@ -464,6 +470,9 @@ describe('adminDeliverNif', () => {
     vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
       nifNumber: null,
       tier: 'express',
+      customerEmail: 'customer@example.com',
+      customerLanguage: 'en',
+      fullName: 'Test Customer',
     })
     vi.mocked(queries.deliverNifNumber).mockResolvedValue(undefined)
 
@@ -483,6 +492,9 @@ describe('adminDeliverNif', () => {
     vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
       nifNumber: null,
       tier: 'essential',
+      customerEmail: 'customer@example.com',
+      customerLanguage: 'en',
+      fullName: 'Test Customer',
     })
     vi.mocked(queries.deliverNifNumber).mockResolvedValue(undefined)
 
@@ -490,5 +502,62 @@ describe('adminDeliverNif', () => {
 
     expect(result).toEqual({ success: true })
     expect(queries.deliverNifNumber).toHaveBeenCalledWith(VALID_ORDER_ID, VALID_NIF, 'essential')
+  })
+
+  // Feature 16 — delivery email
+  it('fires sendEmail with nif_delivered after successful delivery', async () => {
+    vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
+      nifNumber: null,
+      tier: 'standard',
+      customerEmail: 'customer@example.com',
+      customerLanguage: 'fr',
+      fullName: 'Maria Santos',
+    })
+    vi.mocked(queries.deliverNifNumber).mockResolvedValue(undefined)
+
+    await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
+
+    expect(emailSend.sendEmail).toHaveBeenCalledWith(
+      'customer@example.com',
+      'fr',
+      expect.objectContaining({
+        template: 'nif_delivered',
+        nifNumber: VALID_NIF,
+        customerName: 'Maria Santos',
+      }),
+    )
+  })
+
+  it('falls back to "there" for customerName when fullName is null', async () => {
+    vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
+      nifNumber: null,
+      tier: 'standard',
+      customerEmail: 'customer@example.com',
+      customerLanguage: 'en',
+      fullName: null,
+    })
+    vi.mocked(queries.deliverNifNumber).mockResolvedValue(undefined)
+
+    await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
+
+    expect(emailSend.sendEmail).toHaveBeenCalledWith(
+      'customer@example.com',
+      'en',
+      expect.objectContaining({ customerName: 'there' }),
+    )
+  })
+
+  it('does NOT fire sendEmail when the immutability guard blocks delivery', async () => {
+    vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
+      nifNumber: '987654321', // already set
+      tier: 'standard',
+      customerEmail: 'customer@example.com',
+      customerLanguage: 'en',
+      fullName: 'Maria Santos',
+    })
+
+    await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
+
+    expect(emailSend.sendEmail).not.toHaveBeenCalled()
   })
 })

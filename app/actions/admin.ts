@@ -269,6 +269,13 @@ export async function adminDeliverNif(orderId: string, nifNumber: string): Promi
 
     await deliverNifNumber(validated.orderId, validated.nifNumber, order.tier)
 
+    // Fire delivery email — fire-and-forget, errors caught inside sendEmail
+    void sendEmail(order.customerEmail, order.customerLanguage, {
+      template: 'nif_delivered',
+      customerName: order.fullName ?? 'there',
+      nifNumber: validated.nifNumber,
+    })
+
     await insertAuditLog({
       userId: admin.id,
       orderId: validated.orderId,

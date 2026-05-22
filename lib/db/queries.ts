@@ -508,18 +508,42 @@ export async function insertOperatorNotification(data: Omit<InsertOperatorNotifi
 }
 
 /**
- * Lightweight read used by adminDeliverNif to check immutability and get tier
- * before performing the delivery update. Avoids the full getAdminOrderDetail join.
+ * Lightweight read used by adminDeliverNif to check immutability, get tier,
+ * and retrieve the customer email + language needed for the delivery email.
+ * Uses a leftJoin on users to avoid the full getAdminOrderDetail join cost.
  */
 export async function getOrderNifAndTier(
   orderId: string,
-): Promise<{ nifNumber: string | null; tier: 'essential' | 'standard' | 'express' } | null> {
+): Promise<{
+  nifNumber: string | null
+  tier: 'essential' | 'standard' | 'express'
+  customerEmail: string
+  customerLanguage: 'en' | 'fr' | 'es' | 'de'
+  fullName: string | null
+} | null> {
   const result = await db
-    .select({ nifNumber: orders.nifNumber, tier: orders.tier })
+    .select({
+      nifNumber: orders.nifNumber,
+      tier: orders.tier,
+      fullName: orders.fullName,
+      customerEmail: users.email,
+      customerLanguage: users.language,
+    })
     .from(orders)
+    .leftJoin(users, eq(users.id, orders.userId))
     .where(eq(orders.id, orderId))
     .limit(1)
-  return result[0] ?? null
+
+  if (!result[0]) return null
+
+  return {
+    nifNumber: result[0].nifNumber,
+    tier: result[0].tier,
+    fullName: result[0].fullName,
+    // Guard against null from leftJoin — orders always have a valid userId
+    customerEmail: result[0].customerEmail ?? '',
+    customerLanguage: (result[0].customerLanguage ?? 'en') as 'en' | 'fr' | 'es' | 'de',
+  }
 }
 
 /**

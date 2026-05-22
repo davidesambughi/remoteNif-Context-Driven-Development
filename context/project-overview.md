@@ -68,7 +68,7 @@ RemoteNIF v2 is a web application that allows non-residents to apply for a Portu
 
 ### Post-NIF Journey Guide
 
-Single automated email sent after NIF delivery. Content only — not a sales pitch. Covers: how to open a Portuguese bank account (Wise/N26 referral link), how to register a property after purchase, what NHR/IFICI is and whether the customer might qualify.
+Single automated email sent after NIF delivery. Contains the NIF number prominently and a link to the customer's dashboard. No editorial guide content in the email — recommending specific banks or explaining NHR/IFICI in an email creates bias and regulatory risk. Post-NIF guidance lives on the website (see v2 ideas below).
 
 ---
 
@@ -90,7 +90,7 @@ Fiscal representation cannot be marketed as a universal requirement. Standard an
 - Do **not** imply fiscal rep is a universal legal requirement — it is not.
 - The Express 48h commitment must specify it starts from document approval, not payment. Exact expected copy: _"Your 48-hour window begins once your documents pass review."_
 - The estimated delivery date on the dashboard must be clearly marked as an estimate outside the product's control once the application is submitted.
-- The Post-NIF Journey Guide email must read as information, not upsell. No CTAs beyond the referral links.
+- The Post-NIF Journey Guide email is intentionally minimal: NIF number + dashboard link only. No bank recommendations, no tax regime guidance in email.
 
 ---
 
@@ -148,3 +148,18 @@ Fiscal representation cannot be marketed as a universal requirement. Standard an
 - < 40% checkout completion → pricing or trust is broken.
 - > 5% of Express orders miss the 48h SLA → pause the Express tier.
 - Fiscal rep renewal rate < 30% after regulatory change → rebuild recurring model around tax compliance packages.
+
+---
+
+## v2 Ideas
+
+Ideas deferred from v1 — not blocking launch, revisit after the product is live and generating real usage data.
+
+### Post-NIF Content Hub
+
+A dedicated area on the website (or inside the customer dashboard) with curated post-NIF guidance. Better format than an email for detailed, linkable content. Potential sections:
+
+- **Opening a Portuguese bank account** — balanced overview of options (online banks, traditional banks), no single recommendation. Affiliate/referral links can be added here once partners are confirmed.
+- **Buying property in Portugal** — what the NIF is needed for and when (promissory contract, deed signing).
+- **NHR / IFICI tax regime** — what it is, who might qualify, clear recommendation to consult a licensed tax adviser. Neutral framing — not legal advice.
+- Could be implemented as a blog, a static `/resources` section, or a "What's next?" tab inside the delivered-state dashboard view.

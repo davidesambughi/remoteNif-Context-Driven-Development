@@ -26,6 +26,10 @@ import {
   OrderSubmittedCustomerEmail,
   getOrderSubmittedCustomerSubject,
 } from './templates/order-submitted-customer'
+import {
+  NifDeliveredEmail,
+  getNifDeliveredSubject,
+} from './templates/nif-delivered'
 
 export type EmailLocale = 'en' | 'fr' | 'es' | 'de'
 export type EmailTemplateName =
@@ -35,6 +39,7 @@ export type EmailTemplateName =
   | 'documents_approved_customer'
   | 'operator_submission_ready'
   | 'order_submitted_customer'
+  | 'nif_delivered'
 
 // Discriminated union — add a new member here when a new template is introduced,
 // then add a matching case in the switch below.
@@ -45,6 +50,7 @@ export type EmailPayload =
   | { template: 'documents_approved_customer'; customerName: string; tier: string }
   | { template: 'operator_submission_ready'; customerName: string; tier: string; orderId: string; slaNote?: string }
   | { template: 'order_submitted_customer'; customerName: string; tier: string }
+  | { template: 'nif_delivered'; customerName: string; nifNumber: string }
 
 /**
  * Central email sending helper. All outbound emails go through here — never call
@@ -128,6 +134,17 @@ export async function sendEmail(
           locale,
           customerName: payload.customerName,
           tier: payload.tier,
+          dashboardUrl,
+        })
+        break
+      }
+      case 'nif_delivered': {
+        // Send the NIF number and post-NIF journey guide to the customer
+        subject = getNifDeliveredSubject(locale)
+        reactElement = NifDeliveredEmail({
+          locale,
+          customerName: payload.customerName,
+          nifNumber: payload.nifNumber,
           dashboardUrl,
         })
         break

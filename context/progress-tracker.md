@@ -4,13 +4,13 @@
 
 ## Current Phase
 
-Active development. Features 01–15 complete.
+Active development. Features 01–16 complete.
 
 ---
 
 ## Current Goal
 
-Feature 16 — Delivery Emails.
+Feature 17a — Account Settings (Security & Deletion).
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
@@ -18,15 +18,17 @@ Feature 16 — Delivery Emails.
 
 ## Handoff Note (read before starting next session)
 
-**Next feature is 16** — Delivery Emails: send NIF delivery email + post-NIF journey guide to the customer after `adminDeliverNif` runs.
+**Next feature is 17a** — Account Settings: change email, change password, delete account.
 
-**Key context for 16:**
-- Hook into `adminDeliverNif` in `app/actions/admin.ts` — fire email as fire-and-forget after `deliverNifNumber` call.
-- Need a new `nif_delivered` email template (4 locales) containing the NIF number and post-NIF guide content.
-- Optionally a second follow-up guide email scheduled after delivery (feature list says "follow-up guide email scheduled after delivery").
-- Customer's `order.customerLanguage` is available via `getAdminOrderDetail` — but `adminDeliverNif` currently only calls `getOrderNifAndTier`. Will need the customer email + language; either extend that lightweight query or do a second targeted select.
+**Key context for 17a:**
+- Route: `app/[locale]/(dashboard)/settings/page.tsx` (already exists in project tree per architecture-context.md — verify whether it has any content).
+- Three sections: Change Email (requires password verification + new-email confirmation link), Change Password (current + new + confirm), Delete Account (type DELETE confirmation dialog).
+- All forms use react-hook-form + Zod + shadcn `Form` primitives — same pattern as Personal Details form.
+- Supabase Auth handles email change and password update — use `supabase.auth.updateUser()`.
+- Delete account: delete from `auth.users` (Supabase admin client) + `public.users` cascade handles FK cleanup.
+- All copy via next-intl keys under `settings.*` namespace in all 4 locale files.
 
-**Test order:** `0f449877-f56c-4411-9f5c-eef0190d606e` — reset to `submitted` to test Feature 15 / 16:
+**Test order reset (if needed for Feature 16 testing):**
 ```sql
 UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at = NULL, fiscal_rep_expires_at = NULL WHERE id = '0f449877-f56c-4411-9f5c-eef0190d606e';
 ```
@@ -74,6 +76,7 @@ UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at =
 - **Feature 14c — App-Wide Navigation** — `DashboardSignOutButton` (client), `DashboardHeader` (server, sticky, brand link + LanguageSwitcher + sign-out), `DashboardLayout` (new `app/[locale]/(dashboard)/layout.tsx` — auth guard + header shell); `OperatorNavLinks` (client, tab nav with active indicator replacing `OperatorNav`); `AdminNavLinks` (client, same pattern); operator layout rewritten to single sticky bar (brand + tabs inline); admin layout rewritten to single sticky bar (brand + tabs inline); `OperatorNav.tsx` deleted; i18n keys `nav.signOut` / `nav.accountSettings` added to all 4 locale files. Build: clean. 292 unit tests passing.
 - **Feature 14d — Performance: Loading States & Auth Caching** — `getCurrentUser()` wrapped in React `cache()` in `lib/auth/session.ts` (deduplicates layout + page DB calls per request); `loading.tsx` skeletons added for `/operator`, `/operator/submitted`, `/operator/preferences`, `/signin`, `/signup`. Note: `unstable_instant` (Next.js 16.2) was researched and specced but requires `cacheComponents: true` in `next.config.ts` — enabling it is an architectural decision deferred to a future feature. Skeletons deliver their core UX benefit without it. 292 unit tests passing, build clean.
 - **Feature 15 — NIF Delivery** — `AdminOrderDetail` interface extended with `nifNumber`; `getAdminOrderDetail` SELECT updated; `getOrderNifAndTier` (lightweight read for immutability check) and `deliverNifNumber` (atomic UPDATE: `nifNumber`, `status = 'delivered'`, `deliveredAt`, `fiscalRepExpiresAt = deliveredAt + 12 months` for Standard/Express, null for Essential) added to `lib/db/queries.ts`; `adminDeliverNif` Server Action added to `app/actions/admin.ts` (validate → requireRole → immutability guard → deliverNifNumber → audit log → revalidate); `DeliverNifSection` client component created (`components/admin/DeliverNifSection.tsx`) with inline confirmation pattern, digit-only input, delivered read-only state; wired into admin order detail aside; i18n keys added under `admin.detail.deliverNif` in all 4 locales. Customer dashboard was already wired (08b placeholder, `getUserActiveOrder` returns all fields). 7 new unit tests, 300 total passing, build clean.
+- **Feature 16 — Delivery Emails** — `getOrderNifAndTier` in `lib/db/queries.ts` extended with `leftJoin` on `users` to return `customerEmail`, `customerLanguage`, and `fullName` alongside existing fields; `lib/email/templates/nif-delivered.tsx` created (4 locales: EN/FR/ES/DE) — intentionally minimal: NIF number in a prominent brand-tinted monospace block + dashboard CTA only, no guide content (bank/property/NHR removed — biased recommendations and regulatory risk; content hub deferred to v2, logged in `project-overview.md`); `nif_delivered` registered in `lib/email/send.ts` (union member + switch case + exhaustive check); `adminDeliverNif` wired with `void sendEmail(...)` fire-and-forget after `deliverNifNumber` succeeds; 16 new unit tests (template smoke tests × 4 locales + NIF-in-output + no-guide-content assertion + dashboard URL + subject uniqueness; send dispatch × 2 locales; action: sendEmail called on success, fullName-null fallback, NOT called on immutability guard). 316 total passing, build clean.
 
 ---
 
