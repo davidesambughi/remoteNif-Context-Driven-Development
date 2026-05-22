@@ -42,7 +42,7 @@ export function DeliverNifSection({
   // Once delivered (either from prop or after a successful action) show read-only view
   if (delivered && deliveredNif) {
     return (
-      <Card className="shadow-[var(--shadow-md)] border-[var(--border-default)]">
+      <Card className="shadow-[var(--shadow-md)] border-border-default">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2 text-success">
             <CheckCircle2 className="h-4 w-4" />
@@ -90,7 +90,7 @@ export function DeliverNifSection({
   }
 
   return (
-    <Card className="shadow-[var(--shadow-md)] border-[var(--border-default)]">
+    <Card className="shadow-[var(--shadow-md)] border-border-default">
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
           <Hash className="h-4 w-4 text-brand-primary" />
@@ -102,7 +102,7 @@ export function DeliverNifSection({
       <CardContent>
         {isConfirming ? (
           /* Inline confirmation — consistent with ApproveOrderSection pattern */
-          <div className="bg-[var(--bg-subtle)] border border-[var(--border-default)] rounded-[length:var(--radius-md)] p-3 space-y-3">
+          <div className="bg-subtle border border-border-default rounded-[length:var(--radius-md)] p-3 space-y-3">
             <p className="text-sm font-medium text-text-primary">{t('confirmTitle')}</p>
             <p className="text-xs text-text-secondary">{t('confirmDescription')}</p>
             {/* Echo back the NIF being delivered so admin can double-check */}
@@ -163,7 +163,7 @@ export function DeliverNifSection({
 
             <Button
               variant="outline"
-              className="w-full border-brand-primary text-brand-primary hover:bg-[var(--brand-primary-dim)] hover:text-brand-primary"
+              className="w-full border-brand-primary text-brand-primary hover:bg-brand-primary-dim hover:text-brand-primary"
               onClick={handleTrigger}
               disabled={nifInput.length === 0}
             >
