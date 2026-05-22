@@ -468,5 +468,73 @@
       "saveSuccess": "Preferences saved.",
       "saveError": "Failed to save preferences. Please try again."
     }
+  },
+  "settings": {
+    "pageTitle": "Account Settings",
+    "changeEmail": {
+      "heading": "Change Email",
+      "description": "A verification link will be sent to your new email address. Your current email stays active until you confirm the change.",
+      "newEmailLabel": "New email address",
+      "newEmailPlaceholder": "you@example.com",
+      "currentPasswordLabel": "Current password",
+      "currentPasswordPlaceholder": "Enter your current password",
+      "submitButton": "Send verification link",
+      "successMessage": "Verification link sent. Check your new inbox to confirm the change.",
+      "errors": {
+        "emailInUse": "This email is already registered to another account.",
+        "incorrectPassword": "Incorrect password.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "changePassword": {
+      "heading": "Change Password",
+      "description": "Choose a strong password with at least 8 characters, one uppercase letter, one lowercase letter, and one number.",
+      "currentPasswordLabel": "Current password",
+      "newPasswordLabel": "New password",
+      "confirmPasswordLabel": "Confirm new password",
+      "submitButton": "Update password",
+      "successMessage": "Password updated successfully.",
+      "errors": {
+        "incorrectPassword": "Current password is incorrect.",
+        "passwordMismatch": "Passwords don't match.",
+        "weakPassword": "Password must be at least 8 characters with one uppercase letter, one lowercase letter, and one number.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "deleteAccount": {
+      "heading": "Delete Account",
+      "description": "Permanently delete your account and all order history. Your NIF number remains valid with Finanças, but you will lose access to this dashboard.",
+      "triggerButton": "Delete my account",
+      "dialog": {
+        "title": "Are you sure?",
+        "body": "This action is permanent and cannot be undone. Type DELETE below to confirm.",
+        "activeOrderWarning": "You have an active order. You will lose access to order status updates.",
+        "fiscalRepWarning": "Your fiscal representation is active until {date}. Deleting your account will not cancel it. Contact support if you need to cancel.",
+        "confirmationLabel": "Type DELETE to confirm",
+        "confirmationPlaceholder": "DELETE",
+        "cancelButton": "Cancel",
+        "confirmButton": "Delete my account",
+        "errors": {
+          "generic": "Something went wrong. Please try again."
+        }
+      }
+    },
+    "backToDashboard": "Back to dashboard",
+    "languagePreference": {
+      "heading": "Language Preference",
+      "description": "Choose the language you'd like to use for this dashboard and all emails we send you.",
+      "selectLabel": "Language",
+      "options": {
+        "en": "English",
+        "fr": "Français",
+        "es": "Español",
+        "de": "Deutsch"
+      },
+      "submitButton": "Save preference",
+      "successMessage": "Language preference saved.",
+      "errors": {
+        "generic": "Something went wrong. Please try again."
+      }
+    }
   }
 }

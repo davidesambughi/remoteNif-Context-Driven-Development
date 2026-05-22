@@ -6,7 +6,8 @@ const localeEnum = z.enum(routing.locales as unknown as [string, ...string[]])
 
 // Strong password: 8+ chars, upper, lower, digit. No special-char requirement —
 // avoids UX friction without meaningful security loss at this level.
-const strongPassword = z.string()
+// Exported so settings.ts (change-password) can reuse the same rule without duplication.
+export const strongPassword = z.string()
   .min(8, 'Password must be at least 8 characters')
   .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
   .regex(/[a-z]/, 'Password must contain at least one lowercase letter')

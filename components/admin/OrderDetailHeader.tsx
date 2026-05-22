@@ -19,7 +19,7 @@ export async function OrderDetailHeader({ order }: OrderDetailHeaderProps) {
   }
 
   const tierColors: Record<string, string> = {
-    essential: 'bg-subtle text-secondary',
+    essential: 'bg-subtle text-[var(--text-secondary)]',
     standard: 'bg-brand-primary-dim text-brand-primary',
     express: 'bg-brand-primary text-on-accent',
   }

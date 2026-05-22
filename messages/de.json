@@ -468,5 +468,73 @@
       "saveSuccess": "Preferences saved.",
       "saveError": "Failed to save preferences. Please try again."
     }
+  },
+  "settings": {
+    "pageTitle": "Kontoeinstellungen",
+    "changeEmail": {
+      "heading": "E-Mail ändern",
+      "description": "Ein Bestätigungslink wird an Ihre neue E-Mail-Adresse gesendet. Ihre aktuelle E-Mail bleibt aktiv, bis Sie die Änderung bestätigen.",
+      "newEmailLabel": "Neue E-Mail-Adresse",
+      "newEmailPlaceholder": "sie@beispiel.com",
+      "currentPasswordLabel": "Aktuelles Passwort",
+      "currentPasswordPlaceholder": "Geben Sie Ihr aktuelles Passwort ein",
+      "submitButton": "Bestätigungslink senden",
+      "successMessage": "Bestätigungslink gesendet. Prüfen Sie Ihr neues Postfach, um die Änderung zu bestätigen.",
+      "errors": {
+        "emailInUse": "Diese E-Mail-Adresse ist bereits einem anderen Konto zugeordnet.",
+        "incorrectPassword": "Falsches Passwort.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+      }
+    },
+    "changePassword": {
+      "heading": "Passwort ändern",
+      "description": "Wählen Sie ein sicheres Passwort mit mindestens 8 Zeichen, einem Großbuchstaben, einem Kleinbuchstaben und einer Zahl.",
+      "currentPasswordLabel": "Aktuelles Passwort",
+      "newPasswordLabel": "Neues Passwort",
+      "confirmPasswordLabel": "Neues Passwort bestätigen",
+      "submitButton": "Passwort aktualisieren",
+      "successMessage": "Passwort erfolgreich aktualisiert.",
+      "errors": {
+        "incorrectPassword": "Das aktuelle Passwort ist falsch.",
+        "passwordMismatch": "Passwörter stimmen nicht überein.",
+        "weakPassword": "Das Passwort muss mindestens 8 Zeichen, einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl enthalten.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+      }
+    },
+    "deleteAccount": {
+      "heading": "Konto löschen",
+      "description": "Löschen Sie Ihr Konto und den gesamten Bestellverlauf dauerhaft. Ihre NIF-Nummer bleibt bei den Finanças gültig, aber Sie verlieren den Zugang zu diesem Dashboard.",
+      "triggerButton": "Mein Konto löschen",
+      "dialog": {
+        "title": "Sind Sie sicher?",
+        "body": "Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden. Geben Sie unten DELETE ein, um zu bestätigen.",
+        "activeOrderWarning": "Sie haben eine aktive Bestellung. Sie verlieren den Zugang zu Statusaktualisierungen.",
+        "fiscalRepWarning": "Ihre steuerliche Vertretung ist bis {date} aktiv. Das Löschen Ihres Kontos wird sie nicht kündigen. Kontaktieren Sie den Support, falls erforderlich.",
+        "confirmationLabel": "Geben Sie DELETE ein, um zu bestätigen",
+        "confirmationPlaceholder": "DELETE",
+        "cancelButton": "Abbrechen",
+        "confirmButton": "Mein Konto löschen",
+        "errors": {
+          "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+        }
+      }
+    },
+    "backToDashboard": "Zurück zum Dashboard",
+    "languagePreference": {
+      "heading": "Spracheinstellung",
+      "description": "Wählen Sie die Sprache, die Sie für dieses Dashboard und alle E-Mails verwenden möchten.",
+      "selectLabel": "Sprache",
+      "options": {
+        "en": "English",
+        "fr": "Français",
+        "es": "Español",
+        "de": "Deutsch"
+      },
+      "submitButton": "Einstellung speichern",
+      "successMessage": "Spracheinstellung gespeichert.",
+      "errors": {
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+      }
+    }
   }
 }

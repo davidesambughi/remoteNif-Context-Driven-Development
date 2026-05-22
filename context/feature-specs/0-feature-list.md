@@ -634,6 +634,11 @@ Done when:
 - A follow-up guide email is scheduled after delivery.
 - Emails are sent in the customer's stored language preference.
 
+Notes:
+
+- **Resend domain verification required before launch.** Manually tested and confirmed working — Resend receives the correct payload and the HTML renders correctly. However, `remotenif.com` is not yet verified in Resend, so emails are blocked from actual delivery. Pre-launch task: go to [resend.com/domains](https://resend.com/domains) → Add domain → `remotenif.com` → add the DNS records provided. Once verified, all transactional emails (not just delivery emails) will deliver to real inboxes.
+- Post-NIF guide content (bank accounts, property registration, NHR/IFICI) was intentionally removed from the email — recommending specific services creates bias and regulatory risk. Deferred to a v2 content hub on the website. See `context/project-overview.md` → v2 Ideas.
+
 Depends on: 15.
 
 ---
@@ -722,7 +727,7 @@ Done when:
 Known items to address:
 
 - **Signup — "email already in Supabase Auth but not in public.users"**: Supabase silently accepts the signup call, attempts to send a confirmation email, but returns no session. The user sees "Email confirmation is required. Please check your inbox." — misleading because the email is either never sent (SMTP domain restriction blocks sends to non-owner addresses during dev) or Supabase silently swallows the duplicate. The fix is to detect this state more precisely and show a message that does not promise an email the system may not have sent (e.g. "If this email is not registered, you'll receive a confirmation link shortly.") — or, once email confirmation is re-enabled pre-launch, test the full confirmation flow end-to-end.
-- **Personal details form — no success state after save**: after a successful save the form stays fully visible and editable, giving no signal that the save worked. Users may think it failed and retry or abandon. Fix: collapse the form into a read-only summary card on success, with an "Edit" link to re-open it. Also add a short pre-submit note ("Please double-check your details — they will be used in your official application") to surface the typo-check prompt before saving.
+
 - **Document upload — no delete/re-upload for approved slots (discovered: Feature 11a testing)**: once a slot reaches `approved`, there is no self-serve way for the user to replace it (e.g. wrong file that AI still cleared). The `flagged` path already has Re-upload. An `approved` slot would need: (a) a "Replace" button visible only when `order.status === 'documents_pending'`; (b) a server action that soft-deletes the existing record (`supersededAt = now`) and resets the slot to `idle` for a fresh upload + re-review; (c) locked once order moves past `documents_pending`. Restriction: `manual_review` slots must NOT get a Replace button — admin handles those. Defer until real usage confirms demand.
 - **`DocumentUploadSlot` — extract `useDocumentUpload` hook (structural refactor)**: the component's `handleFile` function is a 105-line async pipeline (validate → sign URL → PUT to storage → register in DB → AI review → timeout management). Extract all state and async logic into `hooks/useDocumentUpload.ts`, leaving the component as a thin renderer. Also consolidate the two boolean sub-state flags (`isReviewing`, `isSlowReview`) into the main `SlotStatus` state machine to remove the manual sync requirement. Do not change any behavior — structural refactor only. Verify the full upload flow (upload, AI review, timeout, cross-slot locking) still works end-to-end after the change.
 - **Email confirmation template is unstyled (discovered: Feature 11a testing)**: the Supabase default confirmation email is plain and unbranded. Fix: customize the email template in Supabase Auth → Email Templates to match RemoteNIF branding (logo, colors, clear CTA button). All four locale email templates should be updated.
@@ -735,6 +740,7 @@ Known items to address:
 - **Auth forms — no loading state on submit button (discovered: Feature 14d)**: when the user clicks "Sign in" or "Sign up", the button shows no feedback for ~400–600ms while Supabase validates credentials and the server action runs. Feels broken. Fix: use `useFormStatus` (inside the form) or `useTransition` to set `pending = true` on submit, then render the button as disabled with a spinner and "Signing in…" / "Creating account…" label. Apply to all auth forms: `/signin`, `/signup`, `/operator/signin`, `/admin/signin`, password reset submit. Use the shadcn `Button` disabled state + a `Loader2` Lucide icon (`animate-spin h-4 w-4`). No copy changes needed beyond the loading label — add the loading string to all four locale files.
 - **Skeleton flash on fast-loading auth pages (discovered: Feature 14d)**: `loading.tsx` skeletons on `/signin` and `/signup` appear and disappear in under 100ms because `getCurrentUser()` (the only async call in those pages) is fast. The result is an ugly visual glitch — a skeleton flicker the user never asked for. Two options: (a) remove the `loading.tsx` files from auth pages entirely — they add no real value there since the page has no slow data to mask; (b) add a CSS `animation-delay` of ~150ms to the skeleton container so it only appears if loading takes longer than that threshold, hiding the flash on fast connections. Option (a) is simpler and recommended — auth pages are almost always fast, and a skeleton on a login screen is unusual UX. Option (b) is better if the team wants consistent skeleton coverage across all pages.
 - Add further items here as they are discovered during feature testing.
+- **`no UI for ai checking documents**
 
 Notes:
 

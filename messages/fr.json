@@ -468,5 +468,73 @@
       "saveSuccess": "Preferences saved.",
       "saveError": "Failed to save preferences. Please try again."
     }
+  },
+  "settings": {
+    "pageTitle": "Paramètres du compte",
+    "changeEmail": {
+      "heading": "Changer l'adresse e-mail",
+      "description": "Un lien de vérification sera envoyé à votre nouvelle adresse e-mail. Votre adresse actuelle reste active jusqu'à confirmation.",
+      "newEmailLabel": "Nouvelle adresse e-mail",
+      "newEmailPlaceholder": "vous@exemple.com",
+      "currentPasswordLabel": "Mot de passe actuel",
+      "currentPasswordPlaceholder": "Entrez votre mot de passe actuel",
+      "submitButton": "Envoyer le lien de vérification",
+      "successMessage": "Lien de vérification envoyé. Consultez votre nouvelle boîte mail pour confirmer le changement.",
+      "errors": {
+        "emailInUse": "Cette adresse e-mail est déjà associée à un autre compte.",
+        "incorrectPassword": "Mot de passe incorrect.",
+        "generic": "Une erreur s'est produite. Veuillez réessayer."
+      }
+    },
+    "changePassword": {
+      "heading": "Changer le mot de passe",
+      "description": "Choisissez un mot de passe fort avec au moins 8 caractères, une majuscule, une minuscule et un chiffre.",
+      "currentPasswordLabel": "Mot de passe actuel",
+      "newPasswordLabel": "Nouveau mot de passe",
+      "confirmPasswordLabel": "Confirmer le nouveau mot de passe",
+      "submitButton": "Mettre à jour le mot de passe",
+      "successMessage": "Mot de passe mis à jour avec succès.",
+      "errors": {
+        "incorrectPassword": "Le mot de passe actuel est incorrect.",
+        "passwordMismatch": "Les mots de passe ne correspondent pas.",
+        "weakPassword": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.",
+        "generic": "Une erreur s'est produite. Veuillez réessayer."
+      }
+    },
+    "deleteAccount": {
+      "heading": "Supprimer le compte",
+      "description": "Supprimez définitivement votre compte et tout l'historique de commandes. Votre numéro NIF reste valide auprès des Finanças, mais vous perdrez l'accès à ce tableau de bord.",
+      "triggerButton": "Supprimer mon compte",
+      "dialog": {
+        "title": "Êtes-vous sûr ?",
+        "body": "Cette action est permanente et irréversible. Tapez DELETE ci-dessous pour confirmer.",
+        "activeOrderWarning": "Vous avez une commande active. Vous perdrez l'accès aux mises à jour de statut.",
+        "fiscalRepWarning": "Votre représentation fiscale est active jusqu'au {date}. La suppression de votre compte ne l'annulera pas. Contactez le support si nécessaire.",
+        "confirmationLabel": "Tapez DELETE pour confirmer",
+        "confirmationPlaceholder": "DELETE",
+        "cancelButton": "Annuler",
+        "confirmButton": "Supprimer mon compte",
+        "errors": {
+          "generic": "Une erreur s'est produite. Veuillez réessayer."
+        }
+      }
+    },
+    "backToDashboard": "Retour au tableau de bord",
+    "languagePreference": {
+      "heading": "Préférence de langue",
+      "description": "Choisissez la langue que vous souhaitez utiliser pour ce tableau de bord et tous les e-mails que nous vous envoyons.",
+      "selectLabel": "Langue",
+      "options": {
+        "en": "English",
+        "fr": "Français",
+        "es": "Español",
+        "de": "Deutsch"
+      },
+      "submitButton": "Enregistrer la préférence",
+      "successMessage": "Préférence de langue enregistrée.",
+      "errors": {
+        "generic": "Une erreur s'est produite. Veuillez réessayer."
+      }
+    }
   }
 }

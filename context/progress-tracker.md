@@ -4,25 +4,44 @@
 
 ## Current Phase
 
-Active development. Features 01–16 complete.
+Active development. Features 01–17a complete.
 
 ---
 
 ## Current Goal
 
-Feature 17a — Account Settings (Security & Deletion).
+Feature 18a — Renewal Flow (Checkout & Extension).
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
 ---
 
+## Handoff Note — Feature 17b complete
+
+**Feature 17b — Account Settings (Language Preference)** — done.
+- `updateUserLanguage` query in `lib/db/queries.ts`
+- `updateLanguagePreferenceSchema` in `lib/validations/settings.ts` (derives enum from `routing.locales`)
+- `updateLanguagePreference` action in `app/actions/settings.ts`
+- `LanguagePreferenceForm` in `components/dashboard/settings/LanguagePreferenceForm.tsx`
+- Settings page extended with fourth card and `currentLanguage` prop
+- Loading skeleton extended with fourth `SettingsCardSkeleton rows={1}`
+- i18n keys added to all 4 locale files under `settings.languagePreference.*`
+- Bugfix: `text-secondary` → `text-[var(--text-secondary)]` in `OrderDetailHeader.tsx` (wrong shadcn shorthand collision)
+- 363 unit tests passing, build clean.
+
+**Next feature is 18a** — Renewal Flow (Checkout & Extension).
+
+---
+
 ## Handoff Note (read before starting next session)
 
-**Next feature is 17a** — Account Settings: change email, change password, delete account.
+**Next feature is 17b** — Account Settings: language preference selector.
 
-**Key context for 17a:**
-- Route: `app/[locale]/(dashboard)/settings/page.tsx` (already exists in project tree per architecture-context.md — verify whether it has any content).
-- Three sections: Change Email (requires password verification + new-email confirmation link), Change Password (current + new + confirm), Delete Account (type DELETE confirmation dialog).
+**Key context for 17b:**
+- Add a fourth card to the existing `/settings` page (below Delete Account).
+- Language selector saves to `public.users.language` via a Server Action in `app/actions/settings.ts`.
+- On save, page reloads in the selected locale — use `router.push` with the new locale via `@/i18n/navigation`.
+- i18n keys go under `settings.languagePreference.*` namespace in all 4 locale files.
 - All forms use react-hook-form + Zod + shadcn `Form` primitives — same pattern as Personal Details form.
 - Supabase Auth handles email change and password update — use `supabase.auth.updateUser()`.
 - Delete account: delete from `auth.users` (Supabase admin client) + `public.users` cascade handles FK cleanup.
@@ -76,6 +95,8 @@ UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at =
 - **Feature 14c — App-Wide Navigation** — `DashboardSignOutButton` (client), `DashboardHeader` (server, sticky, brand link + LanguageSwitcher + sign-out), `DashboardLayout` (new `app/[locale]/(dashboard)/layout.tsx` — auth guard + header shell); `OperatorNavLinks` (client, tab nav with active indicator replacing `OperatorNav`); `AdminNavLinks` (client, same pattern); operator layout rewritten to single sticky bar (brand + tabs inline); admin layout rewritten to single sticky bar (brand + tabs inline); `OperatorNav.tsx` deleted; i18n keys `nav.signOut` / `nav.accountSettings` added to all 4 locale files. Build: clean. 292 unit tests passing.
 - **Feature 14d — Performance: Loading States & Auth Caching** — `getCurrentUser()` wrapped in React `cache()` in `lib/auth/session.ts` (deduplicates layout + page DB calls per request); `loading.tsx` skeletons added for `/operator`, `/operator/submitted`, `/operator/preferences`, `/signin`, `/signup`. Note: `unstable_instant` (Next.js 16.2) was researched and specced but requires `cacheComponents: true` in `next.config.ts` — enabling it is an architectural decision deferred to a future feature. Skeletons deliver their core UX benefit without it. 292 unit tests passing, build clean.
 - **Feature 15 — NIF Delivery** — `AdminOrderDetail` interface extended with `nifNumber`; `getAdminOrderDetail` SELECT updated; `getOrderNifAndTier` (lightweight read for immutability check) and `deliverNifNumber` (atomic UPDATE: `nifNumber`, `status = 'delivered'`, `deliveredAt`, `fiscalRepExpiresAt = deliveredAt + 12 months` for Standard/Express, null for Essential) added to `lib/db/queries.ts`; `adminDeliverNif` Server Action added to `app/actions/admin.ts` (validate → requireRole → immutability guard → deliverNifNumber → audit log → revalidate); `DeliverNifSection` client component created (`components/admin/DeliverNifSection.tsx`) with inline confirmation pattern, digit-only input, delivered read-only state; wired into admin order detail aside; i18n keys added under `admin.detail.deliverNif` in all 4 locales. Customer dashboard was already wired (08b placeholder, `getUserActiveOrder` returns all fields). 7 new unit tests, 300 total passing, build clean.
+- **Feature 17b — Account Settings (Language Preference)** — `updateLanguagePreference` action + `updateUserLanguage` DB query + `LanguagePreferenceForm` (shadcn Select, `useState`, locale-aware `router.push`). Enum derived from `routing.locales` — no hardcoded strings. i18n keys in all 4 locales. Bugfix: `text-secondary` shorthand collision in `OrderDetailHeader`. 363 unit tests passing, build clean.
+- **Feature 17a — Account Settings (Security & Deletion)** — `app/[locale]/(dashboard)/settings/page.tsx` (calls `setRequestLocale(locale)` — required so `NextIntlClientProvider` serialises locale to client; fixes "No intl context" in `LanguageSwitcher`) + `loading.tsx` (3-card skeleton); `app/actions/settings.ts` (`changeEmail`, `changePassword`, `deleteAccount`); `lib/validations/settings.ts` (`changeEmailSchema`, `changePasswordSchema`, `deleteAccountSchema`); `strongPassword` exported from `lib/validations/auth.ts`; `components/dashboard/settings/` (`ChangeEmailForm`, `ChangePasswordForm`, `DeleteAccountSection`); `settings` namespace added to all 4 locale files (← arrow removed from `backToDashboard` to fix double-arrow visual bug); `DashboardHeader` updated: text link replaced with gear icon (`Settings` from lucide-react, `aria-label` for accessibility). Tests: `tests/unit/validations/settings.test.ts` (23 tests — strongPassword, changeEmailSchema, changePasswordSchema, deleteAccountSchema) + `tests/unit/actions/settings.test.ts` (24 tests — all 3 actions, error branches, signOut/updateUser call guards). 363 unit tests passing, build clean.
 - **Feature 16 — Delivery Emails** — `getOrderNifAndTier` in `lib/db/queries.ts` extended with `leftJoin` on `users` to return `customerEmail`, `customerLanguage`, and `fullName` alongside existing fields; `lib/email/templates/nif-delivered.tsx` created (4 locales: EN/FR/ES/DE) — intentionally minimal: NIF number in a prominent brand-tinted monospace block + dashboard CTA only, no guide content (bank/property/NHR removed — biased recommendations and regulatory risk; content hub deferred to v2, logged in `project-overview.md`); `nif_delivered` registered in `lib/email/send.ts` (union member + switch case + exhaustive check); `adminDeliverNif` wired with `void sendEmail(...)` fire-and-forget after `deliverNifNumber` succeeds; 16 new unit tests (template smoke tests × 4 locales + NIF-in-output + no-guide-content assertion + dashboard URL + subject uniqueness; send dispatch × 2 locales; action: sendEmail called on success, fullName-null fallback, NOT called on immutability guard). 316 total passing, build clean.
 
 ---

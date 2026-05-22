@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server'
+import { Settings } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 import { DashboardSignOutButton } from './DashboardSignOutButton'
@@ -21,8 +22,16 @@ export async function DashboardHeader() {
           {t('appName')}
         </Link>
 
-        {/* Right side: language switcher + sign out */}
+        {/* Right side: settings link + language switcher + sign out */}
         <div className="flex items-center gap-4">
+          {/* Gear icon — icon-only link, aria-label satisfies accessibility requirement */}
+          <Link
+            href="/settings"
+            aria-label={t('nav.accountSettings')}
+            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-[var(--transition-base)]"
+          >
+            <Settings className="h-5 w-5" />
+          </Link>
           <LanguageSwitcher />
           <DashboardSignOutButton />
         </div>

@@ -468,5 +468,73 @@
       "saveSuccess": "Preferences saved.",
       "saveError": "Failed to save preferences. Please try again."
     }
+  },
+  "settings": {
+    "pageTitle": "Configuración de la cuenta",
+    "changeEmail": {
+      "heading": "Cambiar correo electrónico",
+      "description": "Se enviará un enlace de verificación a tu nueva dirección de correo. Tu correo actual permanece activo hasta que confirmes el cambio.",
+      "newEmailLabel": "Nueva dirección de correo",
+      "newEmailPlaceholder": "tu@ejemplo.com",
+      "currentPasswordLabel": "Contraseña actual",
+      "currentPasswordPlaceholder": "Ingresa tu contraseña actual",
+      "submitButton": "Enviar enlace de verificación",
+      "successMessage": "Enlace de verificación enviado. Revisa tu nueva bandeja de entrada para confirmar el cambio.",
+      "errors": {
+        "emailInUse": "Este correo electrónico ya está registrado en otra cuenta.",
+        "incorrectPassword": "Contraseña incorrecta.",
+        "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
+      }
+    },
+    "changePassword": {
+      "heading": "Cambiar contraseña",
+      "description": "Elige una contraseña segura con al menos 8 caracteres, una letra mayúscula, una minúscula y un número.",
+      "currentPasswordLabel": "Contraseña actual",
+      "newPasswordLabel": "Nueva contraseña",
+      "confirmPasswordLabel": "Confirmar nueva contraseña",
+      "submitButton": "Actualizar contraseña",
+      "successMessage": "Contraseña actualizada correctamente.",
+      "errors": {
+        "incorrectPassword": "La contraseña actual es incorrecta.",
+        "passwordMismatch": "Las contraseñas no coinciden.",
+        "weakPassword": "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número.",
+        "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
+      }
+    },
+    "deleteAccount": {
+      "heading": "Eliminar cuenta",
+      "description": "Elimina permanentemente tu cuenta y todo el historial de pedidos. Tu número NIF sigue siendo válido en Finanças, pero perderás el acceso a este panel.",
+      "triggerButton": "Eliminar mi cuenta",
+      "dialog": {
+        "title": "¿Estás seguro?",
+        "body": "Esta acción es permanente e irreversible. Escribe DELETE a continuación para confirmar.",
+        "activeOrderWarning": "Tienes un pedido activo. Perderás el acceso a las actualizaciones de estado.",
+        "fiscalRepWarning": "Tu representación fiscal está activa hasta el {date}. Eliminar tu cuenta no la cancelará. Contacta con soporte si necesitas cancelarla.",
+        "confirmationLabel": "Escribe DELETE para confirmar",
+        "confirmationPlaceholder": "DELETE",
+        "cancelButton": "Cancelar",
+        "confirmButton": "Eliminar mi cuenta",
+        "errors": {
+          "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
+        }
+      }
+    },
+    "backToDashboard": "Volver al panel",
+    "languagePreference": {
+      "heading": "Preferencia de idioma",
+      "description": "Elige el idioma que deseas usar para este panel y todos los correos que te enviamos.",
+      "selectLabel": "Idioma",
+      "options": {
+        "en": "English",
+        "fr": "Français",
+        "es": "Español",
+        "de": "Deutsch"
+      },
+      "submitButton": "Guardar preferencia",
+      "successMessage": "Preferencia de idioma guardada.",
+      "errors": {
+        "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@ import { users, orders, documents, payments, auditLog, operatorNotifications, op
 import type { SelectUser, SelectOrder, SelectDocument, InsertDocument, InsertAuditLog, InsertOperatorNotification, InsertOperatorPreferences } from '@/lib/db/schema'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 import type { EmailLocale } from '@/lib/email/send'
+import type { Locale } from '@/i18n/routing'
 
 // ---------------------------------------------------------------------------
 // Document queries (Feature 11)
@@ -880,4 +881,22 @@ export async function upsertOperatorPreferences(
       target: operatorPreferences.userId,
       set: { ...data, updatedAt: new Date() },
     })
+}
+
+// ---------------------------------------------------------------------------
+// User language preference (Feature 17b)
+// ---------------------------------------------------------------------------
+
+/**
+ * Persists the user's chosen language preference to public.users.
+ * Called only after the action has validated the locale value.
+ */
+export async function updateUserLanguage(
+  userId: string,
+  language: Locale,
+): Promise<void> {
+  await db
+    .update(users)
+    .set({ language, updatedAt: new Date() })
+    .where(eq(users.id, userId))
 }
