@@ -319,6 +319,7 @@ export interface AdminOrderDetail {
   passportNumber: string | null
   passportExpiry: string | null
   address: string | null
+  nifNumber: string | null          // null until admin delivers (Feature 15)
   createdAt: Date
   documentsApprovedAt: Date | null
   // Customer
@@ -366,6 +367,7 @@ export async function getAdminOrderDetail(orderId: string): Promise<AdminOrderDe
       passportNumber: orders.passportNumber,
       passportExpiry: orders.passportExpiry,
       address: orders.address,
+      nifNumber: orders.nifNumber,
       createdAt: orders.createdAt,
       documentsApprovedAt: orders.documentsApprovedAt,
       customerEmail: users.email,
@@ -503,6 +505,59 @@ export async function insertAuditLog(entry: Omit<InsertAuditLog, 'id' | 'created
 /** Inserts a record for an operator notification. */
 export async function insertOperatorNotification(data: Omit<InsertOperatorNotification, 'id' | 'createdAt'>): Promise<void> {
   await db.insert(operatorNotifications).values(data)
+}
+
+/**
+ * Lightweight read used by adminDeliverNif to check immutability and get tier
+ * before performing the delivery update. Avoids the full getAdminOrderDetail join.
+ */
+export async function getOrderNifAndTier(
+  orderId: string,
+): Promise<{ nifNumber: string | null; tier: 'essential' | 'standard' | 'express' } | null> {
+  const result = await db
+    .select({ nifNumber: orders.nifNumber, tier: orders.tier })
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .limit(1)
+  return result[0] ?? null
+}
+
+/**
+ * Atomically marks an order as delivered.
+ * Sets nifNumber, status, deliveredAt, and — for Standard/Express tiers —
+ * fiscalRepExpiresAt to exactly 12 months after deliveredAt.
+ * Essential orders leave fiscalRepExpiresAt null (no fiscal rep purchased).
+ */
+export async function deliverNifNumber(
+  orderId: string,
+  nifNumber: string,
+  tier: 'essential' | 'standard' | 'express',
+): Promise<void> {
+  const deliveredAt = new Date()
+  // Add exactly 12 calendar months; handles month-length edge cases via Date constructor
+  const fiscalRepExpiresAt =
+    tier !== 'essential'
+      ? new Date(
+          deliveredAt.getFullYear() + 1,
+          deliveredAt.getMonth(),
+          deliveredAt.getDate(),
+          deliveredAt.getHours(),
+          deliveredAt.getMinutes(),
+          deliveredAt.getSeconds(),
+          deliveredAt.getMilliseconds(),
+        )
+      : null
+
+  await db
+    .update(orders)
+    .set({
+      nifNumber,
+      status: 'delivered',
+      deliveredAt,
+      fiscalRepExpiresAt,
+      updatedAt: new Date(),
+    })
+    .where(eq(orders.id, orderId))
 }
 
 // ---------------------------------------------------------------------------

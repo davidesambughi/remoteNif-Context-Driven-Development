@@ -397,6 +397,21 @@
       "emailTypes": {
         "order_confirmation": "Order Confirmation",
         "documents_approved_customer": "Documents Approved"
+      },
+      "deliverNif": {
+        "sectionTitle": "Deliver NIF",
+        "description": "Enter the 9-digit NIF number issued by Finanças.",
+        "inputLabel": "NIF Number",
+        "inputPlaceholder": "123456789",
+        "triggerButton": "Enter NIF",
+        "confirmTitle": "Confirm NIF Delivery",
+        "confirmDescription": "This will mark the order as delivered. The NIF cannot be changed once it is saved.",
+        "confirmButton": "Deliver NIF",
+        "cancelButton": "Cancel",
+        "successToast": "NIF delivered successfully",
+        "alreadyDeliveredLabel": "NIF delivered",
+        "immutableError": "This order already has a NIF number and cannot be changed.",
+        "invalidFormat": "NIF must be exactly 9 digits."
       }
     }
   },

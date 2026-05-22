@@ -9,6 +9,7 @@ import { DocumentReviewCard } from '@/components/admin/DocumentReviewCard'
 import { ApproveOrderSection } from '@/components/admin/ApproveOrderSection'
 import { StatusUpdateSection } from '@/components/admin/StatusUpdateSection'
 import { EmailResendSection } from '@/components/admin/EmailResendSection'
+import { DeliverNifSection } from '@/components/admin/DeliverNifSection'
 
 interface OrderDetailPageProps {
   params: Promise<{ id: string; locale: string }>
@@ -71,6 +72,12 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           />
 
           <EmailResendSection orderId={order.id} />
+
+          <DeliverNifSection
+            orderId={order.id}
+            currentStatus={order.status}
+            existingNifNumber={order.nifNumber}
+          />
         </aside>
       </div>
     </div>

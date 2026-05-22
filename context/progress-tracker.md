@@ -4,13 +4,13 @@
 
 ## Current Phase
 
-Active development. Features 01–14c complete.
+Active development. Features 01–15 complete.
 
 ---
 
 ## Current Goal
 
-Feature 15 — NIF Delivery.
+Feature 16 — Delivery Emails.
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
@@ -18,22 +18,20 @@ Feature 15 — NIF Delivery.
 
 ## Handoff Note (read before starting next session)
 
-**Next feature is 15** — NIF Delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
+**Next feature is 16** — Delivery Emails: send NIF delivery email + post-NIF journey guide to the customer after `adminDeliverNif` runs.
 
-**After 14c, next is 15** — NIF delivery: admin enters the NIF number, order transitions to `delivered`, customer dashboard shows the NIF prominently.
+**Key context for 16:**
+- Hook into `adminDeliverNif` in `app/actions/admin.ts` — fire email as fire-and-forget after `deliverNifNumber` call.
+- Need a new `nif_delivered` email template (4 locales) containing the NIF number and post-NIF guide content.
+- Optionally a second follow-up guide email scheduled after delivery (feature list says "follow-up guide email scheduled after delivery").
+- Customer's `order.customerLanguage` is available via `getAdminOrderDetail` — but `adminDeliverNif` currently only calls `getOrderNifAndTier`. Will need the customer email + language; either extend that lightweight query or do a second targeted select.
 
-**Key context for 15:**
-- `nifNumber` is immutable once set per tech-spec.md — the action must enforce this (check for existing value before writing).
-- `deliveredAt` and `fiscalRepExpiresAt` (deliveredAt + 12 months, Standard/Express only) must be set in the same DB update.
-- Customer dashboard `delivered` state already has a placeholder view from Feature 08b — wire up the real `nifNumber` field.
-- Admin action lives in `app/actions/admin.ts`, new query in `lib/db/queries.ts`.
+**Test order:** `0f449877-f56c-4411-9f5c-eef0190d606e` — reset to `submitted` to test Feature 15 / 16:
+```sql
+UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at = NULL, fiscal_rep_expires_at = NULL WHERE id = '0f449877-f56c-4411-9f5c-eef0190d606e';
+```
 
 **Operator test account:** promote your own user account via `UPDATE public.users SET role = 'operator' WHERE email = 'YOUR_EMAIL'`, sign out, sign back in.
-
-**Test order:** `0f449877-f56c-4411-9f5c-eef0190d606e` — reset to `documents_approved` if needed:
-```sql
-UPDATE public.orders SET status = 'documents_approved', tier = 'express', documents_approved_at = now() - interval '10 hours' WHERE id = '0f449877-f56c-4411-9f5c-eef0190d606e';
-```
 
 ---
 
@@ -75,6 +73,7 @@ UPDATE public.orders SET status = 'documents_approved', tier = 'express', docume
 - **Feature 14b — Tests** — 18 new unit tests: `formatSubmissionDate` (6 cases in `tests/unit/lib/utils/dates.test.ts`), `OrderSubmittedCustomerEmail` template smoke tests in 4 locales + key content assertions + `getOrderSubmittedCustomerSubject` locale uniqueness (10 cases appended to `templates.test.tsx`), `sendEmail` dispatch for `order_submitted_customer` in 2 locales (appended to `send.test.ts`). 23 new integration tests in `tests/integration/db/operator-14b.test.ts`: `getSubmittedOrders` (empty, filter, exclusion, ordering, shape), `getOperatorPreferencesOrDefaults` (defaults when missing, stored values, read-only guarantee), `upsertOperatorPreferences` (insert, ON CONFLICT update, phone number), `getOrderDataForSubmissionEmail` (null for missing, join shape, null fullName, all 4 locales). 292 unit tests passing.
 - **Feature 14c — App-Wide Navigation** — `DashboardSignOutButton` (client), `DashboardHeader` (server, sticky, brand link + LanguageSwitcher + sign-out), `DashboardLayout` (new `app/[locale]/(dashboard)/layout.tsx` — auth guard + header shell); `OperatorNavLinks` (client, tab nav with active indicator replacing `OperatorNav`); `AdminNavLinks` (client, same pattern); operator layout rewritten to single sticky bar (brand + tabs inline); admin layout rewritten to single sticky bar (brand + tabs inline); `OperatorNav.tsx` deleted; i18n keys `nav.signOut` / `nav.accountSettings` added to all 4 locale files. Build: clean. 292 unit tests passing.
 - **Feature 14d — Performance: Loading States & Auth Caching** — `getCurrentUser()` wrapped in React `cache()` in `lib/auth/session.ts` (deduplicates layout + page DB calls per request); `loading.tsx` skeletons added for `/operator`, `/operator/submitted`, `/operator/preferences`, `/signin`, `/signup`. Note: `unstable_instant` (Next.js 16.2) was researched and specced but requires `cacheComponents: true` in `next.config.ts` — enabling it is an architectural decision deferred to a future feature. Skeletons deliver their core UX benefit without it. 292 unit tests passing, build clean.
+- **Feature 15 — NIF Delivery** — `AdminOrderDetail` interface extended with `nifNumber`; `getAdminOrderDetail` SELECT updated; `getOrderNifAndTier` (lightweight read for immutability check) and `deliverNifNumber` (atomic UPDATE: `nifNumber`, `status = 'delivered'`, `deliveredAt`, `fiscalRepExpiresAt = deliveredAt + 12 months` for Standard/Express, null for Essential) added to `lib/db/queries.ts`; `adminDeliverNif` Server Action added to `app/actions/admin.ts` (validate → requireRole → immutability guard → deliverNifNumber → audit log → revalidate); `DeliverNifSection` client component created (`components/admin/DeliverNifSection.tsx`) with inline confirmation pattern, digit-only input, delivered read-only state; wired into admin order detail aside; i18n keys added under `admin.detail.deliverNif` in all 4 locales. Customer dashboard was already wired (08b placeholder, `getUserActiveOrder` returns all fields). 7 new unit tests, 300 total passing, build clean.
 
 ---
 

@@ -5,6 +5,7 @@ import {
   adminApproveOrder,
   adminUpdateOrderStatus,
   adminResendEmail,
+  adminDeliverNif,
 } from '@/app/actions/admin'
 
 // ---------------------------------------------------------------------------
@@ -18,6 +19,8 @@ vi.mock('@/lib/db/queries', () => ({
   adminSetDocumentFlagged: vi.fn(),
   adminTransitionOrderToApproved: vi.fn(),
   adminUpdateOrderStatusQuery: vi.fn(),
+  getOrderNifAndTier: vi.fn(),
+  deliverNifNumber: vi.fn(),
   insertAuditLog: vi.fn(),
   insertOperatorNotification: vi.fn(),
 }))
@@ -394,5 +397,98 @@ describe('adminResendEmail', () => {
         details: expect.objectContaining({ emailType: 'order_confirmation' }),
       }),
     )
+  })
+})
+
+// ---------------------------------------------------------------------------
+// adminDeliverNif (Feature 15)
+// ---------------------------------------------------------------------------
+
+describe('adminDeliverNif', () => {
+  const VALID_NIF = '123456789'
+
+  it('returns validation error for a non-UUID orderId', async () => {
+    const result = await adminDeliverNif('not-a-uuid', VALID_NIF)
+    expect(result.success).toBe(false)
+    expect(queries.deliverNifNumber).not.toHaveBeenCalled()
+  })
+
+  it('returns validation error when NIF is not 9 digits', async () => {
+    const result = await adminDeliverNif(VALID_ORDER_ID, '12345')
+    expect(result.success).toBe(false)
+    expect(result.error).toMatch(/9 digits/)
+    expect(queries.deliverNifNumber).not.toHaveBeenCalled()
+  })
+
+  it('returns validation error when NIF contains non-numeric characters', async () => {
+    const result = await adminDeliverNif(VALID_ORDER_ID, '12345678A')
+    expect(result.success).toBe(false)
+    expect(queries.deliverNifNumber).not.toHaveBeenCalled()
+  })
+
+  it('returns order_not_found when the order does not exist', async () => {
+    vi.mocked(queries.getOrderNifAndTier).mockResolvedValue(null)
+
+    const result = await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
+
+    expect(result).toEqual({ success: false, error: 'order_not_found' })
+    expect(queries.deliverNifNumber).not.toHaveBeenCalled()
+  })
+
+  it('returns nif_already_set when the order already has a NIF (immutability guard)', async () => {
+    vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
+      nifNumber: '987654321',
+      tier: 'standard',
+    })
+
+    const result = await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
+
+    expect(result).toEqual({ success: false, error: 'nif_already_set' })
+    expect(queries.deliverNifNumber).not.toHaveBeenCalled()
+  })
+
+  it('calls deliverNifNumber with correct args on success', async () => {
+    vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
+      nifNumber: null,
+      tier: 'standard',
+    })
+    vi.mocked(queries.deliverNifNumber).mockResolvedValue(undefined)
+
+    const result = await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
+
+    expect(result).toEqual({ success: true })
+    expect(queries.deliverNifNumber).toHaveBeenCalledWith(VALID_ORDER_ID, VALID_NIF, 'standard')
+  })
+
+  it('writes an audit log entry with nifNumber and tier on success', async () => {
+    vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
+      nifNumber: null,
+      tier: 'express',
+    })
+    vi.mocked(queries.deliverNifNumber).mockResolvedValue(undefined)
+
+    await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
+
+    expect(queries.insertAuditLog).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: ADMIN.id,
+        orderId: VALID_ORDER_ID,
+        action: 'order.nif.delivered',
+        details: expect.objectContaining({ nifNumber: VALID_NIF, tier: 'express' }),
+      }),
+    )
+  })
+
+  it('works for an essential tier (no fiscal rep expiry)', async () => {
+    vi.mocked(queries.getOrderNifAndTier).mockResolvedValue({
+      nifNumber: null,
+      tier: 'essential',
+    })
+    vi.mocked(queries.deliverNifNumber).mockResolvedValue(undefined)
+
+    const result = await adminDeliverNif(VALID_ORDER_ID, VALID_NIF)
+
+    expect(result).toEqual({ success: true })
+    expect(queries.deliverNifNumber).toHaveBeenCalledWith(VALID_ORDER_ID, VALID_NIF, 'essential')
   })
 })

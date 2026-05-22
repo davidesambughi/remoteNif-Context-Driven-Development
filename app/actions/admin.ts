@@ -9,6 +9,8 @@ import {
   adminSetDocumentFlagged,
   adminTransitionOrderToApproved,
   adminUpdateOrderStatusQuery,
+  getOrderNifAndTier,
+  deliverNifNumber,
   insertAuditLog,
   insertOperatorNotification,
 } from '@/lib/db/queries'
@@ -46,6 +48,13 @@ const UpdateOrderStatusSchema = z.object({
 const ResendEmailSchema = z.object({
   orderId: z.string().uuid(),
   emailType: z.enum(['order_confirmation', 'documents_approved_customer']),
+})
+
+const DeliverNifSchema = z.object({
+  orderId: z.string().uuid(),
+  nifNumber: z
+    .string()
+    .regex(/^\d{9}$/, 'NIF must be exactly 9 digits'),
 })
 
 // ---------------------------------------------------------------------------
@@ -234,6 +243,46 @@ export async function adminUpdateOrderStatus(
       return { success: false, error: error.issues[0]?.message || 'validation_error' }
     }
     console.error('[adminUpdateOrderStatus] Error:', error)
+    return { success: false, error: 'unexpected_error' }
+  }
+}
+
+/**
+ * Delivers the NIF to the customer by setting nifNumber on the order.
+ * Guards immutability — the NIF cannot be changed once set.
+ * Sets deliveredAt and fiscalRepExpiresAt (Standard/Express only) atomically.
+ */
+export async function adminDeliverNif(orderId: string, nifNumber: string): Promise<ActionResult> {
+  try {
+    const admin = await requireRole('admin')
+
+    const validated = DeliverNifSchema.parse({ orderId, nifNumber })
+
+    // Fetch just the fields needed for the immutability check and the DB update
+    const order = await getOrderNifAndTier(validated.orderId)
+    if (!order) return { success: false, error: 'order_not_found' }
+
+    // Immutability guard — NIF is permanent once set (tech-spec.md)
+    if (order.nifNumber !== null) {
+      return { success: false, error: 'nif_already_set' }
+    }
+
+    await deliverNifNumber(validated.orderId, validated.nifNumber, order.tier)
+
+    await insertAuditLog({
+      userId: admin.id,
+      orderId: validated.orderId,
+      action: 'order.nif.delivered',
+      details: { nifNumber: validated.nifNumber, tier: order.tier },
+    })
+
+    revalidatePath('/admin/orders/[id]', 'page')
+    return { success: true }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { success: false, error: error.issues[0]?.message || 'validation_error' }
+    }
+    console.error('[adminDeliverNif] Error:', error)
     return { success: false, error: 'unexpected_error' }
   }
 }
