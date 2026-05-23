@@ -213,6 +213,21 @@
         "description": "¡Felicidades! Tu número de identificación fiscal portugués ha sido emitido con éxito.",
         "nifLabel": "Tu número NIF"
       }
+    },
+    "renewalBanner": {
+      "nearExpiry": "Tu representación fiscal expira en {days} días. Renueva para seguir cubierto.",
+      "expired": "Tu representación fiscal expiró el {date}. Renueva para seguir cubierto.",
+      "renewLink": "Renovar ahora →",
+      "dismissLink": "Ya no necesito representación fiscal",
+      "dialog": {
+        "title": "¿Estás seguro?",
+        "description": "Puedes enfrentar multas si tienes obligaciones fiscales portuguesas (propiedad, ingresos por alquiler, empleo). Esto detendrá todos los recordatorios de renovación.",
+        "confirm": "Sí, no lo necesito",
+        "cancel": "Cancelar"
+      },
+      "errors": {
+        "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
+      }
     }
   },
   "personalDetails": {
@@ -535,12 +550,17 @@
       "errors": {
         "generic": "Algo salió mal. Por favor, inténtalo de nuevo."
       }
+    },
+    "renewFiscalRep": {
+      "description": "Anteriormente desactivaste los recordatorios de representación fiscal. Puedes renovar en cualquier momento.",
+      "link": "Renovar representación fiscal →"
     }
   },
   "renewal": {
-    "pageTitle": "Renew Fiscal Representation",
-    "pageDescription": "12 months fiscal representation · €89",
-    "preparingCheckout": "Preparing your checkout…",
+    "renewFiscalRep": "Renovar representación fiscal",
+    "pageTitle": "Renovar Representación Fiscal",
+    "pageDescription": "12 meses de representación fiscal · €89",
+    "preparingCheckout": "Preparando tu pago…",
     "notEligible": "This order is not eligible for renewal.",
     "backToDashboard": "Back to dashboard",
     "errorTitle": "Something went wrong",

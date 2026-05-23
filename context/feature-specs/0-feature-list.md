@@ -752,18 +752,7 @@ Depends on: 18b (all functional features complete so the full flow can be review
 
 ---
 
-## 20 — SEO & Metadata
 
-Add per-page metadata, structured data, sitemap, and robots.txt.
-
-Done when:
-
-- Every public page has a `title` and `description` in the root language (English).
-- Open Graph tags are present on all public-facing pages.
-- JSON-LD structured data is added where relevant (homepage, pricing page).
-- `sitemap.ts` and `robots.ts` are generated dynamically.
-- Canonical URLs are correct across all locales.
-- `metadataBase` resolves correctly in production.
 
 Notes:
 
@@ -830,6 +819,36 @@ Notes:
 - Scope to happy paths only first; edge cases can be added incrementally.
 
 Depends on: 21 (all features and polish complete).
+
+---
+
+## 22 — Cron Schedule Configuration (Post-Launch)
+
+Wire up Vercel's cron trigger so the renewal reminder route fires automatically on a daily schedule.
+
+**Context:** The cron route (`app/api/cron/renewals/route.ts`) is built and secured in Feature 18b. Without this config it only runs when called manually — it will never fire in production on its own.
+
+Done when:
+
+- A `vercel.json` file exists at the project root with a cron entry for `/api/cron/renewals` on a daily schedule (e.g. `"0 9 * * *"` — 09:00 UTC every day).
+- The deployment environment is confirmed to be on a Vercel plan that supports cron jobs (Hobby does not; Pro and above do).
+- A manual test confirms the route returns 200 with the correct `Authorization` header.
+
+```json
+{
+  "crons": [
+    { "path": "/api/cron/renewals", "schedule": "0 9 * * *" }
+  ]
+}
+```
+
+Notes:
+
+- Do not add `vercel.json` before the route exists — Feature 18b must be deployed first.
+- If the project already has a `vercel.json` for other config, add the `crons` key without replacing existing config.
+- Vercel cron docs: https://vercel.com/docs/cron-jobs
+
+Depends on: 18b (route must be deployed before the schedule fires).
 
 ---
 

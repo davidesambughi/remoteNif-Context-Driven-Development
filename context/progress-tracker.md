@@ -4,32 +4,30 @@
 
 ## Current Phase
 
-Active development. Features 01–18a complete.
+Active development. Features 01–18b complete.
 
 ---
 
 ## Current Goal
 
-Feature 18b — Renewal Reminder Emails & Dashboard Banner.
+Feature 19 — UX Gap Fixes (see `context/feature-specs/` and `current-issues/`).
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
 ---
 
-## Handoff Note — Feature 17b complete
+## Handoff Note — Feature 18b complete
 
-**Feature 17b — Account Settings (Language Preference)** — done.
-- `updateUserLanguage` query in `lib/db/queries.ts`
-- `updateLanguagePreferenceSchema` in `lib/validations/settings.ts` (derives enum from `routing.locales`)
-- `updateLanguagePreference` action in `app/actions/settings.ts`
-- `LanguagePreferenceForm` in `components/dashboard/settings/LanguagePreferenceForm.tsx`
-- Settings page extended with fourth card and `currentLanguage` prop
-- Loading skeleton extended with fourth `SettingsCardSkeleton rows={1}`
-- i18n keys added to all 4 locale files under `settings.languagePreference.*`
-- Bugfix: `text-secondary` → `text-[var(--text-secondary)]` in `OrderDetailHeader.tsx` (wrong shadcn shorthand collision)
-- 363 unit tests passing, build clean.
+**Feature 18b — Renewal Reminder Emails & Dashboard Banner** — done. See Completed section for full detail.
 
-**Next feature is 18a** — Renewal Flow (Checkout & Extension).
+**Key context for next session:**
+- `CRON_SECRET` env var must be set in Vercel before the cron route is useful. Add to `.env.local` for local testing.
+- The Vercel cron schedule (`vercel.json`) is tracked as Feature 22 (post-launch) — do not implement now.
+- Deduplication is a known limitation in the cron route (documented in-code comment) — acceptable at current scale.
+- `RenewalBanner` is a Server Component — do not add `'use client'` to it.
+- Test ORDER_IDs must be valid UUID v4 (Zod v4 enforces version bits) — use `00000000-0000-4000-8000-000000000001` as the pattern.
+
+**Next feature:** 19 — UX Gap Fixes (see `project_ux_gaps.md` memory and any current-issues files).
 
 ---
 
@@ -99,6 +97,7 @@ UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at =
 - **Feature 17a — Account Settings (Security & Deletion)** — `app/[locale]/(dashboard)/settings/page.tsx` (calls `setRequestLocale(locale)` — required so `NextIntlClientProvider` serialises locale to client; fixes "No intl context" in `LanguageSwitcher`) + `loading.tsx` (3-card skeleton); `app/actions/settings.ts` (`changeEmail`, `changePassword`, `deleteAccount`); `lib/validations/settings.ts` (`changeEmailSchema`, `changePasswordSchema`, `deleteAccountSchema`); `strongPassword` exported from `lib/validations/auth.ts`; `components/dashboard/settings/` (`ChangeEmailForm`, `ChangePasswordForm`, `DeleteAccountSection`); `settings` namespace added to all 4 locale files (← arrow removed from `backToDashboard` to fix double-arrow visual bug); `DashboardHeader` updated: text link replaced with gear icon (`Settings` from lucide-react, `aria-label` for accessibility). Tests: `tests/unit/validations/settings.test.ts` (23 tests — strongPassword, changeEmailSchema, changePasswordSchema, deleteAccountSchema) + `tests/unit/actions/settings.test.ts` (24 tests — all 3 actions, error branches, signOut/updateUser call guards). 363 unit tests passing, build clean.
 - **Feature 16 — Delivery Emails** — `getOrderNifAndTier` in `lib/db/queries.ts` extended with `leftJoin` on `users` to return `customerEmail`, `customerLanguage`, and `fullName` alongside existing fields; `lib/email/templates/nif-delivered.tsx` created (4 locales: EN/FR/ES/DE) — intentionally minimal: NIF number in a prominent brand-tinted monospace block + dashboard CTA only, no guide content (bank/property/NHR removed — biased recommendations and regulatory risk; content hub deferred to v2, logged in `project-overview.md`); `nif_delivered` registered in `lib/email/send.ts` (union member + switch case + exhaustive check); `adminDeliverNif` wired with `void sendEmail(...)` fire-and-forget after `deliverNifNumber` succeeds; 16 new unit tests (template smoke tests × 4 locales + NIF-in-output + no-guide-content assertion + dashboard URL + subject uniqueness; send dispatch × 2 locales; action: sendEmail called on success, fullName-null fallback, NOT called on immutability guard). 316 total passing, build clean.
 - **Feature 18a — Renewal Flow (Checkout & Extension)** — `getRenewalOrderInfo`, `extendFiscalRepExpiry`, `getOrderFullName` DB queries in `lib/db/queries.ts`; `RenewalCheckoutSchema`, `RenewalWebhookMetadataSchema` + inferred types in `lib/validations/checkout.ts`; `createRenewalCheckoutSession` Server Action in `app/actions/checkout.ts`; `handleRenewalCheckoutCompleted` in `lib/stripe/webhooks.ts` (idempotency guard + `db.transaction` + fire-and-forget email); webhook route updated to dispatch on `metadata.type === 'fiscal_rep_renewal'`; `fiscal-rep-renewal-confirmation.tsx` email template (4 locales); `send.ts` extended with `fiscal_rep_renewal_confirmation` union member + switch case; `RenewalCheckoutButton` client component (single `ButtonState` state machine, auto-trigger via `useEffect`); `/[locale]/renewal` Server Component page + co-located `NotEligibleCard` / `RenewalCard` sub-components; `loading.tsx` skeleton; `renewal.*` i18n keys in all 4 locale files. 4 new test files (checkout action, webhook handler, email template, email send) covering 71 cases. 387 total unit tests passing, build clean.
+- **Feature 18b — Renewal Reminder Emails & Dashboard Banner** — `RenewalReminderTarget` type + `getOrdersForRenewalReminders` (3-cohort day-window query: 30/15/0 days, gte/lt range on `fiscalRepExpiresAt`, status=delivered, tier IN standard/express, dismissedAt IS NULL) + `dismissFiscalRepForOrder` DB queries; `renewal-reminder.tsx` email template (4 locales × 3 intervals: `30_days`/`15_days`/`expired` — inline styles, regulatory warning block); `send.ts` extended with `renewal_reminder` union member + switch case; `app/api/cron/renewals/route.ts` (Bearer auth via `CRON_SECRET`, processes 3 cohorts serially, per-cohort DB error = log + continue, fire-and-forget `sendEmail`, returns `{ success, processed }`); `dismissFiscalRep` Server Action in `app/actions/orders.ts` (Zod UUID validation, ownership check via `getUserActiveOrder`, sets `fiscalRepDismissedAt`); `DismissRenewalDialog.tsx` client component (shadcn AlertDialog, destructive confirm, `useTransition`); `RenewalBanner.tsx` server component (skips Essential + no-expiry + dismissed + >30 days; warning/error states via semantic tokens `bg-warning-subtle`/`bg-error-subtle`; `<Link>` from `@/i18n/navigation`); dashboard page wired with `RenewalBanner`; settings page wired with recovery link (shown when dismissed + non-Essential); `renewalBanner.*` + `settings.renewFiscalRep` i18n keys in all 4 locale files; Feature 22 (vercel.json cron schedule) added to feature list as post-launch. Tests: `orders.test.ts` (7), `cron-renewals.test.ts` (9), `templates.test.tsx` appended (12 smoke × intervals/locales), `send.test.ts` appended (2 dispatch). Note: test `ORDER_ID` must be valid UUID v4 (`00000000-0000-4000-8000-000000000001`) — Zod v4 enforces version bits. 423 total unit tests passing, build clean.
 
 ---
 

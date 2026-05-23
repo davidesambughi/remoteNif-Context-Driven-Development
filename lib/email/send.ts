@@ -34,6 +34,11 @@ import {
   FiscalRepRenewalConfirmationEmail,
   getFiscalRepRenewalConfirmationSubject,
 } from './templates/fiscal-rep-renewal-confirmation'
+import {
+  RenewalReminderEmail,
+  getRenewalReminderSubject,
+  type RenewalReminderInterval,
+} from './templates/renewal-reminder'
 
 export type EmailLocale = 'en' | 'fr' | 'es' | 'de'
 export type EmailTemplateName =
@@ -45,6 +50,7 @@ export type EmailTemplateName =
   | 'order_submitted_customer'
   | 'nif_delivered'
   | 'fiscal_rep_renewal_confirmation'
+  | 'renewal_reminder'
 
 // Discriminated union — add a new member here when a new template is introduced,
 // then add a matching case in the switch below.
@@ -57,6 +63,7 @@ export type EmailPayload =
   | { template: 'order_submitted_customer'; customerName: string; tier: string }
   | { template: 'nif_delivered'; customerName: string; nifNumber: string }
   | { template: 'fiscal_rep_renewal_confirmation'; customerName: string; newExpiresAt: string }
+  | { template: 'renewal_reminder'; interval: RenewalReminderInterval; customerName: string; renewalUrl: string }
 
 /**
  * Central email sending helper. All outbound emails go through here — never call
@@ -163,6 +170,18 @@ export async function sendEmail(
           customerName: payload.customerName,
           newExpiresAt: payload.newExpiresAt,
           dashboardUrl,
+        })
+        break
+      }
+      case 'renewal_reminder': {
+        // Automated reminder sent by the daily cron job at 30, 15, and 0 days before expiry
+        const renewalUrl = payload.renewalUrl
+        subject = getRenewalReminderSubject(locale, payload.interval)
+        reactElement = RenewalReminderEmail({
+          locale,
+          interval: payload.interval,
+          customerName: payload.customerName,
+          renewalUrl,
         })
         break
       }

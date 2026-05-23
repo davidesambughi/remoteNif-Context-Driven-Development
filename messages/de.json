@@ -213,6 +213,21 @@
         "description": "Herzlichen Glückwunsch! Ihre portugiesische Steuernummer wurde erfolgreich ausgestellt.",
         "nifLabel": "Ihre NIF-Nummer"
       }
+    },
+    "renewalBanner": {
+      "nearExpiry": "Ihre steuerliche Vertretung läuft in {days} Tagen ab. Verlängern Sie, um abgesichert zu bleiben.",
+      "expired": "Ihre steuerliche Vertretung ist am {date} abgelaufen. Verlängern Sie, um abgesichert zu bleiben.",
+      "renewLink": "Jetzt verlängern →",
+      "dismissLink": "Ich benötige keine steuerliche Vertretung mehr",
+      "dialog": {
+        "title": "Sind Sie sicher?",
+        "description": "Sie können Bußgelder riskieren, wenn Sie portugiesische Steuerpflichten haben (Immobilien, Mieteinnahmen, Beschäftigung). Dies stoppt alle Verlängerungserinnerungen.",
+        "confirm": "Ja, ich brauche es nicht",
+        "cancel": "Abbrechen"
+      },
+      "errors": {
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+      }
     }
   },
   "personalDetails": {
@@ -535,12 +550,17 @@
       "errors": {
         "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
       }
+    },
+    "renewFiscalRep": {
+      "description": "Sie haben zuvor Verlängerungserinnerungen für steuerliche Vertretung deaktiviert. Sie können jederzeit verlängern.",
+      "link": "Steuerliche Vertretung verlängern →"
     }
   },
   "renewal": {
-    "pageTitle": "Renew Fiscal Representation",
-    "pageDescription": "12 months fiscal representation · €89",
-    "preparingCheckout": "Preparing your checkout…",
+    "renewFiscalRep": "Steuerliche Vertretung verlängern",
+    "pageTitle": "Steuerliche Vertretung verlängern",
+    "pageDescription": "12 Monate steuerliche Vertretung · 89 €",
+    "preparingCheckout": "Ihre Zahlung wird vorbereitet…",
     "notEligible": "This order is not eligible for renewal.",
     "backToDashboard": "Back to dashboard",
     "errorTitle": "Something went wrong",

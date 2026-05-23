@@ -220,4 +220,36 @@ describe('sendEmail dispatch routing', () => {
     expect(call![0].subject).toContain('renouvel')
     expect(call![0].react).toBeTruthy()
   })
+
+  // Feature 18b — renewal_reminder
+  it('routes renewal_reminder (30_days) with correct EN subject', async () => {
+    await sendEmail(TO, 'en', {
+      template: 'renewal_reminder',
+      interval: '30_days',
+      customerName: CUSTOMER_NAME,
+      renewalUrl: 'http://localhost:3000/en/renewal?orderId=order-1',
+    })
+
+    expect(resendClient.emails.send).toHaveBeenCalledOnce()
+    const [call] = vi.mocked(resendClient.emails.send).mock.calls
+    expect(call![0].subject).toContain('30 days')
+    expect(call![0].react).toBeTruthy()
+    expect(call![0].from).toBe('noreply@remotenif.com')
+    expect(call![0].to).toBe(TO)
+  })
+
+  it('routes renewal_reminder (expired) in FR locale without throwing', async () => {
+    await expect(
+      sendEmail(TO, 'fr', {
+        template: 'renewal_reminder',
+        interval: 'expired',
+        customerName: CUSTOMER_NAME,
+        renewalUrl: 'http://localhost:3000/fr/renewal?orderId=order-1',
+      }),
+    ).resolves.toBeUndefined()
+
+    expect(resendClient.emails.send).toHaveBeenCalledOnce()
+    const [call] = vi.mocked(resendClient.emails.send).mock.calls
+    expect(call![0].subject).toContain('expiré')
+  })
 })

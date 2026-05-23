@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
 import OrderTimeline from '@/components/dashboard/OrderTimeline'
 import { PersonalDetailsForm } from '@/components/dashboard/PersonalDetailsForm'
+import { RenewalBanner } from '@/components/dashboard/RenewalBanner'
 import { Mail, ShieldCheck, FileCheck, Send, CheckCircle2 } from 'lucide-react'
 
 /**
@@ -71,6 +72,9 @@ export default async function DashboardPage() {
         {/* Case B: User has an active order */}
         {order && (
           <>
+            {/* Renewal banner — renders only for Standard/Express within 30 days of expiry */}
+            <RenewalBanner order={order} locale={locale} />
+
             <div className="space-y-[length:var(--space-2)]">
               <h1 className="text-[length:var(--text-3xl)] font-[number:var(--font-bold)] text-text-primary">
                 {t('title')}

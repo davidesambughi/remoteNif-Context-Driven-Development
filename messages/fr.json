@@ -213,6 +213,21 @@
         "description": "Félicitations ! Votre numéro d'identification fiscale portugais a été délivré avec succès.",
         "nifLabel": "Votre numéro NIF"
       }
+    },
+    "renewalBanner": {
+      "nearExpiry": "Votre représentation fiscale expire dans {days} jours. Renouvelez pour rester couvert.",
+      "expired": "Votre représentation fiscale a expiré le {date}. Renouvelez pour rester couvert.",
+      "renewLink": "Renouveler maintenant →",
+      "dismissLink": "Je n'ai plus besoin de représentation fiscale",
+      "dialog": {
+        "title": "Êtes-vous sûr ?",
+        "description": "Vous risquez des amendes si vous avez des obligations fiscales portugaises (propriété, revenus locatifs, emploi). Cela arrêtera tous les rappels de renouvellement.",
+        "confirm": "Oui, je n'en ai pas besoin",
+        "cancel": "Annuler"
+      },
+      "errors": {
+        "generic": "Une erreur s'est produite. Veuillez réessayer."
+      }
     }
   },
   "personalDetails": {
@@ -535,17 +550,22 @@
       "errors": {
         "generic": "Une erreur s'est produite. Veuillez réessayer."
       }
+    },
+    "renewFiscalRep": {
+      "description": "Vous avez précédemment désactivé les rappels de représentation fiscale. Vous pouvez renouveler à tout moment.",
+      "link": "Renouveler la représentation fiscale →"
     }
   },
   "renewal": {
-    "pageTitle": "Renew Fiscal Representation",
-    "pageDescription": "12 months fiscal representation · €89",
-    "preparingCheckout": "Preparing your checkout…",
-    "notEligible": "This order is not eligible for renewal.",
-    "backToDashboard": "Back to dashboard",
-    "errorTitle": "Something went wrong",
-    "errorDescription": "We couldn't start your checkout. Please try again or contact support.",
-    "canceledDescription": "Your payment was cancelled. You can try again below.",
-    "retryButton": "Try again"
+    "renewFiscalRep": "Renouveler la représentation fiscale",
+    "pageTitle": "Renouveler la Représentation Fiscale",
+    "pageDescription": "12 mois de représentation fiscale · 89 €",
+    "preparingCheckout": "Préparation de votre paiement…",
+    "notEligible": "Cette commande n'est pas éligible au renouvellement.",
+    "backToDashboard": "Retour au tableau de bord",
+    "errorTitle": "Une erreur s'est produite",
+    "errorDescription": "Nous n'avons pas pu démarrer votre paiement. Veuillez réessayer ou contacter le support.",
+    "canceledDescription": "Votre paiement a été annulé. Vous pouvez réessayer ci-dessous.",
+    "retryButton": "Réessayer"
   }
 }

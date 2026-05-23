@@ -412,3 +412,83 @@ describe('getFiscalRepRenewalConfirmationSubject', () => {
     expect(new Set(subjects).size).toBe(4)
   })
 })
+
+// ---------------------------------------------------------------------------
+// RenewalReminderEmail (Feature 18b)
+// ---------------------------------------------------------------------------
+
+import {
+  RenewalReminderEmail,
+  getRenewalReminderSubject,
+  type RenewalReminderInterval,
+} from '@/lib/email/templates/renewal-reminder'
+
+describe('RenewalReminderEmail', () => {
+  const baseProps = {
+    locale: 'en' as const,
+    interval: '30_days' as RenewalReminderInterval,
+    customerName: 'Ana Costa',
+    renewalUrl: 'https://example.com/en/renewal?orderId=order-1',
+  }
+
+  // Smoke tests — all 3 intervals × all 4 locales = 12 combinations
+  const intervals: RenewalReminderInterval[] = ['30_days', '15_days', 'expired']
+  const locales = ['en', 'fr', 'es', 'de'] as const
+
+  for (const locale of locales) {
+    for (const interval of intervals) {
+      it(`renders without throwing — ${locale} / ${interval}`, async () => {
+        await expect(
+          render(RenewalReminderEmail({ ...baseProps, locale, interval })),
+        ).resolves.not.toThrow()
+      })
+    }
+  }
+
+  it('contains the customer name in the rendered output', async () => {
+    const html = await render(RenewalReminderEmail(baseProps))
+    expect(html).toContain('Ana Costa')
+  })
+
+  it('contains the renewal URL as a link', async () => {
+    const html = await render(RenewalReminderEmail(baseProps))
+    expect(html).toContain('https://example.com/en/renewal?orderId=order-1')
+  })
+
+  it('contains regulatory warning copy for all locales', async () => {
+    // The warning block is always present — it explains who actually needs fiscal rep
+    for (const locale of locales) {
+      const html = await render(RenewalReminderEmail({ ...baseProps, locale }))
+      // All locales mention "tax" or "fiscal" in the warning block
+      expect(html.toLowerCase()).toMatch(/tax|fiscal|steuer|impôt|fiscal/i)
+    }
+  })
+})
+
+describe('getRenewalReminderSubject', () => {
+  it('returns a non-empty string for every locale + interval combination', () => {
+    const intervals: RenewalReminderInterval[] = ['30_days', '15_days', 'expired']
+    const locales = ['en', 'fr', 'es', 'de'] as const
+    for (const locale of locales) {
+      for (const interval of intervals) {
+        const subject = getRenewalReminderSubject(locale, interval)
+        expect(typeof subject).toBe('string')
+        expect(subject.length).toBeGreaterThan(0)
+      }
+    }
+  })
+
+  it('returns different subjects for different intervals within the same locale', () => {
+    const subjects = (['30_days', '15_days', 'expired'] as RenewalReminderInterval[]).map(
+      (interval) => getRenewalReminderSubject('en', interval),
+    )
+    expect(new Set(subjects).size).toBe(3)
+  })
+
+  it('returns different subjects for different locales within the same interval', () => {
+    const subjects = (['en', 'fr', 'es', 'de'] as const).map(
+      (locale) => getRenewalReminderSubject(locale, '30_days'),
+    )
+    expect(new Set(subjects).size).toBe(4)
+  })
+})

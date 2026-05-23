@@ -5,11 +5,14 @@ import {
   updateOrderPersonalDetails,
   updateOrderPoaPath,
   getOrderPersonalDetails,
+  getUserActiveOrder,
+  dismissFiscalRepForOrder,
 } from '@/lib/db/queries'
 import { PersonalDetailsSchema, GeneratePoaSchema } from '@/lib/validations/orders'
 import type { PersonalDetailsData } from '@/lib/validations/orders'
 import type { ActionResult } from '@/lib/types'
 import { generateAndStorePoaPdf, deleteStoredPoaPdf } from '@/lib/pdf/generator'
+import { revalidatePath } from 'next/cache'
 
 /**
  * Saves the personal details for a specific order.
@@ -94,5 +97,42 @@ export async function generatePoa(
     return { success: true, data: { signedUrl } }
   } catch {
     return { success: false, error: 'personalDetails.poa.error' }
+  }
+}
+
+/**
+ * Marks the customer's fiscal representation as dismissed.
+ * Sets fiscalRepDismissedAt = NOW(), which permanently hides the renewal banner
+ * and suppresses all future renewal reminder emails for this order.
+ *
+ * Validates ownership: the order must belong to the currently authenticated user.
+ * Uses GeneratePoaSchema to validate the orderId UUID before any DB access.
+ */
+export async function dismissFiscalRep(orderId: string): Promise<ActionResult<void>> {
+  try {
+    // 1. Validate input — reuses the existing UUID schema
+    const validated = GeneratePoaSchema.safeParse({ orderId })
+    if (!validated.success) {
+      return { success: false, error: 'dashboard.renewalBanner.errors.generic' }
+    }
+
+    // 2. Auth check
+    const user = await requireAuth()
+
+    // 3. Ownership check — verify the order belongs to this user before mutating
+    const order = await getUserActiveOrder(user.id)
+    if (!order || order.id !== validated.data.orderId) {
+      return { success: false, error: 'dashboard.renewalBanner.errors.generic' }
+    }
+
+    // 4. Set fiscalRepDismissedAt — suppresses banner and future cron emails
+    await dismissFiscalRepForOrder(validated.data.orderId)
+
+    // 5. Revalidate the dashboard so the banner disappears immediately
+    revalidatePath('/dashboard')
+
+    return { success: true }
+  } catch {
+    return { success: false, error: 'dashboard.renewalBanner.errors.generic' }
   }
 }

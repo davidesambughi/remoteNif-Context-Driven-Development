@@ -9,6 +9,7 @@ import { ChangeEmailForm } from '@/components/dashboard/settings/ChangeEmailForm
 import { ChangePasswordForm } from '@/components/dashboard/settings/ChangePasswordForm'
 import { DeleteAccountSection } from '@/components/dashboard/settings/DeleteAccountSection'
 import { LanguagePreferenceForm } from '@/components/dashboard/settings/LanguagePreferenceForm'
+import { RefreshCw } from 'lucide-react'
 
 interface Props {
   params: Promise<{ locale: Locale }>
@@ -45,6 +46,14 @@ export default async function SettingsPage({ params }: Props) {
   // Fiscal rep expiry only applies to Standard and Express tiers
   const fiscalRepExpiresAt = order?.fiscalRepExpiresAt ?? null
 
+  // Show the "Renew fiscal representation" recovery link only when:
+  //  - The order is Standard or Express (Essential never has fiscal rep)
+  //  - The customer previously dismissed the renewal banner
+  const showRenewFiscalRepLink =
+    order !== null &&
+    order.tier !== 'essential' &&
+    order.fiscalRepDismissedAt !== null
+
   return (
     <div className="max-w-xl mx-auto px-[length:var(--space-6)] py-[length:var(--space-12)]">
       {/* Back link — locale-aware, above the page title */}
@@ -63,11 +72,39 @@ export default async function SettingsPage({ params }: Props) {
         </h1>
       </div>
 
-      {/* Three independent sections stacked vertically */}
+      {/* Sections stacked vertically */}
       <div className="flex flex-col gap-[length:var(--space-8)]">
         <ChangeEmailForm />
         <ChangePasswordForm />
         <LanguagePreferenceForm />
+
+        {/* Fiscal rep recovery link — only visible after the customer dismissed the banner.
+            Gives them a self-serve way to renew if they change their mind. */}
+        {showRenewFiscalRepLink && order && (
+          <div className="rounded-[length:var(--radius-lg)] border border-[var(--border-default)]
+            bg-[var(--bg-surface)] p-[length:var(--space-6)] shadow-[var(--shadow-sm)]">
+            <div className="flex items-center gap-[length:var(--space-3)]">
+              <RefreshCw className="h-5 w-5 text-[var(--text-muted)] shrink-0" aria-hidden="true" />
+              <div>
+                <p className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+                  {t('renewFiscalRep.description')}
+                </p>
+                <Link
+                  href={`/renewal?orderId=${order.id}`}
+                  className="text-[length:var(--text-sm)] font-[number:var(--font-medium)]
+                    text-[var(--brand-primary)] underline underline-offset-2
+                    hover:opacity-80 transition-[var(--transition-fast)]
+                    focus-visible:outline-none focus-visible:ring-2
+                    focus-visible:ring-[var(--brand-primary)] focus-visible:ring-offset-1
+                    rounded-[length:var(--radius-sm)]"
+                >
+                  {t('renewFiscalRep.link')}
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         <DeleteAccountSection
           hasActiveOrder={hasActiveOrder}
           fiscalRepExpiresAt={fiscalRepExpiresAt ? new Date(fiscalRepExpiresAt) : null}

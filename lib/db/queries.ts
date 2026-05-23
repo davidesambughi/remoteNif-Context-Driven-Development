@@ -1,6 +1,6 @@
 // Reusable DB queries — populated by feature specs as each feature is built.
 
-import { eq, desc, and, isNull, sql } from 'drizzle-orm'
+import { eq, desc, and, isNull, gte, lt, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { users, orders, documents, payments, auditLog, operatorNotifications, operatorPreferences } from '@/lib/db/schema'
 import type { SelectUser, SelectOrder, SelectDocument, InsertDocument, InsertAuditLog, InsertOperatorNotification, InsertOperatorPreferences } from '@/lib/db/schema'
@@ -961,6 +961,88 @@ export async function extendFiscalRepExpiry(orderId: string, dbOrTx: any = db): 
 
   // Non-null assertion: we just set the value unconditionally above
   return result[0]!.fiscalRepExpiresAt!
+}
+
+// ---------------------------------------------------------------------------
+// Renewal reminder queries (Feature 18b)
+// ---------------------------------------------------------------------------
+
+/**
+ * Shape returned by getOrdersForRenewalReminders — one row per order that needs
+ * a reminder email, joined with the user's email and language preference.
+ */
+export type RenewalReminderTarget = {
+  orderId: string
+  userId: string
+  email: string
+  language: EmailLocale
+  fullName: string | null
+  fiscalRepExpiresAt: Date
+}
+
+/**
+ * Fetches all orders whose fiscal rep expires on the calendar day that is
+ * exactly `targetDaysFromNow` days from today (in UTC).
+ *
+ * Uses a day-window range (>= startOfDay AND < startOfNextDay) because
+ * `fiscal_rep_expires_at` is a full timestamp, not a date-only value.
+ * A simple equality comparison would match nothing in practice.
+ *
+ * Filters:
+ *  - status = 'delivered'
+ *  - tier IN ('standard', 'express')  — Essential orders have no fiscal rep
+ *  - fiscalRepDismissedAt IS NULL     — customer opted out: no more emails
+ *  - fiscalRepExpiresAt within the target calendar day
+ *
+ * NOTE: no dedup guard — known limitation, acceptable at current scale.
+ * If the cron fires twice on the same day a customer may receive a duplicate
+ * reminder. Tracked as a known issue; add a sent-flag column if volume grows.
+ */
+export async function getOrdersForRenewalReminders(
+  targetDaysFromNow: number,
+): Promise<RenewalReminderTarget[]> {
+  return db
+    .select({
+      orderId: orders.id,
+      userId: orders.userId,
+      email: users.email,
+      // Language is stored on the users table; cast to EmailLocale — the column
+      // is constrained to the same four values so the cast is safe.
+      language: users.language,
+      fullName: orders.fullName,
+      // Non-null assertion below is safe: the WHERE clause guarantees non-null
+      fiscalRepExpiresAt: orders.fiscalRepExpiresAt,
+    })
+    .from(orders)
+    .innerJoin(users, eq(orders.userId, users.id))
+    .where(
+      and(
+        eq(orders.status, 'delivered'),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        sql`${orders.tier} IN ('standard', 'express')` as any,
+        isNull(orders.fiscalRepDismissedAt),
+        // Day-window range: >= start of target day, < start of next day (UTC)
+        gte(
+          orders.fiscalRepExpiresAt,
+          sql`CURRENT_DATE + INTERVAL '${sql.raw(String(targetDaysFromNow))} days'`,
+        ),
+        lt(
+          orders.fiscalRepExpiresAt,
+          sql`CURRENT_DATE + INTERVAL '${sql.raw(String(targetDaysFromNow + 1))} days'`,
+        ),
+      ),
+    ) as unknown as Promise<RenewalReminderTarget[]>
+}
+
+/**
+ * Sets fiscalRepDismissedAt to NOW() for the given order.
+ * Ownership is verified by the caller (Server Action) before this runs.
+ */
+export async function dismissFiscalRepForOrder(orderId: string): Promise<void> {
+  await db
+    .update(orders)
+    .set({ fiscalRepDismissedAt: new Date(), updatedAt: new Date() })
+    .where(eq(orders.id, orderId))
 }
 
 /**

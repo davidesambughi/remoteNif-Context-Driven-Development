@@ -213,6 +213,21 @@
         "description": "Congratulations! Your Portuguese Tax Identification Number has been successfully issued.",
         "nifLabel": "Your NIF Number"
       }
+    },
+    "renewalBanner": {
+      "nearExpiry": "Your fiscal representation expires in {days} days. Renew to stay covered.",
+      "expired": "Your fiscal representation expired on {date}. Renew to stay covered.",
+      "renewLink": "Renew now →",
+      "dismissLink": "I no longer need fiscal representation",
+      "dialog": {
+        "title": "Are you sure?",
+        "description": "You may face fines if you have Portuguese tax obligations (property, rental income, employment). This will stop all renewal reminders.",
+        "confirm": "Yes, I don't need it",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "generic": "Something went wrong. Please try again."
+      }
     }
   },
   "personalDetails": {
@@ -535,9 +550,14 @@
       "errors": {
         "generic": "Something went wrong. Please try again."
       }
+    },
+    "renewFiscalRep": {
+      "description": "You previously opted out of fiscal representation reminders. You can renew at any time.",
+      "link": "Renew fiscal representation →"
     }
   },
   "renewal": {
+    "renewFiscalRep": "Renew fiscal representation",
     "pageTitle": "Renew Fiscal Representation",
     "pageDescription": "12 months fiscal representation · €89",
     "preparingCheckout": "Preparing your checkout…",
