@@ -536,5 +536,16 @@
         "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
       }
     }
+  },
+  "renewal": {
+    "pageTitle": "Renew Fiscal Representation",
+    "pageDescription": "12 months fiscal representation · €89",
+    "preparingCheckout": "Preparing your checkout…",
+    "notEligible": "This order is not eligible for renewal.",
+    "backToDashboard": "Back to dashboard",
+    "errorTitle": "Something went wrong",
+    "errorDescription": "We couldn't start your checkout. Please try again or contact support.",
+    "canceledDescription": "Your payment was cancelled. You can try again below.",
+    "retryButton": "Try again"
   }
 }

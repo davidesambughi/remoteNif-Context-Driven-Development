@@ -3,6 +3,10 @@ import { render } from 'react-email'
 import { OrderConfirmationEmail } from '@/lib/email/templates/order-confirmation'
 import { AdminDocumentEscalatedEmail } from '@/lib/email/templates/admin-document-escalated'
 import { AdminOrderReadyEmail } from '@/lib/email/templates/admin-order-ready'
+import {
+  FiscalRepRenewalConfirmationEmail,
+  getFiscalRepRenewalConfirmationSubject,
+} from '@/lib/email/templates/fiscal-rep-renewal-confirmation'
 
 // Smoke tests: verify each template renders to HTML without throwing and
 // contains the key dynamic values passed as props.
@@ -343,5 +347,68 @@ describe('getNifDeliveredSubject', () => {
     const es = getNifDeliveredSubject('es')
     const de = getNifDeliveredSubject('de')
     expect(new Set([en, fr, es, de]).size).toBe(4)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// FiscalRepRenewalConfirmationEmail (Feature 18a)
+// ---------------------------------------------------------------------------
+
+describe('FiscalRepRenewalConfirmationEmail', () => {
+  const baseProps = {
+    locale: 'en' as const,
+    customerName: 'Maria Santos',
+    newExpiresAt: '1 January 2027',
+    dashboardUrl: 'https://example.com/en/dashboard',
+  }
+
+  it('renders without throwing in EN locale', async () => {
+    await expect(render(FiscalRepRenewalConfirmationEmail(baseProps))).resolves.not.toThrow()
+  })
+
+  it('renders without throwing in FR locale', async () => {
+    await expect(
+      render(FiscalRepRenewalConfirmationEmail({ ...baseProps, locale: 'fr' })),
+    ).resolves.not.toThrow()
+  })
+
+  it('renders without throwing in ES locale', async () => {
+    await expect(
+      render(FiscalRepRenewalConfirmationEmail({ ...baseProps, locale: 'es' })),
+    ).resolves.not.toThrow()
+  })
+
+  it('renders without throwing in DE locale', async () => {
+    await expect(
+      render(FiscalRepRenewalConfirmationEmail({ ...baseProps, locale: 'de' })),
+    ).resolves.not.toThrow()
+  })
+
+  it('contains the new expiry date in the rendered output', async () => {
+    const html = await render(FiscalRepRenewalConfirmationEmail(baseProps))
+    expect(html).toContain('1 January 2027')
+  })
+
+  it('contains the customer name in the rendered output', async () => {
+    const html = await render(FiscalRepRenewalConfirmationEmail(baseProps))
+    expect(html).toContain('Maria Santos')
+  })
+})
+
+describe('getFiscalRepRenewalConfirmationSubject', () => {
+  it('returns a non-empty string for each locale', () => {
+    const locales = ['en', 'fr', 'es', 'de'] as const
+    for (const locale of locales) {
+      const subject = getFiscalRepRenewalConfirmationSubject(locale)
+      expect(typeof subject).toBe('string')
+      expect(subject.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('returns a unique subject per locale — no copy-paste error', () => {
+    const subjects = (['en', 'fr', 'es', 'de'] as const).map(
+      getFiscalRepRenewalConfirmationSubject,
+    )
+    expect(new Set(subjects).size).toBe(4)
   })
 })

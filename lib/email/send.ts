@@ -30,6 +30,10 @@ import {
   NifDeliveredEmail,
   getNifDeliveredSubject,
 } from './templates/nif-delivered'
+import {
+  FiscalRepRenewalConfirmationEmail,
+  getFiscalRepRenewalConfirmationSubject,
+} from './templates/fiscal-rep-renewal-confirmation'
 
 export type EmailLocale = 'en' | 'fr' | 'es' | 'de'
 export type EmailTemplateName =
@@ -40,6 +44,7 @@ export type EmailTemplateName =
   | 'operator_submission_ready'
   | 'order_submitted_customer'
   | 'nif_delivered'
+  | 'fiscal_rep_renewal_confirmation'
 
 // Discriminated union — add a new member here when a new template is introduced,
 // then add a matching case in the switch below.
@@ -51,6 +56,7 @@ export type EmailPayload =
   | { template: 'operator_submission_ready'; customerName: string; tier: string; orderId: string; slaNote?: string }
   | { template: 'order_submitted_customer'; customerName: string; tier: string }
   | { template: 'nif_delivered'; customerName: string; nifNumber: string }
+  | { template: 'fiscal_rep_renewal_confirmation'; customerName: string; newExpiresAt: string }
 
 /**
  * Central email sending helper. All outbound emails go through here — never call
@@ -145,6 +151,17 @@ export async function sendEmail(
           locale,
           customerName: payload.customerName,
           nifNumber: payload.nifNumber,
+          dashboardUrl,
+        })
+        break
+      }
+      case 'fiscal_rep_renewal_confirmation': {
+        // Confirm the renewal to the customer with their new fiscal rep expiry date
+        subject = getFiscalRepRenewalConfirmationSubject(locale)
+        reactElement = FiscalRepRenewalConfirmationEmail({
+          locale,
+          customerName: payload.customerName,
+          newExpiresAt: payload.newExpiresAt,
           dashboardUrl,
         })
         break

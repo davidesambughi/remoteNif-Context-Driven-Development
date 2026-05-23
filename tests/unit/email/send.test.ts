@@ -190,4 +190,34 @@ describe('sendEmail dispatch routing', () => {
       }),
     ).resolves.toBeUndefined()
   })
+
+  // Feature 18a — fiscal_rep_renewal_confirmation
+  it('routes fiscal_rep_renewal_confirmation with correct EN subject', async () => {
+    await sendEmail(TO, 'en', {
+      template: 'fiscal_rep_renewal_confirmation',
+      customerName: CUSTOMER_NAME,
+      newExpiresAt: '1 January 2027',
+    })
+
+    expect(resendClient.emails.send).toHaveBeenCalledOnce()
+    const [call] = vi.mocked(resendClient.emails.send).mock.calls
+    expect(call![0].subject).toContain('renewed')
+    expect(call![0].react).toBeTruthy()
+    expect(call![0].from).toBe('noreply@remotenif.com')
+    expect(call![0].to).toBe(TO)
+  })
+
+  it('routes fiscal_rep_renewal_confirmation with correct FR subject', async () => {
+    await sendEmail(TO, 'fr', {
+      template: 'fiscal_rep_renewal_confirmation',
+      customerName: CUSTOMER_NAME,
+      newExpiresAt: '1 janvier 2027',
+    })
+
+    expect(resendClient.emails.send).toHaveBeenCalledOnce()
+    const [call] = vi.mocked(resendClient.emails.send).mock.calls
+    // French subject contains 'renouvelée'
+    expect(call![0].subject).toContain('renouvel')
+    expect(call![0].react).toBeTruthy()
+  })
 })

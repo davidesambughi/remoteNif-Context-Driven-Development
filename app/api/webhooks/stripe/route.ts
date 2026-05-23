@@ -7,7 +7,7 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import { env } from '@/lib/env'
-import { handleCheckoutSessionCompleted } from '@/lib/stripe/webhooks'
+import { handleCheckoutSessionCompleted, handleRenewalCheckoutCompleted } from '@/lib/stripe/webhooks'
 import Stripe from 'stripe'
 
 export async function POST(req: Request) {
@@ -38,7 +38,13 @@ export async function POST(req: Request) {
       case 'checkout.session.completed': {
         // event.data.object is a union of all Stripe object types — narrowed by the switch case
         const session = event.data.object as Stripe.Checkout.Session
-        await handleCheckoutSessionCompleted(session)
+        // Discriminate on metadata.type: renewal sessions have type='fiscal_rep_renewal';
+        // all other sessions (initial orders) fall through to handleCheckoutSessionCompleted.
+        if (session.metadata?.type === 'fiscal_rep_renewal') {
+          await handleRenewalCheckoutCompleted(session)
+        } else {
+          await handleCheckoutSessionCompleted(session)
+        }
         break
       }
       default:

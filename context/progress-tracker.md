@@ -4,13 +4,13 @@
 
 ## Current Phase
 
-Active development. Features 01–17a complete.
+Active development. Features 01–18a complete.
 
 ---
 
 ## Current Goal
 
-Feature 18a — Renewal Flow (Checkout & Extension).
+Feature 18b — Renewal Reminder Emails & Dashboard Banner.
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
@@ -98,6 +98,7 @@ UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at =
 - **Feature 17b — Account Settings (Language Preference)** — `updateLanguagePreference` action + `updateUserLanguage` DB query + `LanguagePreferenceForm` (shadcn Select, `useState`, locale-aware `router.push`). Enum derived from `routing.locales` — no hardcoded strings. i18n keys in all 4 locales. Bugfix: `text-secondary` shorthand collision in `OrderDetailHeader`. 363 unit tests passing, build clean.
 - **Feature 17a — Account Settings (Security & Deletion)** — `app/[locale]/(dashboard)/settings/page.tsx` (calls `setRequestLocale(locale)` — required so `NextIntlClientProvider` serialises locale to client; fixes "No intl context" in `LanguageSwitcher`) + `loading.tsx` (3-card skeleton); `app/actions/settings.ts` (`changeEmail`, `changePassword`, `deleteAccount`); `lib/validations/settings.ts` (`changeEmailSchema`, `changePasswordSchema`, `deleteAccountSchema`); `strongPassword` exported from `lib/validations/auth.ts`; `components/dashboard/settings/` (`ChangeEmailForm`, `ChangePasswordForm`, `DeleteAccountSection`); `settings` namespace added to all 4 locale files (← arrow removed from `backToDashboard` to fix double-arrow visual bug); `DashboardHeader` updated: text link replaced with gear icon (`Settings` from lucide-react, `aria-label` for accessibility). Tests: `tests/unit/validations/settings.test.ts` (23 tests — strongPassword, changeEmailSchema, changePasswordSchema, deleteAccountSchema) + `tests/unit/actions/settings.test.ts` (24 tests — all 3 actions, error branches, signOut/updateUser call guards). 363 unit tests passing, build clean.
 - **Feature 16 — Delivery Emails** — `getOrderNifAndTier` in `lib/db/queries.ts` extended with `leftJoin` on `users` to return `customerEmail`, `customerLanguage`, and `fullName` alongside existing fields; `lib/email/templates/nif-delivered.tsx` created (4 locales: EN/FR/ES/DE) — intentionally minimal: NIF number in a prominent brand-tinted monospace block + dashboard CTA only, no guide content (bank/property/NHR removed — biased recommendations and regulatory risk; content hub deferred to v2, logged in `project-overview.md`); `nif_delivered` registered in `lib/email/send.ts` (union member + switch case + exhaustive check); `adminDeliverNif` wired with `void sendEmail(...)` fire-and-forget after `deliverNifNumber` succeeds; 16 new unit tests (template smoke tests × 4 locales + NIF-in-output + no-guide-content assertion + dashboard URL + subject uniqueness; send dispatch × 2 locales; action: sendEmail called on success, fullName-null fallback, NOT called on immutability guard). 316 total passing, build clean.
+- **Feature 18a — Renewal Flow (Checkout & Extension)** — `getRenewalOrderInfo`, `extendFiscalRepExpiry`, `getOrderFullName` DB queries in `lib/db/queries.ts`; `RenewalCheckoutSchema`, `RenewalWebhookMetadataSchema` + inferred types in `lib/validations/checkout.ts`; `createRenewalCheckoutSession` Server Action in `app/actions/checkout.ts`; `handleRenewalCheckoutCompleted` in `lib/stripe/webhooks.ts` (idempotency guard + `db.transaction` + fire-and-forget email); webhook route updated to dispatch on `metadata.type === 'fiscal_rep_renewal'`; `fiscal-rep-renewal-confirmation.tsx` email template (4 locales); `send.ts` extended with `fiscal_rep_renewal_confirmation` union member + switch case; `RenewalCheckoutButton` client component (single `ButtonState` state machine, auto-trigger via `useEffect`); `/[locale]/renewal` Server Component page + co-located `NotEligibleCard` / `RenewalCard` sub-components; `loading.tsx` skeleton; `renewal.*` i18n keys in all 4 locale files. 4 new test files (checkout action, webhook handler, email template, email send) covering 71 cases. 387 total unit tests passing, build clean.
 
 ---
 

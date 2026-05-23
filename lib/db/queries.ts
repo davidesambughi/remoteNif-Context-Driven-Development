@@ -900,3 +900,80 @@ export async function updateUserLanguage(
     .set({ language, updatedAt: new Date() })
     .where(eq(users.id, userId))
 }
+
+// ---------------------------------------------------------------------------
+// Renewal queries (Feature 18a)
+// ---------------------------------------------------------------------------
+
+/**
+ * Partial select from SelectOrder — no duplicate interface needed.
+ * Used by getRenewalOrderInfo and createRenewalCheckoutSession.
+ */
+type RenewalOrderInfo = Pick<SelectOrder, 'id' | 'userId' | 'tier' | 'fiscalRepExpiresAt' | 'status'>
+
+/**
+ * Fetches the minimal order data needed to validate a renewal request.
+ * Returns null if the order does not exist or belongs to a different user.
+ * The userId ownership check prevents customers accessing each other's orders.
+ */
+export async function getRenewalOrderInfo(
+  orderId: string,
+  userId: string,
+): Promise<RenewalOrderInfo | null> {
+  const [row] = await db
+    .select({
+      id: orders.id,
+      userId: orders.userId,
+      tier: orders.tier,
+      fiscalRepExpiresAt: orders.fiscalRepExpiresAt,
+      status: orders.status,
+    })
+    .from(orders)
+    .where(and(eq(orders.id, orderId), eq(orders.userId, userId)))
+    .limit(1)
+
+  return row ?? null
+}
+
+/**
+ * Extends the fiscal rep expiry by 12 months from the LATER of the current expiry
+ * or the current timestamp. This handles late renewals: if the expiry has already
+ * passed, the 12-month window starts from today rather than from the expired date.
+ *
+ * SQL: GREATEST(fiscal_rep_expires_at, NOW()) + INTERVAL '12 months'
+ *
+ * Accepts an optional dbOrTx parameter so the update can participate in a
+ * calling transaction. Uses `any` to avoid the complex Drizzle transaction generic —
+ * the runtime shape is identical to `db` so this is safe.
+ *
+ * Returns the new fiscalRepExpiresAt value.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function extendFiscalRepExpiry(orderId: string, dbOrTx: any = db): Promise<Date> {
+  const result = await dbOrTx
+    .update(orders)
+    .set({
+      fiscalRepExpiresAt: sql`GREATEST(${orders.fiscalRepExpiresAt}, NOW()) + INTERVAL '12 months'`,
+      updatedAt: new Date(),
+    })
+    .where(eq(orders.id, orderId))
+    .returning({ fiscalRepExpiresAt: orders.fiscalRepExpiresAt })
+
+  // Non-null assertion: we just set the value unconditionally above
+  return result[0]!.fiscalRepExpiresAt!
+}
+
+/**
+ * Fetches the full name stored against an order.
+ * Used by handleRenewalCheckoutCompleted to personalise the confirmation email.
+ * Returns null if no name has been saved yet (name is collected after payment).
+ */
+export async function getOrderFullName(orderId: string): Promise<string | null> {
+  const [row] = await db
+    .select({ fullName: orders.fullName })
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .limit(1)
+
+  return row?.fullName ?? null
+}
