@@ -48,7 +48,9 @@
       "Bash(npx shadcn@latest *)",
       "PowerShell(New-Item *)",
       "Bash(rg *)",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
+      "Bash(dir \"C:\\\\Users\\\\sambu\\\\nif3\\\\nif3\\\\app\" -R)",
+      "Bash(findstr /E \"\\\\\\(auth\\\\\\)|loading.tsx|page.tsx\")"
     ]
   }
 }

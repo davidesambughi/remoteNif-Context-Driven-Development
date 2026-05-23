@@ -24,6 +24,7 @@
       "email": "Email",
       "password": "Password",
       "submit": "Sign in",
+      "submitting": "Signing in…",
       "forgotPassword": "Forgot your password?",
       "noAccount": "Don't have an account?",
       "signUpLink": "Sign up",
@@ -38,12 +39,13 @@
       "email": "Email",
       "password": "Password",
       "submit": "Create account",
+      "submitting": "Creating account…",
       "hasAccount": "Already have an account?",
       "signInLink": "Sign in",
       "errors": {
         "emailInUse": "An account with this email already exists.",
         "generic": "Something went wrong. Please try again.",
-        "emailConfirmationRequired": "Email confirmation is required. Please check your inbox."
+        "emailConfirmationRequired": "Check your email — if you signed up with this address, we've sent a confirmation link."
       }
     },
     "resetPassword": {
@@ -51,6 +53,7 @@
       "description": "Enter your email and we'll send you a reset link.",
       "email": "Email",
       "submit": "Send reset link",
+      "submitting": "Sending…",
       "backToSignIn": "Back to sign in",
       "successMessage": "If an account exists for this email, you'll receive a reset link shortly.",
       "errors": {
@@ -62,6 +65,7 @@
       "password": "New password",
       "confirmPassword": "Confirm new password",
       "submit": "Update password",
+      "submitting": "Updating password…",
       "errors": {
         "passwordMismatch": "Passwords don't match",
         "generic": "Something went wrong. Please try again."
@@ -188,6 +192,7 @@
       "buttonLabel": "View Pricing & Start"
     },
     "timeline": {
+      "payment": "Payment",
       "upload": "Upload",
       "review": "Review",
       "approved": "Approved",
@@ -312,7 +317,7 @@
       "pendingReview": "Under review",
       "stillReviewing": "Still reviewing… this is taking longer than usual.",
       "approved": "Approved",
-      "manualReview": "Our team will review your document within 4 hours"
+      "manualReview": "Our team has been notified and will review your document manually."
     },
     "flagReasons": {
       "passport_expired": "Your passport is expired. Please upload a valid passport.",

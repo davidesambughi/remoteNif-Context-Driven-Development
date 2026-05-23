@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { Card } from '@/components/ui/card'
 import { FileText, Download, CheckCircle2, AlertCircle } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { getSignedDocumentUrl } from '@/lib/supabase/documents'
 import { DocumentOverrideButtons } from './DocumentOverrideButtons'
 import type { AdminDocumentDetail } from '@/lib/db/queries'
 
@@ -22,7 +22,7 @@ export async function DocumentReviewCard({ doc, type, orderId }: DocumentReviewC
         <div className="flex items-center gap-3 mb-4">
           <FileText className="h-5 w-5 text-text-muted" />
           <h3 className="font-bold text-text-secondary">{typeLabel}</h3>
-          <span className="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-subtle text-text-muted border border-border-subtle">
+          <span className="ml-auto px-2 py-0.5 rounded-full text-2xs font-bold uppercase tracking-wider bg-subtle text-text-muted border border-border-subtle">
             {t('notUploaded')}
           </span>
         </div>
@@ -30,12 +30,7 @@ export async function DocumentReviewCard({ doc, type, orderId }: DocumentReviewC
     )
   }
 
-  const supabase = await createClient()
-  const { data } = await supabase.storage
-    .from('documents')
-    .createSignedUrl(doc.filePath, 3600)
-  
-  const signedUrl = data?.signedUrl
+  const signedUrl = await getSignedDocumentUrl(doc.filePath)
 
   // Maps each AI review status to its badge color classes.
   const statusColors: Record<string, string> = {
@@ -62,11 +57,11 @@ export async function DocumentReviewCard({ doc, type, orderId }: DocumentReviewC
           <FileText className="h-5 w-5 text-brand-primary" />
           <h3 className="font-bold text-text-primary">{typeLabel}</h3>
           {doc.approved ? (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-success-subtle text-success border border-success/20">
+            <span className="px-2 py-0.5 rounded-full text-2xs font-bold uppercase tracking-wider bg-success-subtle text-success border border-success/20">
               Approved
             </span>
           ) : (
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusColors[doc.aiReviewStatus ?? 'pending']}`}>
+            <span className={`px-2 py-0.5 rounded-full text-2xs font-bold uppercase tracking-wider border ${statusColors[doc.aiReviewStatus ?? 'pending']}`}>
               {aiStatusLabel[doc.aiReviewStatus ?? 'pending']}
             </span>
           )}
@@ -106,7 +101,7 @@ export async function DocumentReviewCard({ doc, type, orderId }: DocumentReviewC
                 {aiStatusLabel[doc.aiReviewStatus ?? 'pending']}
               </span>
               {doc.aiReviewAttempts > 0 && (
-                <span className="text-[10px] text-text-muted">
+                <span className="text-2xs text-text-muted">
                   ({doc.aiReviewAttempts} {t('aiAttempts')})
                 </span>
               )}
@@ -137,7 +132,12 @@ export async function DocumentReviewCard({ doc, type, orderId }: DocumentReviewC
                   {doc.adminOverrideReason}
                 </p>
               )}
-              <p className="text-[10px] text-text-muted">
+              {/* KNOWN LIMITATION: adminOverrideBy is a User.id UUID. Showing the first UUID
+                  segment is a cosmetic workaround — admins can identify themselves from the
+                  timestamp context. A proper fix requires joining to the users table in
+                  getAdminOrderDetail to fetch the admin's email or display name.
+                  Deferred — acceptable for internal-only admin UI. */}
+              <p className="text-2xs text-text-muted">
                 By {doc.adminOverrideBy?.split('-')[0]} on {doc.adminOverrideAt?.toLocaleDateString()}
               </p>
             </div>

@@ -21,6 +21,8 @@ const statusOrder = ORDER_STATUS_SEQUENCE
 
 export function StatusUpdateSection({ orderId, currentStatus }: StatusUpdateSectionProps) {
   const t = useTranslations('admin.detail')
+  // Separate namespace for status labels shared with the admin list page
+  const tAdmin = useTranslations('admin')
   const [isPending, startTransition] = useTransition()
   const [status, setStatus] = useState<SelectOrder['status']>(currentStatus)
   const [note, setNote] = useState('')
@@ -63,7 +65,7 @@ export function StatusUpdateSection({ orderId, currentStatus }: StatusUpdateSect
             <SelectContent>
               {statusOrder.map((s) => (
                 <SelectItem key={s} value={s}>
-                  {s.replace(/_/g, ' ')}
+                  {tAdmin(`statuses.${s}`)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -79,7 +81,7 @@ export function StatusUpdateSection({ orderId, currentStatus }: StatusUpdateSect
             disabled={isPending}
           />
           {isBackward && !note && (
-            <p className="text-[10px] text-error">
+            <p className="text-2xs text-error">
               {t('updateStatusNoteRequired')}
             </p>
           )}

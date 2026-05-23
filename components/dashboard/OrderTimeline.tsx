@@ -12,8 +12,12 @@ interface OrderTimelineProps {
   status: SelectOrder['status']
 }
 
-// Canonical sequence of order statuses for the timeline
+// Canonical sequence of order statuses for the timeline.
+// 'payment_received' is a synthetic step — it has no matching SelectOrder['status'] value.
+// It is always rendered as completed because payment has already been processed
+// by the time any user reaches the dashboard.
 const steps = [
+  { id: 'payment_received', labelKey: 'timeline.payment' },
   { id: 'documents_pending', labelKey: 'timeline.upload' },
   { id: 'documents_under_review', labelKey: 'timeline.review' },
   { id: 'documents_approved', labelKey: 'timeline.approved' },

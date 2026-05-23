@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Loader2 } from 'lucide-react'
 
 interface Props {
   locale: string
@@ -86,12 +87,20 @@ export default function RequestPasswordResetForm({ locale }: Props) {
           )}
         />
 
+        {/* Show spinner + loading label while the server action is in-flight */}
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
           className="w-full mt-[length:var(--space-6)] bg-brand-primary text-on-accent font-[number:var(--font-semibold)]"
         >
-          {t('submit')}
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="animate-spin h-4 w-4" />
+              {t('submitting')}
+            </>
+          ) : (
+            t('submit')
+          )}
         </Button>
       </form>
 

@@ -105,6 +105,8 @@
     var(--font-jetbrains-mono), "SFMono-Regular", Menlo, Monaco, Consolas,
     monospace;
 
+  --text-2xs: 0.625rem;
+  /* 10px — admin badge labels and micro-captions; below the standard token floor */
   --text-xs: 0.75rem;
   /* 12px */
   --text-sm: 0.875rem;
@@ -275,6 +277,9 @@
   /* Fonts */
   --font-family-sans: var(--font-sans);
   --font-family-mono: var(--font-mono);
+
+  /* text-2xs utility — generates the text-2xs Tailwind class (10px micro-captions) */
+  --font-size-2xs: var(--text-2xs);
 }
 
 /* ==========================================

@@ -130,6 +130,7 @@ Surfaces stack from outermost to innermost. Each layer is visually distinct.
 
 | Token | Size | Usage |
 |-------|------|-------|
+| `--text-2xs` | 0.625rem (10px) | Admin badge labels, micro-captions — below the standard floor |
 | `--text-xs` | 0.75rem (12px) | Captions, badges, metadata |
 | `--text-sm` | 0.875rem (14px) | Small body text, labels |
 | `--text-base` | 1rem (16px) | Default body text |

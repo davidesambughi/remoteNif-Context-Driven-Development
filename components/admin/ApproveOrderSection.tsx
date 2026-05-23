@@ -89,12 +89,12 @@ export function ApproveOrderSection({ orderId, orderStatus, allDocsApproved, tie
             </Button>
 
             {!allDocsApproved && (
-              <p className="text-[10px] text-muted-foreground italic">
+              <p className="text-2xs text-muted-foreground italic">
                 * {t('approveOrderDisabledDocs')}
               </p>
             )}
             {allDocsApproved && orderStatus !== 'documents_under_review' && (
-              <p className="text-[10px] text-muted-foreground italic">
+              <p className="text-2xs text-muted-foreground italic">
                 * {t('approveOrderDisabledStatus')}
               </p>
             )}

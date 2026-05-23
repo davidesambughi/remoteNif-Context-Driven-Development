@@ -1,12 +1,18 @@
 /**
- * Unit tests for app/actions/checkout.ts — createRenewalCheckoutSession
+ * Unit tests for app/actions/checkout.ts
  *
- * Covers all guard conditions (validation, auth, ownership, eligibility)
- * and the happy path. Stripe and DB are mocked — no real network calls.
+ * createCheckoutSession — initial NIF order checkout (Feature 07a)
+ *   Covers: validation, auth guard, happy path, Stripe error, missing URL.
+ *
+ * createRenewalCheckoutSession — fiscal rep renewal (Feature 18a)
+ *   Covers all guard conditions (validation, auth, ownership, eligibility)
+ *   and the happy path.
+ *
+ * Stripe and DB are fully mocked — no real network calls.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createRenewalCheckoutSession } from '@/app/actions/checkout'
+import { createCheckoutSession, createRenewalCheckoutSession } from '@/app/actions/checkout'
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -73,6 +79,97 @@ beforeEach(() => {
   vi.mocked(queries.getRenewalOrderInfo).mockResolvedValue(STANDARD_ORDER)
   ;(stripe.checkout.sessions.create as ReturnType<typeof vi.fn>).mockResolvedValue({
     url: 'https://checkout.stripe.com/test_session',
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Tests — createCheckoutSession
+// ---------------------------------------------------------------------------
+
+describe('createCheckoutSession', () => {
+  // Valid input: a known tier + a supported locale
+  const CHECKOUT_INPUT = { tier: 'standard', locale: 'en' }
+
+  it('returns { success: false } when tier is invalid', async () => {
+    const result = await createCheckoutSession({ tier: 'platinum', locale: 'en' })
+
+    expect(result.success).toBe(false)
+    expect(stripe.checkout.sessions.create).not.toHaveBeenCalled()
+  })
+
+  it('returns { success: false } when locale is invalid', async () => {
+    const result = await createCheckoutSession({ tier: 'standard', locale: 'xx' })
+
+    expect(result.success).toBe(false)
+    expect(stripe.checkout.sessions.create).not.toHaveBeenCalled()
+  })
+
+  it('returns { success: false } when input is missing entirely', async () => {
+    const result = await createCheckoutSession(null)
+
+    expect(result.success).toBe(false)
+    expect(stripe.checkout.sessions.create).not.toHaveBeenCalled()
+  })
+
+  it('returns { success: false } when getCurrentUser returns null (unauthenticated)', async () => {
+    vi.mocked(session.getCurrentUser).mockResolvedValue(null)
+
+    const result = await createCheckoutSession(CHECKOUT_INPUT)
+
+    expect(result.success).toBe(false)
+    expect(stripe.checkout.sessions.create).not.toHaveBeenCalled()
+  })
+
+  it('returns { success: true, data: { url } } on the happy path', async () => {
+    const result = await createCheckoutSession(CHECKOUT_INPUT)
+
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.url).toBe('https://checkout.stripe.com/test_session')
+    }
+    expect(stripe.checkout.sessions.create).toHaveBeenCalledOnce()
+  })
+
+  it('returns { success: false } when Stripe throws an error', async () => {
+    ;(stripe.checkout.sessions.create as ReturnType<typeof vi.fn>).mockRejectedValue(
+      new Error('Stripe API error'),
+    )
+
+    const result = await createCheckoutSession(CHECKOUT_INPUT)
+
+    expect(result.success).toBe(false)
+  })
+
+  it('returns { success: false } when Stripe returns a session with no URL', async () => {
+    // Exercises the `if (!session.url)` guard — Stripe hosted checkout should always
+    // return a URL, but the guard exists for resilience.
+    ;(stripe.checkout.sessions.create as ReturnType<typeof vi.fn>).mockResolvedValue({
+      url: null,
+    })
+
+    const result = await createCheckoutSession(CHECKOUT_INPUT)
+
+    expect(result.success).toBe(false)
+  })
+
+  it('builds locale-aware success_url and cancel_url using the input locale', async () => {
+    await createCheckoutSession({ tier: 'express', locale: 'fr' })
+
+    const [call] = vi.mocked(stripe.checkout.sessions.create).mock.calls
+    expect(call![0].success_url).toContain('/fr/dashboard')
+    expect(call![0].cancel_url).toContain('/fr/pricing')
+  })
+
+  it('includes userId and tier in session metadata — no fiscal_rep_renewal type', async () => {
+    await createCheckoutSession(CHECKOUT_INPUT)
+
+    const [call] = vi.mocked(stripe.checkout.sessions.create).mock.calls
+    expect(call![0].metadata).toEqual({
+      userId: USER.id,
+      tier: 'standard',
+    })
+    // createCheckoutSession metadata must NOT include the renewal type marker
+    expect(call![0].metadata).not.toHaveProperty('type')
   })
 })
 

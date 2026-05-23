@@ -18,6 +18,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Loader2 } from 'lucide-react'
+import PasswordInput from '@/components/auth/PasswordInput'
 
 interface Props {
   redirectTo?: string
@@ -99,8 +101,7 @@ export default function SignInForm({ redirectTo, initialError }: Props) {
                 {t('password')}
               </FormLabel>
               <FormControl>
-                <Input
-                  type="password"
+                <PasswordInput
                   autoComplete="current-password"
                   className="rounded-[length:var(--radius-md)] border-border-default focus:border-brand-primary"
                   {...field}
@@ -115,12 +116,20 @@ export default function SignInForm({ redirectTo, initialError }: Props) {
           <p className="text-[length:var(--text-sm)] text-error">{serverError}</p>
         )}
 
+        {/* Show spinner + loading label while the server action is in-flight */}
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
           className="w-full mt-[length:var(--space-6)] bg-brand-primary text-on-accent font-[number:var(--font-semibold)]"
         >
-          {t('submit')}
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="animate-spin h-4 w-4" />
+              {t('submitting')}
+            </>
+          ) : (
+            t('submit')
+          )}
         </Button>
       </form>
 

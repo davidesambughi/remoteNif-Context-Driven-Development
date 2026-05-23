@@ -9,6 +9,8 @@ interface OrderDetailHeaderProps {
 
 export async function OrderDetailHeader({ order }: OrderDetailHeaderProps) {
   const t = await getTranslations('admin.detail')
+  // Separate namespace for status/tier labels shared with the admin list page
+  const tAdmin = await getTranslations('admin')
 
   const statusColors: Record<string, string> = {
     documents_pending: 'bg-warning-subtle text-warning border-warning',
@@ -32,11 +34,11 @@ export async function OrderDetailHeader({ order }: OrderDetailHeaderProps) {
             <h1 className="text-xl font-bold text-[var(--text-primary)]">
               {order.fullName || 'Unnamed Customer'}
             </h1>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${tierColors[order.tier]}`}>
-              {order.tier.toUpperCase()}
+            <span className={`px-2 py-0.5 rounded-full text-2xs font-bold uppercase tracking-wider ${tierColors[order.tier]}`}>
+              {tAdmin(`tiers.${order.tier}`).toUpperCase()}
             </span>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusColors[order.status]}`}>
-              {order.status.replace(/_/g, ' ')}
+            <span className={`px-2 py-0.5 rounded-full text-2xs font-bold uppercase tracking-wider border ${statusColors[order.status]}`}>
+              {tAdmin(`statuses.${order.status}`)}
             </span>
           </div>
           <div className="text-right">

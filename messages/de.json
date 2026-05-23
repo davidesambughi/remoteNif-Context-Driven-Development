@@ -24,6 +24,7 @@
       "email": "E-Mail-Adresse",
       "password": "Passwort",
       "submit": "Anmelden",
+      "submitting": "Signing in…",
       "forgotPassword": "Passwort vergessen?",
       "noAccount": "Noch kein Konto?",
       "signUpLink": "Registrieren",
@@ -38,12 +39,13 @@
       "email": "E-Mail-Adresse",
       "password": "Passwort",
       "submit": "Konto erstellen",
+      "submitting": "Creating account…",
       "hasAccount": "Bereits ein Konto?",
       "signInLink": "Anmelden",
       "errors": {
         "emailInUse": "Ein Konto mit dieser E-Mail-Adresse existiert bereits.",
         "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-        "emailConfirmationRequired": "E-Mail-Bestätigung erforderlich. Bitte prüfe deinen Posteingang."
+        "emailConfirmationRequired": "Check your email — if you signed up with this address, we've sent a confirmation link."
       }
     },
     "resetPassword": {
@@ -51,6 +53,7 @@
       "description": "Gib deine E-Mail-Adresse ein und wir senden dir einen Reset-Link.",
       "email": "E-Mail-Adresse",
       "submit": "Reset-Link senden",
+      "submitting": "Sending…",
       "backToSignIn": "Zurück zur Anmeldung",
       "successMessage": "Wenn für diese E-Mail-Adresse ein Konto existiert, erhältst du in Kürze einen Reset-Link.",
       "errors": {
@@ -62,6 +65,7 @@
       "password": "Neues Passwort",
       "confirmPassword": "Neues Passwort bestätigen",
       "submit": "Passwort aktualisieren",
+      "submitting": "Updating password…",
       "errors": {
         "passwordMismatch": "Passwörter stimmen nicht überein",
         "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
@@ -188,6 +192,7 @@
       "buttonLabel": "Preise ansehen & starten"
     },
     "timeline": {
+      "payment": "Payment",
       "upload": "Hochladen",
       "review": "Prüfung",
       "approved": "Genehmigt",
@@ -312,7 +317,7 @@
       "pendingReview": "In Prüfung",
       "stillReviewing": "Wird noch geprüft… das dauert länger als gewöhnlich.",
       "approved": "Genehmigt",
-      "manualReview": "Unser Team wird Ihr Dokument innerhalb von 4 Stunden prüfen"
+      "manualReview": "Our team has been notified and will review your document manually."
     },
     "flagReasons": {
       "passport_expired": "Ihr Reisepass ist abgelaufen. Bitte laden Sie einen gültigen Reisepass hoch.",

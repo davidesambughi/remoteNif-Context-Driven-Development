@@ -24,6 +24,7 @@
       "email": "Adresse e-mail",
       "password": "Mot de passe",
       "submit": "Se connecter",
+      "submitting": "Signing in…",
       "forgotPassword": "Mot de passe oublié ?",
       "noAccount": "Pas encore de compte ?",
       "signUpLink": "S'inscrire",
@@ -38,12 +39,13 @@
       "email": "Adresse e-mail",
       "password": "Mot de passe",
       "submit": "Créer un compte",
+      "submitting": "Creating account…",
       "hasAccount": "Déjà un compte ?",
       "signInLink": "Se connecter",
       "errors": {
         "emailInUse": "Un compte avec cette adresse e-mail existe déjà.",
         "generic": "Une erreur est survenue. Veuillez réessayer.",
-        "emailConfirmationRequired": "Une confirmation par e-mail est requise. Veuillez vérifier votre boîte de réception."
+        "emailConfirmationRequired": "Check your email — if you signed up with this address, we've sent a confirmation link."
       }
     },
     "resetPassword": {
@@ -51,6 +53,7 @@
       "description": "Saisissez votre e-mail et nous vous enverrons un lien de réinitialisation.",
       "email": "Adresse e-mail",
       "submit": "Envoyer le lien de réinitialisation",
+      "submitting": "Sending…",
       "backToSignIn": "Retour à la connexion",
       "successMessage": "Si un compte existe pour cet e-mail, vous recevrez un lien de réinitialisation sous peu.",
       "errors": {
@@ -62,6 +65,7 @@
       "password": "Nouveau mot de passe",
       "confirmPassword": "Confirmer le nouveau mot de passe",
       "submit": "Mettre à jour le mot de passe",
+      "submitting": "Updating password…",
       "errors": {
         "passwordMismatch": "Les mots de passe ne correspondent pas",
         "generic": "Une erreur est survenue. Veuillez réessayer."
@@ -188,6 +192,7 @@
       "buttonLabel": "Voir les tarifs et commencer"
     },
     "timeline": {
+      "payment": "Payment",
       "upload": "Téléverser",
       "review": "Révision",
       "approved": "Approuvé",
@@ -312,7 +317,7 @@
       "pendingReview": "En cours d'examen",
       "stillReviewing": "Examen en cours… cela prend plus de temps que d'habitude.",
       "approved": "Approuvé",
-      "manualReview": "Notre équipe examinera votre document dans les 4 heures"
+      "manualReview": "Our team has been notified and will review your document manually."
     },
     "flagReasons": {
       "passport_expired": "Votre passeport est expiré. Veuillez téléverser un passeport valide.",

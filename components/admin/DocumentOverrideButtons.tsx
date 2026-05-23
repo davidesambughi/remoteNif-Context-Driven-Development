@@ -105,11 +105,11 @@ export function DocumentOverrideButtons({ document, orderId }: DocumentOverrideB
               {t('flagConfirm')}
             </Button>
           </div>
-          {error && <p className="text-error text-[10px]">{error}</p>}
+          {error && <p className="text-error text-2xs">{error}</p>}
         </div>
       )}
 
-      {error && !isFlagging && <p className="text-error text-[10px]">{error}</p>}
+      {error && !isFlagging && <p className="text-error text-2xs">{error}</p>}
     </div>
   )
 }
