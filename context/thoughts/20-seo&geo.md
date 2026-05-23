@@ -1,4 +1,4 @@
-20 — SEO & Metadata (Updated 2026)
+20 — SEO & Metadata (Updated 2026) - 
 Implement robust, dynamic metadata management, technical SEO foundations, and AI-readiness optimizations to improve search visibility, social sharing, rich results, and discovery by both traditional engines and LLMs/AI systems.
 Core Goals:
 

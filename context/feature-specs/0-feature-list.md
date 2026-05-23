@@ -763,6 +763,18 @@ Notes:
 Depends on: 18b (all pages must exist to write meaningful metadata).
 
 ---
+## 20 — SEO & Metadata
+
+Add per-page metadata, structured data, sitemap, and robots.txt.
+
+Done when:
+
+- Every public page has a `title` and `description` in the root language (English).
+- Open Graph tags are present on all public-facing pages.
+- JSON-LD structured data is added where relevant (homepage, pricing page).
+- `sitemap.ts` and `robots.ts` are generated dynamically.
+- Canonical URLs are correct across all locales.
+- `metadataBase` resolves correctly in production."
 
 ## 21 — UI Polish & High Fidelity
 
