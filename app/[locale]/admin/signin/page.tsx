@@ -1,7 +1,14 @@
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import AuthCard from '@/components/auth/AuthCard'
 import InternalSignInForm from '@/components/auth/InternalSignInForm'
 import { adminSignIn } from '@/app/actions/auth'
+
+// Admin sign-in is not under the (panel) layout, so noindex is set here directly.
+export const metadata: Metadata = {
+  title: 'Admin Sign In',
+  robots: { index: false, follow: false },
+}
 
 // Admin sign-in — URL: /admin/signin
 // No shared auth layout — renders its own full-page shell so admin routes can have their own layout later.

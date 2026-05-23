@@ -1,8 +1,52 @@
 import { getTranslations } from 'next-intl/server'
+import type { Metadata } from 'next'
 import { ScanSearch, UserCheck, Mail } from 'lucide-react'
 import { getCurrentUser } from '@/lib/auth/session'
 import { TIERS } from '@/lib/pricing'
 import { TierCard } from '@/components/marketing/TierCard'
+import type { Locale } from '@/i18n/routing'
+import { buildAlternates } from '@/lib/seo'
+import { JsonLd } from '@/components/shared/JsonLd'
+import { buildProductSchemas } from '@/lib/jsonld'
+import { env } from '@/lib/env'
+
+// Per-page metadata — distinct from homepage to avoid duplicate titles in Google Search.
+// Canonical + hreflang cover all four locale variants (/pricing, /fr/pricing, etc.).
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const { canonical, languages } = buildAlternates(locale, '/pricing')
+
+  return {
+    // ── 20a: canonical + hreflang ──────────────────────────────────────
+    title: 'Pricing — NIF Application Plans',
+    description:
+      'Compare Essential (€79), Standard (€129), and Express (€179) NIF application plans. ' +
+      'All include AI document review and admin verification. Choose the speed you need.',
+    alternates: { canonical, languages },
+
+    // ── 20b: Open Graph + Twitter Card ────────────────────────────────
+    // og:image is auto-registered by pricing/opengraph-image.tsx — no images field here.
+    openGraph: {
+      title: 'NIF Application Plans — RemoteNIF',
+      description:
+        'Compare Essential (€79), Standard (€129), and Express (€179) plans. ' +
+        'All include AI document review and admin verification.',
+      url: canonical,
+      siteName: 'RemoteNIF',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'NIF Application Plans — RemoteNIF',
+      description:
+        'Compare Essential (€79), Standard (€129), and Express (€179) plans. AI document review included.',
+    },
+  }
+}
 
 // Pricing page — server-rendered, no auth required.
 // Checks session only to decide the CTA destination (signup vs dashboard).
@@ -12,10 +56,14 @@ export default async function PricingPage() {
     getCurrentUser(),
   ])
 
+  // Strip trailing slash — schema URLs must be clean (e.g. "https://remotenif.com")
+  const baseUrl = env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')
+
   // Unauthenticated users go to signup; authenticated users go straight to dashboard
   const ctaBase = user ? '/dashboard' : '/signup'
 
   return (
+    <>
     <div className="bg-[var(--bg-base)] pb-[length:var(--space-16)]">
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
@@ -139,5 +187,13 @@ export default async function PricingPage() {
       </div>
 
     </div>
+
+    {/* ── 20c: Product JSON-LD — one schema per pricing tier.
+         Prices are derived from lib/pricing.ts TIERS to stay in sync automatically.
+         Placed after the visible pricing UI so the schema sits near the content it describes. */}
+    {buildProductSchemas(baseUrl).map((schema, i) => (
+      <JsonLd key={i} data={schema} />
+    ))}
+    </>
   )
 }

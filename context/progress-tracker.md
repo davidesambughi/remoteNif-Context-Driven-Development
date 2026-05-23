@@ -4,30 +4,30 @@
 
 ## Current Phase
 
-Active development. Features 01–18b complete. Feature 19 in progress (19a, 19b, 19c, 19d done).
+Active development. Features 01–19 complete. Features 20a–20c complete.
 
 ---
 
 ## Current Goal
 
-Feature 19 — UX Gap Fixes (see `context/feature-specs/` and `current-issues/`).
+Feature 20 — SEO (20a–20c done, 20d Technical Routing & GEO next).
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
 ---
 
-## Handoff Note — Feature 18b complete
+## Handoff Note — Features 20a–20c complete
 
-**Feature 18b — Renewal Reminder Emails & Dashboard Banner** — done. See Completed section for full detail.
+**Feature 20c — JSON-LD Structured Data** — done. See Completed section for full detail.
 
 **Key context for next session:**
-- `CRON_SECRET` env var must be set in Vercel before the cron route is useful. Add to `.env.local` for local testing.
-- The Vercel cron schedule (`vercel.json`) is tracked as Feature 22 (post-launch) — do not implement now.
-- Deduplication is a known limitation in the cron route (documented in-code comment) — acceptable at current scale.
-- `RenewalBanner` is a Server Component — do not add `'use client'` to it.
-- Test ORDER_IDs must be valid UUID v4 (Zod v4 enforces version bits) — use `00000000-0000-4000-8000-000000000001` as the pattern.
+- Font is at `public/fonts/Inter-Bold.woff` (woff format, not ttf — Satori supports both; woff is what was downloaded).
+- Do NOT add `openGraph.images` to `generateMetadata` on pages that have a co-located `opengraph-image.tsx` — it causes duplicate `og:image` tags.
+- No `twitter-image.tsx` files needed — Twitter falls back to `og:image` and `twitter.card: 'summary_large_image'` is set.
+- **Google deprecated FAQ rich results in May 2026** — `FAQPage` schema kept for AI crawlers only; do not advertise Google rich snippets for FAQ.
+- `JsonLd.tsx` must remain a Server Component — no `"use client"` (Client Components cause hydration duplication).
 
-**Next feature:** 19 — UX Gap Fixes (see `project_ux_gaps.md` memory and any current-issues files).
+**Next feature:** 20d — Technical Routing & GEO (robots.ts, sitemap.ts, llms.txt).
 
 ---
 
@@ -102,6 +102,9 @@ UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at =
 - **Feature 19d — Tests** — `tests/unit/lib/supabase/documents.test.ts` (4 cases: success URL, Supabase error → null, no URL → null, correct bucket name); `tests/unit/actions/checkout.test.ts` extended with 9 `createCheckoutSession` cases (invalid tier, invalid locale, null input, unauthenticated, happy path, Stripe throws, session.url null, locale-aware URLs, metadata shape without renewal type marker). 436 total unit tests passing.
 - **Feature 19d — Admin Storage Utility, Text-2xs Token & Audit Annotations** — `lib/supabase/documents.ts` created with `getSignedDocumentUrl(filePath): Promise<string | null>` (60-min expiry constant, null-on-error); `DocumentReviewCard.tsx` swapped `createClient` + inline `createSignedUrl` for the new utility; `--text-2xs: 0.625rem` added to `globals.css` `:root` block + `--font-size-2xs: var(--text-2xs)` added to `@theme inline` (generates `text-2xs` Tailwind utility); `ui-context.md` Type Scale table updated with `--text-2xs` row; all 12 `text-[10px]` occurrences in 5 admin components (`DocumentReviewCard`, `OrderDetailHeader`, `ApproveOrderSection`, `DocumentOverrideButtons`, `StatusUpdateSection`) replaced with `text-2xs`; `text-[8px]` in `OrderTimeline.tsx` untouched; `OrderDetailHeader.tsx` — added `tAdmin = getTranslations('admin')`, status badge now uses `tAdmin('statuses.*')`, tier badge uses `tAdmin('tiers.*').toUpperCase()` (no more `.replace(/_/g, ' ')`); `StatusUpdateSection.tsx` — added `tAdmin = useTranslations('admin')`, Select options now use `tAdmin('statuses.*')`; `KNOWN LIMITATION` comment added above UUID-fragment render in `DocumentReviewCard.tsx`; empty TODO in `adminUpdateOrderStatus` replaced with `NOTE:` comment explaining the note is audit-logged but not emailed. Quality audit findings 4c, 3c, 3d, 3f, 6b resolved. 423 unit tests passing, build clean.
 - **Feature 19b — Dashboard Timeline & Copy Fixes** — `payment_received` synthetic step prepended to `steps` array in `OrderTimeline.tsx` (always renders completed; `currentStepIndex` for `documents_pending` is now 1, so `index < currentStepIndex` is naturally true for the payment step — no logic change needed); progress-line width formula self-consistent with 6 steps (20% per real status transition); `dashboard.timeline.payment: "Payment"` key added to all 4 locale files; `documents.states.manualReview` value updated to remove the "4 hours" promise in all 4 locale files. 423 unit tests passing, build clean.
+- **Feature 20a — SEO Foundation & Localization** — `lib/seo.ts` created with `buildAlternates(locale, href)` utility (self-referencing canonical + 4-locale hreflang + x-default). `generateMetadata` added to homepage and pricing page. `robots: noindex` added via layout exports to `(auth)`, `(dashboard)`, `admin/(panel)`, `(operator)`. Standalone `admin/signin` and `operator/signin` pages get individual `noindex` + titles. English-only titles; translated metadata deferred to Feature 21. Build clean.
+- **Feature 20b — Social Graph & Visual Discovery** — `lib/og.ts` created (shared OG design constants: hex color tokens, 1200×630 size, Inter Bold font config). `public/fonts/Inter-Bold.woff` downloaded from jsDelivr CDN (woff supported by Satori; TTF spec updated to woff in implementation). Homepage OG image at `app/[locale]/(marketing)/opengraph-image.tsx` and pricing OG image at `app/[locale]/(marketing)/pricing/opengraph-image.tsx` — each with distinct headline + subline text, brand blue background, Inter Bold, static generation via `readFile`. Both pages' `generateMetadata` extended with `openGraph` (title, description, url, siteName, type: 'website') and `twitter` (card: 'summary\_large\_image', title, description) fields. No `openGraph.images` — auto-registered by file convention. No `twitter-image.tsx` — Twitter falls back to `og:image`. Both OG image routes registered at distinct URLs in build output. Build clean.
+- **Feature 20c — JSON-LD Structured Data** — `components/shared/JsonLd.tsx` created (Server Component only, no `"use client"`, sanitizes `<` → `<` for XSS safety). `lib/jsonld.ts` created with 4 pure builder functions: `buildOrganizationSchema`, `buildWebSiteSchema`, `buildProductSchemas` (derives prices from `lib/pricing.ts` TIERS automatically — 79.00/129.00/179.00 EUR), `buildFaqPageSchema` (5 Q&A entries, hardcoded English, comment to keep in sync with `en.json`). Organization + WebSite injected in root `app/layout.tsx` inside `<head>`. FAQPage injected in homepage after `<FAQSection />`. Three Product schemas (one per tier) injected in pricing page after the `</div>` outer wrapper via fragment. Note: Google deprecated FAQ rich results in May 2026 — schema kept for AI crawlers only. TypeScript fix: `TIER_SCHEMA_COPY` typed as `Record<Tier, ...>` (not `Record<string, ...>`) to avoid possible-undefined error on indexed access. Build clean.
 - **Feature 18b — Renewal Reminder Emails & Dashboard Banner** — `RenewalReminderTarget` type + `getOrdersForRenewalReminders` (3-cohort day-window query: 30/15/0 days, gte/lt range on `fiscalRepExpiresAt`, status=delivered, tier IN standard/express, dismissedAt IS NULL) + `dismissFiscalRepForOrder` DB queries; `renewal-reminder.tsx` email template (4 locales × 3 intervals: `30_days`/`15_days`/`expired` — inline styles, regulatory warning block); `send.ts` extended with `renewal_reminder` union member + switch case; `app/api/cron/renewals/route.ts` (Bearer auth via `CRON_SECRET`, processes 3 cohorts serially, per-cohort DB error = log + continue, fire-and-forget `sendEmail`, returns `{ success, processed }`); `dismissFiscalRep` Server Action in `app/actions/orders.ts` (Zod UUID validation, ownership check via `getUserActiveOrder`, sets `fiscalRepDismissedAt`); `DismissRenewalDialog.tsx` client component (shadcn AlertDialog, destructive confirm, `useTransition`); `RenewalBanner.tsx` server component (skips Essential + no-expiry + dismissed + >30 days; warning/error states via semantic tokens `bg-warning-subtle`/`bg-error-subtle`; `<Link>` from `@/i18n/navigation`); dashboard page wired with `RenewalBanner`; settings page wired with recovery link (shown when dismissed + non-Essential); `renewalBanner.*` + `settings.renewFiscalRep` i18n keys in all 4 locale files; Feature 22 (vercel.json cron schedule) added to feature list as post-launch. Tests: `orders.test.ts` (7), `cron-renewals.test.ts` (9), `templates.test.tsx` appended (12 smoke × intervals/locales), `send.test.ts` appended (2 dispatch). Note: test `ORDER_ID` must be valid UUID v4 (`00000000-0000-4000-8000-000000000001`) — Zod v4 enforces version bits. 423 total unit tests passing, build clean.
 
 ---

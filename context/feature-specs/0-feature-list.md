@@ -763,18 +763,92 @@ Notes:
 Depends on: 18b (all pages must exist to write meaningful metadata).
 
 ---
-## 20 — SEO & Metadata
-
-Add per-page metadata, structured data, sitemap, and robots.txt.
-
-Done when:
-
-- Every public page has a `title` and `description` in the root language (English).
-- Open Graph tags are present on all public-facing pages.
-- JSON-LD structured data is added where relevant (homepage, pricing page).
-- `sitemap.ts` and `robots.ts` are generated dynamically.
-- Canonical URLs are correct across all locales.
-- `metadataBase` resolves correctly in production."
+## 20a — SEO Foundation & Localization
+    2
+    3 Establish the core metadata and internationalization tags.
+    4
+    5 Done when:
+    6
+    7 - `metadataBase` is configured correctly in the root layout.
+    8 - Base `title` and `description` are exported across all public pages (Home, Pricing, etc.).
+    9 - Canonical URLs and `hreflang` tags (via Next.js `alternates`) are configured to properly handle the locale
+      routing (en, fr, es, de).
+   10
+   11 Notes:
+   12
+   13 - **Research Requirement:** Before writing the spec or implementing, search online for the latest (2026) Next.js  
+      App Router Metadata API best practices, specifically regarding `hreflang` and `metadataBase` in localized routing 
+      setups.
+   14 - Leverage the Next.js Metadata API heavily. Avoid client-side only metadata.
+   15 - Locale variants of metadata (translated titles/descriptions) are a stretch goal — English is sufficient for     
+      launch, but `hreflang` mapping is critical.
+   16
+   17 Depends on: 18b (all pages must exist to write meaningful metadata).
+   18
+   19 ---
+   20
+   21 ## 20b — Social Graph & Visual Discovery
+   22
+   23 Implement Open Graph and Twitter Card tags to optimize how links appear when shared on social media and messaging 
+      platforms.
+   24
+   25 Done when:
+   26
+   27 - Open Graph tags (`og:title`, `og:description`, `og:image`, `og:url`, `og:type`) and Twitter Card tags are       
+      present on all public-facing pages.
+   28 - The Next.js `opengraph-image.tsx` file (or static OG assets) is implemented to provide a 1200x630 share image.  
+   29 - Social tags correctly reflect the current page and locale.
+   30
+   31 Notes:
+   32
+   33 - **Research Requirement:** Briefly verify current (2026) Next.js dynamic image generation (`ImageResponse`) best 
+      practices or if static OG assets are currently preferred for performance.
+   34
+   35 Depends on: 20a.
+   36
+   37 ---
+   38
+   39 ## 20c — Structured Data (JSON-LD)
+   40
+   41 Implement Schema.org structured data to feed explicit entities to Google's Knowledge Graph and AI search engines. 
+   42
+   43 Done when:
+   44
+   45 - A reusable JSON-LD injection component is created.
+   46 - `Organization` and `WebSite` schemas are injected into the root layout.
+   47 - `Product` schema is injected into the Pricing page.
+   48 - `FAQPage` schema is injected into the Marketing FAQ section.
+   49
+   50 Notes:
+   51
+   52 - **Research Requirement:** Search online for the latest Google Rich Results Schema requirements for 2026
+      (specifically for SaaS/Product and FAQ schemas) to ensure strict compliance.
+   53 - Output using `<script type="application/ld+json">`.
+   54
+   55 Depends on: 20a.
+   56
+   57 ---
+   58
+   59 ## 20d — Technical Routing & GEO (Generative Engine Optimization)
+   60
+   61 Implement technical SEO files and Generative Engine Optimization for AI crawlers.
+   62
+   63 Done when:
+   64
+   65 - `robots.ts` is generated dynamically, including explicit crawl directives for main bots and AI crawlers.        
+   66 - `sitemap.ts` is generated dynamically, ensuring all localized routes are included with accurate `<lastmod>`     
+      properties.
+   67 - `llms.txt` is created at the root, summarizing the site purpose, key pages, and high-value content for LLMs.    
+   68
+   69 Notes:
+   70
+   71 - **Research Requirement:** Search online for the most up-to-date (2026/2027) list of AI crawler User-Agents      
+      (e.g., GPTBot, ClaudeBot, Perplexity, Applebot-Extended) and the absolute latest community standard for the       
+      `llms.txt` file format.
+   72 - `llms.txt` is the standard for Generative Engine Optimization. Ensure it is plain text/markdown and clearly     
+      structured.
+   73
+   74 Depends on: 20a.
 
 ## 21 — UI Polish & High Fidelity
 

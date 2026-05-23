@@ -1,7 +1,13 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/lib/auth/session'
 import { AdminSignOutButton } from '@/components/admin/AdminSignOutButton'
 import { AdminNavLinks } from '@/components/admin/AdminNavLinks'
+
+// Admin panel is an internal tool — suppress indexing across all child routes.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 interface Props {
   children: React.ReactNode

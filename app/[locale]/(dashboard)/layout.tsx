@@ -1,7 +1,13 @@
+import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
 import { redirect } from '@/i18n/navigation'
 import { getCurrentUser } from '@/lib/auth/session'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+
+// Dashboard is authenticated — suppress indexing across all child routes.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 interface Props {
   children: React.ReactNode

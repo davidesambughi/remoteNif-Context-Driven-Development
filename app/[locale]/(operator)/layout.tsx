@@ -1,8 +1,14 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/lib/auth/session'
 import { Toaster } from '@/components/ui/sonner'
 import { OperatorSignOutButton } from '@/components/operator/OperatorSignOutButton'
 import { OperatorNavLinks } from '@/components/operator/OperatorNavLinks'
+
+// Operator panel is an internal tool — suppress indexing across all child routes.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 interface Props {
   children: React.ReactNode
