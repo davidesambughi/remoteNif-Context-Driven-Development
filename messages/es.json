@@ -126,9 +126,9 @@
       "q3": "¿Qué documentos se requieren?",
       "a3": "Necesitas un pasaporte válido y un comprobante de domicilio con fecha de menos de 3 meses (factura de suministros, extracto bancario o contrato de alquiler). No se aceptan facturas de teléfono ni televisión.",
       "q4": "¿Necesito un representante fiscal?",
-      "a4": "Los residentes de fuera de la UE necesitan actualmente un representante fiscal autorizado para solicitar un NIF. Está incluido en los planes Estándar y Express. Los ciudadanos de la UE pueden solicitarlo sin representante usando nuestro plan Esencial.",
-      "q5": "¿Qué cambia en julio de 2026?",
-      "a5": "La ley portuguesa cambia el 1 de julio de 2026: los residentes de fuera de la UE sin obligaciones fiscales en Portugal ya no estarán legalmente obligados a nombrar un representante fiscal. Actualizaremos nuestros planes y precios en consecuencia. Los clientes Estándar y Express serán notificados con antelación."
+      "a4": "Depende de tu situación en Portugal. Bajo el Decreto-Ley 44/2022, los residentes de la UE/EEE nunca están obligados a nombrar un representante fiscal. Los residentes de fuera de la UE/EEE solo lo necesitan si tienen obligaciones fiscales portuguesas activas — como propiedad inmobiliaria, ingresos por alquiler o actividad empresarial en Portugal. Nuestro plan Esencial es para cualquier persona sin necesidad de representación fiscal, independientemente de su nacionalidad. Los planes Estándar y Express incluyen 12 meses de representación fiscal autorizada.",
+      "q5": "He oído que la ley sobre el representante fiscal cambió — ¿cuál es la normativa actual?",
+      "a5": "La ley ya cambió en julio de 2022. El Decreto-Ley 44/2022 eliminó la obligación general para los residentes de fuera de la UE/EEE de nombrar un representante fiscal. Hoy, la obligación solo se aplica a los residentes no pertenecientes a la UE/EEE con obligaciones fiscales portuguesas activas. Si no tienes propiedades, ingresos ni actividad empresarial en Portugal, no estás legalmente obligado a nombrar uno. Algunos servicios todavía describen esto como un requisito universal — eso no ha sido correcto desde 2022."
     }
   },
   "pricing": {

@@ -126,9 +126,9 @@
       "q3": "Quels documents sont requis ?",
       "a3": "Vous avez besoin d'un passeport valide et d'un justificatif de domicile datant de moins de 3 mois (facture d'énergie, relevé bancaire ou contrat de location). Les factures de téléphone et de télévision ne sont pas acceptées.",
       "q4": "Ai-je besoin d'un représentant fiscal ?",
-      "a4": "Les résidents hors UE ont actuellement besoin d'un représentant fiscal agréé pour demander un NIF. Il est inclus dans les forfaits Standard et Express. Les citoyens de l'UE peuvent faire la demande sans représentant via notre forfait Essentiel.",
-      "q5": "Qu'est-ce qui change en juillet 2026 ?",
-      "a5": "La loi portugaise change le 1er juillet 2026 : les résidents hors UE sans obligations fiscales au Portugal ne seront plus légalement tenus de nommer un représentant fiscal. Nous mettrons à jour nos forfaits et tarifs en conséquence. Les clients Standard et Express seront prévenus à l'avance."
+      "a4": "Cela dépend de votre situation au Portugal. En vertu du Décret-Loi 44/2022, les résidents de l'UE/EEE ne sont jamais tenus de nommer un représentant fiscal. Les résidents hors UE/EEE n'en ont besoin que s'ils ont des obligations fiscales portugaises actives — telles que la propriété immobilière, des revenus locatifs ou une activité commerciale au Portugal. Notre forfait Essentiel s'adresse à toute personne sans besoin de représentation fiscale, quelle que soit sa nationalité. Les forfaits Standard et Express incluent 12 mois de représentation fiscale agréée.",
+      "q5": "J'ai entendu dire que la loi sur le représentant fiscal a changé — quelle est la règle actuelle ?",
+      "a5": "La loi a déjà changé en juillet 2022. Le Décret-Loi 44/2022 a supprimé l'obligation générale pour les résidents hors UE/EEE de nommer un représentant fiscal. Aujourd'hui, cette obligation ne s'applique qu'aux résidents hors UE/EEE ayant des obligations fiscales portugaises actives. Si vous n'avez aucune propriété, revenu ou activité commerciale au Portugal, vous n'êtes légalement pas tenu d'en nommer un. Certains services décrivent encore cette obligation comme universelle — ce n'est plus exact depuis 2022."
     }
   },
   "pricing": {

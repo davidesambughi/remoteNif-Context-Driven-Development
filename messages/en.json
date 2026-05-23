@@ -126,9 +126,9 @@
       "q3": "What documents are required?",
       "a3": "You need a valid passport and proof of address dated within the last 3 months (utility bill, bank statement, or rental agreement). Phone and TV bills are not accepted.",
       "q4": "Do I need a fiscal representative?",
-      "a4": "Non-EU residents currently require a licensed fiscal representative to apply for a NIF. This is included in the Standard and Express tiers. EU citizens can apply without one using our Essential tier.",
-      "q5": "What changes in July 2026?",
-      "a5": "Portugal's law changes on July 1, 2026: non-EU residents with no Portuguese tax obligations will no longer be legally required to appoint a fiscal representative. We will update our tiers and pricing to reflect this. Standard and Express customers will be notified in advance."
+      "a4": "It depends on your situation in Portugal. Under Decree-Law 44/2022, EU/EEA residents are never required to appoint a fiscal representative. Non-EU/EEA residents only need one if they have active Portuguese tax obligations — such as property ownership, rental income, or business activity in Portugal. Our Essential tier is for anyone without fiscal representation needs, regardless of nationality. Standard and Express include 12 months of licensed fiscal representation.",
+      "q5": "I've heard the fiscal representative law changed — what's the current rule?",
+      "a5": "The law already changed in July 2022. Decree-Law 44/2022 removed the blanket requirement for non-EU/EEA residents to appoint a fiscal representative. Today, the requirement applies only to non-EU/EEA residents with active Portuguese tax obligations. If you have no property, income, or business activity in Portugal, you are not legally required to appoint one. Some services still describe it as a universal requirement — that has not been accurate since 2022."
     }
   },
   "pricing": {

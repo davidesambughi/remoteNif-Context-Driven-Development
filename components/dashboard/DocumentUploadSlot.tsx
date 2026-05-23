@@ -16,7 +16,7 @@ import { createUploadSignedUrl, uploadDocument, reviewDocument } from '@/app/act
 // ---------------------------------------------------------------------------
 
 type DocumentType = 'passport' | 'proof_of_address' | 'signed_poa'
-type SlotStatus = 'idle' | 'uploading' | 'pending_review' | 'approved' | 'flagged' | 'manual_review'
+export type SlotStatus = 'idle' | 'uploading' | 'pending_review' | 'approved' | 'flagged' | 'manual_review'
 type DisabledReason = 'details' | 'poa' | null
 
 interface DocumentUploadSlotProps {

@@ -1,4 +1,5 @@
-'use server'
+// Server-side utility — called from Server Actions and API routes, not a Server Action itself.
+import type { ReactElement } from 'react'
 
 import { resendClient } from './resend'
 import { env } from '@/lib/env'
@@ -79,9 +80,8 @@ export async function sendEmail(
     const dashboardUrl = `${env.NEXT_PUBLIC_APP_URL}/${locale}/dashboard`
 
     let subject: string
-    // Typed as unknown so send.ts stays .ts (no JSX); Resend accepts ReactElement via react: prop
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let reactElement: any
+    // ReactElement: send.ts stays .ts (no JSX); Resend accepts ReactElement via react: prop
+    let reactElement: ReactElement
 
     switch (payload.template) {
       case 'order_confirmation': {

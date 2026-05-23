@@ -126,9 +126,9 @@
       "q3": "Welche Dokumente werden benötigt?",
       "a3": "Sie benötigen einen gültigen Reisepass und einen Adressnachweis, der nicht älter als 3 Monate ist (Stromrechnung, Kontoauszug oder Mietvertrag). Telefon- und TV-Rechnungen werden nicht akzeptiert.",
       "q4": "Brauche ich einen steuerlichen Vertreter?",
-      "a4": "Nicht-EU-Bürger benötigen derzeit einen zugelassenen steuerlichen Vertreter, um einen NIF zu beantragen. Dieser ist in den Standard- und Express-Paketen enthalten. EU-Bürger können ihn ohne Vertreter über unser Essential-Paket beantragen.",
-      "q5": "Was ändert sich im Juli 2026?",
-      "a5": "Das portugiesische Gesetz ändert sich am 1. Juli 2026: Nicht-EU-Bürger ohne portugiesische Steuerpflichten sind nicht mehr gesetzlich verpflichtet, einen steuerlichen Vertreter zu benennen. Wir werden unsere Pakete und Preise entsprechend aktualisieren. Standard- und Express-Kunden werden im Voraus informiert."
+      "a4": "Das hängt von Ihrer Situation in Portugal ab. Gemäß Gesetzesdekret 44/2022 sind EU/EWR-Bürger niemals verpflichtet, einen steuerlichen Vertreter zu benennen. Nicht-EU/EWR-Bürger benötigen nur dann einen, wenn sie aktive portugiesische Steuerpflichten haben — wie Immobilieneigentum, Mieteinnahmen oder Geschäftstätigkeit in Portugal. Unser Essential-Paket richtet sich an alle ohne Bedarf an steuerlicher Vertretung, unabhängig von der Nationalität. Standard und Express beinhalten 12 Monate lizenzierte steuerliche Vertretung.",
+      "q5": "Ich habe gehört, dass das Gesetz zur steuerlichen Vertretung geändert wurde — was gilt derzeit?",
+      "a5": "Das Gesetz wurde bereits im Juli 2022 geändert. Gesetzesdekret 44/2022 hat die pauschale Pflicht für Nicht-EU/EWR-Bürger zur Benennung eines steuerlichen Vertreters abgeschafft. Heute gilt die Pflicht nur noch für Nicht-EU/EWR-Bürger mit aktiven portugiesischen Steuerpflichten. Wenn Sie keine Immobilien, Einkünfte oder Geschäftstätigkeiten in Portugal haben, sind Sie gesetzlich nicht verpflichtet, einen zu benennen. Einige Dienste beschreiben dies noch als universelle Anforderung — das ist seit 2022 nicht mehr korrekt."
     }
   },
   "pricing": {

@@ -31,18 +31,12 @@ import type { PersonalDetailsData } from '@/lib/validations/orders'
 import { savePersonalDetails, generatePoa } from '@/app/actions/orders'
 import { COUNTRIES } from '@/lib/utils/countries'
 import { DocumentUploadSlot } from '@/components/dashboard/DocumentUploadSlot'
+import type { SlotStatus } from '@/components/dashboard/DocumentUploadSlot'
+import type { SelectDocument } from '@/lib/db/schema'
 
-// Minimal shape of a document record needed by this component — avoids importing
-// the full DB type into a client component.
-interface DocumentRecord {
-  id: string
-  type: 'passport' | 'proof_of_address' | 'signed_poa'
-  aiReviewStatus: 'pending' | 'clear' | 'flagged' | 'error' | 'manual_review' | null
-  aiReviewReason: string | null
-  approved: boolean
-}
-
-type SlotStatus = 'idle' | 'uploading' | 'pending_review' | 'approved' | 'flagged' | 'manual_review'
+// Exactly the fields this component needs — narrows SelectDocument to avoid
+// pulling the full DB type into a client component's prop contract.
+type DocumentRecord = Pick<SelectDocument, 'id' | 'type' | 'aiReviewStatus' | 'aiReviewReason' | 'approved'>
 
 // Derives the initial slot display status from a document record fetched from DB.
 function deriveSlotStatus(doc: DocumentRecord | undefined): SlotStatus {

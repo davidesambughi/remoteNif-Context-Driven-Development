@@ -63,8 +63,9 @@ export async function createCheckoutSession(
       },
     })
 
+    // Guard: Stripe always returns a URL for hosted checkout; if missing, treat as failure
     if (!session.url) {
-      throw new Error('No session URL returned from Stripe')
+      return { success: false, error: 'checkout.errors.generic' }
     }
 
     // 5. Return redirect URL to the client
@@ -138,8 +139,9 @@ export async function createRenewalCheckoutSession(
       },
     })
 
+    // Guard: Stripe always returns a URL for hosted checkout; if missing, treat as failure
     if (!session.url) {
-      throw new Error('No URL returned from Stripe')
+      return { success: false, error: 'renewal.errors.generic' }
     }
 
     return { success: true, data: { url: session.url } }
