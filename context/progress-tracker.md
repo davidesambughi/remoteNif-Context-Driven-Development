@@ -4,30 +4,33 @@
 
 ## Current Phase
 
-Active development. Features 01–19 complete. Features 20a–20c complete.
+Active development. Features 01–19 complete. Feature 20 complete.
 
 ---
 
 ## Current Goal
 
-Feature 20 — SEO (20a–20c done, 20d Technical Routing & GEO next).
+Feature 21 — Final Polish & Launch Prep (21a Production Smoke Test next).
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
 
 ---
 
-## Handoff Note — Features 20a–20c complete
+## Handoff Note — Feature 20 complete
 
-**Feature 20c — JSON-LD Structured Data** — done. See Completed section for full detail.
+**Feature 20 — SEO & GEO Routing** — done.
+- 20a: Foundation & Alternates (robots: noindex for sensitive pages, buildAlternates utility).
+- 20b: Social Graph (OG/Twitter cards, dynamic opengraph-image.tsx with Satori).
+- 20c: JSON-LD (Organization, WebSite, Product, FAQPage schemas).
+- 20d: Technical Routing (robots.ts with crawler blocks, sitemap.ts with 8 entries + alternates, llms.txt following llmstxt.org spec).
 
 **Key context for next session:**
-- Font is at `public/fonts/Inter-Bold.woff` (woff format, not ttf — Satori supports both; woff is what was downloaded).
-- Do NOT add `openGraph.images` to `generateMetadata` on pages that have a co-located `opengraph-image.tsx` — it causes duplicate `og:image` tags.
-- No `twitter-image.tsx` files needed — Twitter falls back to `og:image` and `twitter.card: 'summary_large_image'` is set.
-- **Google deprecated FAQ rich results in May 2026** — `FAQPage` schema kept for AI crawlers only; do not advertise Google rich snippets for FAQ.
-- `JsonLd.tsx` must remain a Server Component — no `"use client"` (Client Components cause hydration duplication).
+- Build passed: `robots.txt` and `sitemap.xml` are static.
+- CCBot and Bytespider are blocked in `robots.ts`.
+- `llms.txt` is static in `public/`.
+- Ready for final smoke tests and launch.
 
-**Next feature:** 20d — Technical Routing & GEO (robots.ts, sitemap.ts, llms.txt).
+**Next feature:** 21a — Production Smoke Test (verify all marketing, auth, and dashboard routes in production-like environment).
 
 ---
 
@@ -73,14 +76,14 @@ UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at =
 - **Feature 11a — AI Document Review** — Groq + Llama 4 Scout, PDF text extraction via `pdfjs-dist`, 12 flag reason keys, escalation logic. Windows fixes: `serverExternalPackages`, legacy ESM import, `file://` worker path.
 - **Feature 11b — Manual Review Notifications** — admin email templates (`admin_document_escalated`, `admin_order_ready`), `ADMIN_EMAIL` env var.
 - **Feature 12a — Customer Emails** — `react-email` v6, `sendEmail` fire-and-forget, order confirmation email in 4 locales.
+- **Feature 12b-T — Integration Tests** — 3 test files, 23 tests, 0 failures. Docker Postgres on port 5433, psql-based migration script (drizzle-kit hangs on Windows). Covers: all 6 query functions (getOrderForUser, createDocumentRecord, supersedePreviousDocuments, getActiveDocumentsForOrder, markOrderDocumentsUnderReview, getOrderBasicInfo), uploadDocument (happy path + supersede correctness), reviewDocument all-approved path (real DB write chain), handleCheckoutSessionCompleted (idempotency + missing metadata). Run with `npm run test:integration` (requires Docker running).
+- **Feature 12a-T — Unit Test Coverage** — 198 tests, 0 failures. Covers: all 5 admin actions, `createUploadSignedUrl`, `uploadDocument`, `reviewDocument` (5 branches A–E), `handleCheckoutSessionCompleted` (idempotency + email routing), `sendEmail` dispatch (all 5 templates), all 5 email template smoke tests in EN/FR/ES/DE.
 - **Feature 13a — Admin Panel: Order List** — `proxy.ts` `AUTH_PAGES` exclusion for `/admin/signin`, `getAdminOrderList` query (users join, filters, SLA sort), admin shell layout with role check, `OrderFilters`, `SlaCountdown`, `OrderRow`.
 - **Design Token Cleanup** — full audit; `bg-[var(--bg-base)]` kept as raw var (avoids `text-base` collision).
 - **Color & UX Enhancement Pass** — status-surface pattern, brand anchor pattern, subtle border tints added to `globals.css`.
 - **Hotfix — FK Cascade** — `.onDelete('cascade')` on all FK refs, migration `0002` applied.
 - **Hotfix — DOB Year Digit Limit** — `max="9999-12-31"` on date inputs.
 - **Testing features scoped** — `12a-T` (vi.mock unit tests), `12b-T` (DB integration), `21b` (Playwright E2E) added to feature list.
-- **Feature 12b-T — Integration Tests** — 3 test files, 23 tests, 0 failures. Docker Postgres on port 5433, psql-based migration script (drizzle-kit hangs on Windows). Covers: all 6 query functions (getOrderForUser, createDocumentRecord, supersedePreviousDocuments, getActiveDocumentsForOrder, markOrderDocumentsUnderReview, getOrderBasicInfo), uploadDocument (happy path + supersede correctness), reviewDocument all-approved path (real DB write chain), handleCheckoutSessionCompleted (idempotency + missing metadata). Run with `npm run test:integration` (requires Docker running).
-- **Feature 12a-T — Unit Test Coverage** — 198 tests, 0 failures. Covers: all 5 admin actions, `createUploadSignedUrl`, `uploadDocument`, `reviewDocument` (5 branches A–E), `handleCheckoutSessionCompleted` (idempotency + email routing), `sendEmail` dispatch (all 5 templates), all 5 email template smoke tests in EN/FR/ES/DE.
 - **Feature 13b — Admin Panel: Order Detail** — `getAdminOrderDetail` query (orders + users + payments + documents join), all 5 admin actions (`adminApproveDocument`, `adminFlagDocument`, `adminApproveOrder`, `adminUpdateOrderStatus`, `adminResendEmail`), `OrderDetailHeader`, `DocumentReviewCard`, `ApproveOrderSection` (inline confirmation, no `window.confirm`), `StatusUpdateSection`, `EmailResendSection`, `DocumentOverrideButtons`. Full EN/FR/ES/DE translations under `admin.detail` namespace.
 - **Quality Audit + Red Fixes** — full audit documented in `context/quality-audit.md`; 3 red violations fixed: (1) duplicate `ActionResult` in `admin.ts` deleted, now imported from `lib/types.ts`; (2) wrong token names (`text-primary`/`text-muted`) corrected to `text-text-primary`/`text-text-muted` in `PersonalDetailsForm.tsx`; (3) Stripe redirect URLs made locale-aware via `locale` field added to `CheckoutSessionSchema` and passed from `CheckoutButton`. 198 unit tests still passing.
 - **Quality Audit — Yellow Fixes (batch 1)** — 4 yellow smells resolved: (1) `ORDER_STATUS_SEQUENCE` constant exported from `lib/db/schema.ts`, replacing hardcoded `statusOrder` arrays in `admin.ts` and `StatusUpdateSection.tsx`; (2) admin filter Zod schema now derives from `orderStatusEnum.enumValues` / `tierEnum.enumValues` instead of duplicating string literals; (3) `DocumentReviewCard.tsx` token syntax unified to shorthand throughout; (4) AI status label casing fixed — consistent Title Case via `aiStatusLabel` map, eliminating the `replace(/_/g,' ')` vs `toUpperCase()` inconsistency. 198 unit tests still passing.
@@ -106,29 +109,4 @@ UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at =
 - **Feature 20b — Social Graph & Visual Discovery** — `lib/og.ts` created (shared OG design constants: hex color tokens, 1200×630 size, Inter Bold font config). `public/fonts/Inter-Bold.woff` downloaded from jsDelivr CDN (woff supported by Satori; TTF spec updated to woff in implementation). Homepage OG image at `app/[locale]/(marketing)/opengraph-image.tsx` and pricing OG image at `app/[locale]/(marketing)/pricing/opengraph-image.tsx` — each with distinct headline + subline text, brand blue background, Inter Bold, static generation via `readFile`. Both pages' `generateMetadata` extended with `openGraph` (title, description, url, siteName, type: 'website') and `twitter` (card: 'summary\_large\_image', title, description) fields. No `openGraph.images` — auto-registered by file convention. No `twitter-image.tsx` — Twitter falls back to `og:image`. Both OG image routes registered at distinct URLs in build output. Build clean.
 - **Feature 20c — JSON-LD Structured Data** — `components/shared/JsonLd.tsx` created (Server Component only, no `"use client"`, sanitizes `<` → `<` for XSS safety). `lib/jsonld.ts` created with 4 pure builder functions: `buildOrganizationSchema`, `buildWebSiteSchema`, `buildProductSchemas` (derives prices from `lib/pricing.ts` TIERS automatically — 79.00/129.00/179.00 EUR), `buildFaqPageSchema` (5 Q&A entries, hardcoded English, comment to keep in sync with `en.json`). Organization + WebSite injected in root `app/layout.tsx` inside `<head>`. FAQPage injected in homepage after `<FAQSection />`. Three Product schemas (one per tier) injected in pricing page after the `</div>` outer wrapper via fragment. Note: Google deprecated FAQ rich results in May 2026 — schema kept for AI crawlers only. TypeScript fix: `TIER_SCHEMA_COPY` typed as `Record<Tier, ...>` (not `Record<string, ...>`) to avoid possible-undefined error on indexed access. Build clean.
 - **Feature 18b — Renewal Reminder Emails & Dashboard Banner** — `RenewalReminderTarget` type + `getOrdersForRenewalReminders` (3-cohort day-window query: 30/15/0 days, gte/lt range on `fiscalRepExpiresAt`, status=delivered, tier IN standard/express, dismissedAt IS NULL) + `dismissFiscalRepForOrder` DB queries; `renewal-reminder.tsx` email template (4 locales × 3 intervals: `30_days`/`15_days`/`expired` — inline styles, regulatory warning block); `send.ts` extended with `renewal_reminder` union member + switch case; `app/api/cron/renewals/route.ts` (Bearer auth via `CRON_SECRET`, processes 3 cohorts serially, per-cohort DB error = log + continue, fire-and-forget `sendEmail`, returns `{ success, processed }`); `dismissFiscalRep` Server Action in `app/actions/orders.ts` (Zod UUID validation, ownership check via `getUserActiveOrder`, sets `fiscalRepDismissedAt`); `DismissRenewalDialog.tsx` client component (shadcn AlertDialog, destructive confirm, `useTransition`); `RenewalBanner.tsx` server component (skips Essential + no-expiry + dismissed + >30 days; warning/error states via semantic tokens `bg-warning-subtle`/`bg-error-subtle`; `<Link>` from `@/i18n/navigation`); dashboard page wired with `RenewalBanner`; settings page wired with recovery link (shown when dismissed + non-Essential); `renewalBanner.*` + `settings.renewFiscalRep` i18n keys in all 4 locale files; Feature 22 (vercel.json cron schedule) added to feature list as post-launch. Tests: `orders.test.ts` (7), `cron-renewals.test.ts` (9), `templates.test.tsx` appended (12 smoke × intervals/locales), `send.test.ts` appended (2 dispatch). Note: test `ORDER_ID` must be valid UUID v4 (`00000000-0000-4000-8000-000000000001`) — Zod v4 enforces version bits. 423 total unit tests passing, build clean.
-
----
-
-## Upcoming Features
-
-- **Feature 20 — Integration Tests: Admin Queries & Operator Queue** — spec at `context/feature-specs/20-integration-test-admin-operator.md`. Six admin query functions (`getAdminOrderList`, `getAdminOrderDetail`, `adminSetDocumentApproved`, `adminSetDocumentFlagged`, `adminTransitionOrderToApproved`, `adminUpdateOrderStatusQuery`) and `getOperatorQueue` have zero real-DB coverage. Two new test files against Docker Postgres. Not blocking launch but should be done before the first real order is processed.
-- **Feature 21b — E2E Tests (Playwright)** — deferred until UI is complete per user decision.
-- **Feature 22 — Vercel Cron Schedule (`vercel.json`)** — wire up the renewal cron job; post-launch.
-- **Feature 23 — Google OAuth** — not in current scope.
-
----
-
-## Open Questions
-
-- Q4 — SEO content strategy — not blocking launch.
-- Q5 — RESOLVED: `@react-pdf/renderer`, POA copy needs fiscal rep review before launch.
-- Q6 — RESOLVED: `documents` Supabase bucket pre-existed, RLS applied.
-- Q7 — RESOLVED: "Submitted to Finanças" customer email implemented in Feature 14b (`order_submitted_customer` template, fired from `markOrderAsSubmitted`).
-
----
-
-## Architecture Decisions
-
-- Q1: Tier selection and deadline question are one screen — no separate step.
-- Q2: AI document review is async with progressive badge states; 30s timeout → manual review.
-- Q3: Fiscal rep renewal uses a new Stripe Checkout session per email — no stored payment method.
+- **Feature 20d — Technical Routing & GEO** — `app/robots.ts` (crawler blocks for CCBot/Bytespider, sitemap link, explicit disallows for auth/dashboard/admin/operator), `app/sitemap.ts` (8 entries: / and /pricing × 4 locales, full hreflang alternates via `getPathname`), `public/llms.txt` (Markdown per llmstxt.org spec, 3 sections + Optional, hardcoded production URLs). Build clean, `robots.txt` and `sitemap.xml` generated as static routes.

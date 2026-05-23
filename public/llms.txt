@@ -1,0 +1,22 @@
+# RemoteNIF
+
+# See llmstxt.org for the spec this file follows.
+
+> Online Portuguese NIF (Tax Identification Number) application service. Apply fully remotely from anywhere in the world — no trip to Portugal required. Three service tiers with AI document review and human verification.
+
+## Service
+
+- [Homepage](https://remotenif.com/): Service overview, how the process works, and frequently asked questions
+- [Pricing](https://remotenif.com/pricing): Three tiers — Essential (€79, NIF only, 5 business days), Standard (€129, NIF + 12 months fiscal representation, 5 business days), Express (€179, NIF + 12 months fiscal representation, application submitted to Finanças within 48 hours of document approval)
+
+## Key Facts
+
+- A Portuguese NIF (Número de Identificação Fiscal) is required for property purchases, bank account opening, signing contracts, and fulfilling tax obligations in Portugal
+- The entire process is remote — customers never need to visit Portugal
+- Required documents: valid passport and proof of address dated within the last 3 months (utility bill, bank statement, or rental agreement; phone and TV bills not accepted)
+- Fiscal representation law (Decree-Law 44/2022): EU/EEA residents are never required to appoint a fiscal representative. Non-EU/EEA residents only need one if they have active Portuguese tax obligations such as property ownership, rental income, or business activity in Portugal
+- All tiers include AI document review and admin verification
+
+## Optional
+
+- [FAQ](https://remotenif.com/#faq): Detailed answers on processing times, document requirements, and the current fiscal representation rules under Decree-Law 44/2022

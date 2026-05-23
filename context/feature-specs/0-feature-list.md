@@ -879,7 +879,7 @@ Depends on: 20 (all features complete).
 
 ---
 
-## 21b — E2E Tests (Playwright)
+## 22 — E2E Tests (Playwright)
 
 Add end-to-end tests covering the critical user flows once the UI is stable.
 
@@ -908,7 +908,7 @@ Depends on: 21 (all features and polish complete).
 
 ---
 
-## 22 — Cron Schedule Configuration (Post-Launch)
+## 23 — Cron Schedule Configuration (Post-Launch)
 
 Wire up Vercel's cron trigger so the renewal reminder route fires automatically on a daily schedule.
 
