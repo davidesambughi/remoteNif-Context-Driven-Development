@@ -101,7 +101,8 @@
       "stat3Value": "48h",
       "stat3Label": "Option Express",
       "stat4Value": "Zéro",
-      "stat4Label": "Frais cachés"
+      "stat4Label": "Frais cachés",
+      "badge": "Sans frais cachés"
     },
     "howItWorks": {
       "title": "Un Processus Transparent en 3 Étapes",

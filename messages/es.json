@@ -101,7 +101,8 @@
       "stat3Value": "48h",
       "stat3Label": "Opción Express",
       "stat4Value": "Cero",
-      "stat4Label": "Cargos ocultos"
+      "stat4Label": "Cargos ocultos",
+      "badge": "Sin cargos ocultos"
     },
     "howItWorks": {
       "title": "Un Proceso Transparente en 3 Pasos",

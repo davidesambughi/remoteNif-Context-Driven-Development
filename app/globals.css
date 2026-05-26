@@ -32,6 +32,11 @@
   --color-blue-100: oklch(93% 0.04 250);
   --color-indigo-600: oklch(55% 0.18 275);
 
+  /* Warm orange — hero CTA, navbar pill, brand highlights */
+  --color-orange-500: oklch(62% 0.18 42);
+  /* Dim version — hover states, tinted surfaces */
+  --color-orange-100: oklch(95% 0.05 42);
+
   --color-emerald-500: oklch(70% 0.14 165);
   --color-amber-500: oklch(78% 0.13 75);
   --color-rose-600: oklch(62% 0.18 25);
@@ -79,9 +84,24 @@
       primary-dim = muted version for hover states and subtle backgrounds
       secondary   = supporting accents and secondary hierarchy
       ========================================== */
-  --brand-primary: var(--color-blue-600);
-  --brand-primary-dim: var(--color-blue-100);
+  /* Remapped to warm orange — was blue-600/blue-100 */
+  --brand-primary: var(--color-orange-500);
+  --brand-primary-dim: var(--color-orange-100);
   --brand-secondary: var(--color-indigo-600);
+
+  /* ==========================================
+      PHOTO CANVAS
+      Glass surfaces for photo-background pages (marketing hero only).
+      Never use these tokens on app-canvas pages (dashboard, admin, auth).
+      ========================================== */
+  --glass-navbar-bg:      oklch(100% 0 0 / 0.10); /* navbar background */
+  --glass-navbar-border:  oklch(100% 0 0 / 0.20); /* navbar bottom border */
+  --glass-badge-bg:       oklch(100% 0 0 / 0.15); /* badge pill background */
+  --glass-badge-border:   oklch(100% 0 0 / 0.40); /* badge pill border */
+  --glass-separator:      oklch(100% 0 0 / 0.30); /* stats row divider */
+  --glass-overlay:        oklch(0% 0 0 / 0.35);   /* photo darkening gradient start */
+  --glass-text:           oklch(100% 0 0);         /* all text on photo */
+  --glass-text-dim:       oklch(100% 0 0 / 0.80);  /* de-emphasised text on photo */
 
   /* ==========================================
       STATUS
@@ -101,6 +121,9 @@
   --font-sans:
     var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
+  /* Serif — hero headlines only. Loaded via next/font/google in the marketing layout. */
+  --font-serif:
+    var(--font-playfair), Georgia, "Times New Roman", serif;
   --font-mono:
     var(--font-jetbrains-mono), "SFMono-Regular", Menlo, Monaco, Consolas,
     monospace;
@@ -274,8 +297,19 @@
   --color-warning-subtle: var(--status-warning-subtle);
   --color-error-subtle: var(--status-error-subtle);
 
+  /* Photo canvas glass tokens */
+  --color-glass-navbar-bg:     var(--glass-navbar-bg);
+  --color-glass-navbar-border: var(--glass-navbar-border);
+  --color-glass-badge-bg:      var(--glass-badge-bg);
+  --color-glass-badge-border:  var(--glass-badge-border);
+  --color-glass-separator:     var(--glass-separator);
+  --color-glass-overlay:       var(--glass-overlay);
+  --color-glass-text:          var(--glass-text);
+  --color-glass-text-dim:      var(--glass-text-dim);
+
   /* Fonts */
   --font-family-sans: var(--font-sans);
+  --font-family-serif: var(--font-serif);
   --font-family-mono: var(--font-mono);
 
   /* text-2xs utility — generates the text-2xs Tailwind class (10px micro-captions) */

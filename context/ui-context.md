@@ -69,8 +69,8 @@ Surfaces stack from outermost to innermost. Each layer is visually distinct.
 
 | Token | Role | Primitive | Value |
 |-------|------|-----------|-------|
-| `--border-subtle` | Light dividers, section separators | `--color-slate-100` | `oklch(96% 0.008 264)` |
-| `--border-default` | Standard card and input borders | `--color-slate-200` | `oklch(92% 0.01 264)` |
+| `--border-subtle` | Light dividers, section separators | `--color-slate-200` | `oklch(92% 0.01 264)` |
+| `--border-default` | Standard card and input borders | `--color-slate-300` | `oklch(88% 0.011 264)` |
 | `--border-strong` | Emphasis borders, focused elements | `--color-slate-950` | `oklch(22% 0.04 264)` |
 
 **Usage:**
@@ -84,8 +84,8 @@ Surfaces stack from outermost to innermost. Each layer is visually distinct.
 
 | Token | Role | Primitive | Value |
 |-------|------|-----------|-------|
-| `--brand-primary` | Main CTAs, key highlights | `--color-blue-600` | `oklch(60% 0.16 250)` |
-| `--brand-primary-dim` | Hover states, subtle backgrounds | `--color-blue-100` | `oklch(93% 0.04 250)` |
+| `--brand-primary` | Main CTAs, key highlights | `--color-orange-500` | `oklch(62% 0.18 42)` |
+| `--brand-primary-dim` | Hover states, subtle backgrounds | `--color-orange-100` | `oklch(95% 0.05 42)` |
 | `--brand-secondary` | Supporting accents, secondary hierarchy | `--color-indigo-600` | `oklch(55% 0.18 275)` |
 
 **Usage:**
