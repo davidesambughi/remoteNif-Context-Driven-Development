@@ -1,64 +1,115 @@
-﻿import { useTranslations } from 'next-intl'
+import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 
 interface StepCardProps {
   number: string
   title: string
   description: string
+  // Illustration image shown at the bottom of the card
+  imageSrc: string
+  imageAlt: string
 }
 
-// Single step card with oversized number as visual anchor
-function StepCard({ number, title, description }: StepCardProps) {
+// Single step card: step number → serif title → serif body → bottom illustration
+function StepCard({ number, title, description, imageSrc, imageAlt }: StepCardProps) {
   return (
-    <div className="bg-surface border border-border-default border-t-4 border-t-brand-primary rounded-[length:var(--radius-lg)] p-5 shadow-[var(--shadow-md)]">
+    // Warm surface, no visible border, subtle shadow
+    <div className="flex flex-col bg-surface rounded-[length:var(--radius-xl)] p-[length:var(--space-6)] shadow-[var(--shadow-md)]">
+
+      {/* Small orange step number (01, 02, 03) */}
       <span
-        className="block text-[length:var(--text-4xl)] font-[number:var(--font-bold)] text-brand-primary opacity-30 leading-none"
+        className="text-[length:var(--text-xs)] font-[number:var(--font-semibold)] text-brand-primary"
         aria-hidden="true"
       >
         {number}
       </span>
-      <h3 className="mt-2 text-[length:var(--text-lg)] font-[number:var(--font-semibold)] text-text-primary">
+
+      {/* Step title — serif, bold, dark */}
+      <h3 className="mt-[length:var(--space-2)] font-serif font-[number:var(--font-bold)] text-[length:var(--text-xl)] text-text-primary leading-[var(--leading-tight)]">
         {title}
       </h3>
-      <p className="mt-1 text-[length:var(--text-sm)] text-text-secondary leading-[var(--leading-relaxed)]">
+
+      {/* Step description — serif, dark, normal weight */}
+      <p className="mt-[length:var(--space-2)] font-serif font-[number:var(--font-normal)] text-[length:var(--text-sm)] text-text-primary leading-[var(--leading-relaxed)]">
         {description}
       </p>
+
+      {/* Illustration pushed to the bottom of the card */}
+      <div className="mt-auto pt-[length:var(--space-6)] flex justify-center">
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          width={240}
+          height={160}
+          className="object-contain"
+        />
+      </div>
+
     </div>
   )
 }
 
-// 3-step process — anchor target for "Learn More" link in hero
+// 3-step process section — anchor target for "Learn More" link in hero
 export function HowItWorksSection() {
   const t = useTranslations('home.howItWorks')
 
+  // Split the title to highlight the word "transparent" in brand color with underline.
+  // Works by finding the word in the translated string; if absent (other locales),
+  // the title renders as plain text with no highlight.
+  const titleText = t('title')
+  const targetWord = 'transparent'
+  const splitIndex = titleText.toLowerCase().indexOf(targetWord)
+  const hasSplit = splitIndex >= 0
+  const before = hasSplit ? titleText.slice(0, splitIndex) : titleText
+  const highlight = hasSplit ? titleText.slice(splitIndex, splitIndex + targetWord.length) : null
+  const after = hasSplit ? titleText.slice(splitIndex + targetWord.length) : null
+
   return (
-    <section id="how-it-works" className="bg-brand-primary-dim px-4 py-12">
-      <div className="max-w-2xl mx-auto">
-        <div className="border-l-4 border-brand-primary pl-[length:var(--space-4)]">
-          <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
-            {t('title')}
+    <section id="how-it-works" className="bg-brand-primary-dim px-[length:var(--space-4)] py-[length:var(--space-16)]">
+      <div className="max-w-5xl mx-auto">
+
+        {/* Centered section heading */}
+        <div className="text-center mb-[length:var(--space-10)]">
+          <h2 className="font-serif font-[number:var(--font-bold)] text-[length:var(--text-3xl)] text-text-primary leading-[var(--leading-tight)]">
+            {before}
+            {/* "transparent" rendered in brand color with underline when present */}
+            {highlight && (
+              <span className="text-brand-primary underline underline-offset-4 decoration-brand-primary italic">
+                {highlight}
+              </span>
+            )}
+            {after}
           </h2>
-          <p className="mt-2 text-[length:var(--text-sm)] text-text-secondary">
+          <p className="mt-[length:var(--space-2)] font-serif font-[number:var(--font-normal)] text-[length:var(--text-sm)] text-text-secondary">
             {t('subtitle')}
           </p>
         </div>
 
-        <div className="mt-8 flex flex-col gap-[length:var(--space-6)] md:flex-row">
+        {/* Cards: stacked on mobile, 3-column on md+ */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-[length:var(--space-6)]">
           <StepCard
             number={t('step1Number')}
             title={t('step1Title')}
             description={t('step1Description')}
+            imageSrc="/images/card1.png"
+            imageAlt={t('step1Title')}
           />
           <StepCard
             number={t('step2Number')}
             title={t('step2Title')}
             description={t('step2Description')}
+            imageSrc="/images/card2.png"
+            imageAlt={t('step2Title')}
           />
           <StepCard
             number={t('step3Number')}
             title={t('step3Title')}
             description={t('step3Description')}
+            imageSrc="/images/card3.png"
+            imageAlt={t('step3Title')}
           />
         </div>
+
       </div>
     </section>
   )

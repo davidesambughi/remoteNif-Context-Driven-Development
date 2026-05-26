@@ -62,9 +62,11 @@ export function HeroSection() {
       {/* ── Background photo ─────────────────────────────────────────── */}
       {/* priority: this is the LCP element — Next.js must preload it.   */}
       {/* alt="": decorative background, not informational (correct SEO) */}
+      {/* priority: this is the LCP element — Next.js must preload it.   */}
+      {/* alt="": decorative background, not informational (correct SEO) */}
       <Image
-        src="/hero-image.png"
-        alt=""
+        src="/images/hero-image.png"
+        alt="Smiling Portugal Landscape"
         fill
         priority
         className="object-cover object-center"

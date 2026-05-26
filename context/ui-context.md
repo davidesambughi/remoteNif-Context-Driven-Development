@@ -58,10 +58,14 @@ Surfaces stack from outermost to innermost. Each layer is visually distinct.
 | `--text-on-accent` | Text/icons on colored backgrounds | `--color-white` | `oklch(100% 0 0)` |
 
 **Usage:**
-- `text-[var(--text-primary)]` → `text-primary`
-- `text-[var(--text-secondary)]` → `text-secondary`
-- `text-[var(--text-muted)]` → `text-muted`
+- `text-[var(--text-primary)]` → `text-text-primary`
+- `text-[var(--text-secondary)]` → `text-text-secondary`
+- `text-[var(--text-muted)]` → `text-text-muted`
 - `text-[var(--text-on-accent)]` → `text-on-accent`
+
+> ⚠️ **Do NOT use `text-primary` or `text-secondary`** — these are shadcn shorthands that
+> resolve to brand orange and bg-subtle respectively, not text colours. Always use the
+> prefixed form: `text-text-primary`, `text-text-secondary`, `text-text-muted`.
 
 ---
 
@@ -74,9 +78,12 @@ Surfaces stack from outermost to innermost. Each layer is visually distinct.
 | `--border-strong` | Emphasis borders, focused elements | `--color-slate-950` | `oklch(22% 0.04 264)` |
 
 **Usage:**
-- `border-[var(--border-subtle)]` → `border-subtle`
-- `border-[var(--border-default)]` → `border-default`
-- `border-[var(--border-strong)]` → `border-strong`
+- `border-[var(--border-subtle)]` → `border-border-subtle`
+- `border-[var(--border-default)]` → `border-border-default`
+- `border-[var(--border-strong)]` → `border-border-strong`
+
+> ⚠️ **Do NOT use bare `border-default` or `border-subtle`** — shadcn's `--color-border`
+> maps to `border-border` already. Always use the prefixed form to avoid ambiguity.
 
 ---
 

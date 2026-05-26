@@ -31,10 +31,11 @@ const jetbrainsMono = JetBrains_Mono({
 
 // Playfair Display — serif, hero headlines only.
 // Bold weight + both styles needed for the upright → italic headline split.
+// 400 needed for body-weight serif text in cards; 700 for bold headings and the hero.
 const playfairDisplay = Playfair_Display({
   variable: '--font-playfair',
   subsets: ['latin'],
-  weight: ['700'],
+  weight: ['400', '700'],
   style: ['normal', 'italic'],
 })
 
