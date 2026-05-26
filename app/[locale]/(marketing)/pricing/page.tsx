@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
-import { ScanSearch, UserCheck, Mail } from 'lucide-react'
 import { getCurrentUser } from '@/lib/auth/session'
 import { TIERS } from '@/lib/pricing'
 import { TierCard } from '@/components/marketing/TierCard'
@@ -62,17 +61,44 @@ export default async function PricingPage() {
   // Unauthenticated users go to signup; authenticated users go straight to dashboard
   const ctaBase = user ? '/dashboard' : '/signup'
 
+  // Split headline so the first word renders as serif italic brand-primary.
+  // Translation: "When do you need your NIF?" → "When" italic + " do you need your NIF?"
+  const headline = t('hero.headline')
+  const firstSpace = headline.indexOf(' ')
+  const heroFirstWord = firstSpace > -1 ? headline.slice(0, firstSpace) : headline
+  const heroRest     = firstSpace > -1 ? headline.slice(firstSpace)    : ''
+
+  // Express subtitle: highlight "48 hours" in brand color.
+  // Split on the literal marker — falls back to plain string if not found (other locales).
+  const expressSubtitleRaw = t('tiers.express.subtitle')
+  const marker48 = '48 hours'
+  const markerIdx = expressSubtitleRaw.indexOf(marker48)
+  const expressSub = markerIdx > -1
+    ? (
+        <>
+          {expressSubtitleRaw.slice(0, markerIdx)}
+          <span className="text-brand-primary font-[number:var(--font-semibold)]">{marker48}</span>
+          {expressSubtitleRaw.slice(markerIdx + marker48.length)}
+        </>
+      )
+    : expressSubtitleRaw
+
   return (
     <>
     <div className="bg-[var(--bg-base)] pb-[length:var(--space-16)]">
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="max-w-2xl mx-auto px-4 pt-[length:var(--space-16)] text-center">
-        <h1
-          className="text-[length:var(--text-4xl)] font-[number:var(--font-bold)]
-            text-text-primary leading-[var(--leading-tight)]"
-        >
-          {t('hero.headline')}
+        {/* Headline: first word → serif italic brand-primary; rest → bold sans text-primary */}
+        <h1 className="leading-[var(--leading-tight)]">
+          <span className="font-serif italic font-[number:var(--font-bold)]
+            text-[length:var(--text-4xl)] text-brand-primary">
+            {heroFirstWord}
+          </span>
+          <span className="font-[number:var(--font-bold)]
+            text-[length:var(--text-4xl)] text-text-primary">
+            {heroRest}
+          </span>
         </h1>
         <p
           className="mt-[length:var(--space-4)] text-[length:var(--text-base)]
@@ -100,7 +126,7 @@ export default async function PricingPage() {
             cta={t('tiers.essential.cta')}
             href={`${ctaBase}?tier=essential`}
             isAuthenticated={!!user}
-            ctaVariant="outline"
+            ctaVariant="default"
           />
 
           {/* Standard */}
@@ -120,12 +146,12 @@ export default async function PricingPage() {
             ctaVariant="default"
           />
 
-          {/* Express */}
+          {/* Express — subtitle uses expressSub (pre-built above) to color "48 hours" */}
           <TierCard
             name={t('tiers.express.name')}
             tierId="express"
             priceEurCents={TIERS.express.priceEurCents}
-            subtitle={t('tiers.express.subtitle')}
+            subtitle={expressSub}
             features={[
               { label: t('tiers.express.features.submission'), icon: 'zap' },
               { label: t('tiers.express.features.nif'),        icon: 'check' },
@@ -143,48 +169,6 @@ export default async function PricingPage() {
         </div>
       </section>
 
-      {/* ── All tiers include bar ─────────────────────────────────────── */}
-      <div className="mt-[length:var(--space-12)] bg-subtle py-[length:var(--space-6)]">
-        <div className="max-w-5xl mx-auto px-4">
-          <div
-            className="flex flex-col md:flex-row items-center justify-center
-              gap-[length:var(--space-4)] md:gap-[length:var(--space-8)]"
-          >
-            <span
-              className="text-[length:var(--text-sm)] font-[number:var(--font-semibold)]
-                text-text-secondary uppercase tracking-wide"
-            >
-              {t('includes.title')}
-            </span>
-
-            <div
-              className="flex flex-col md:flex-row items-center
-                gap-[length:var(--space-4)] md:gap-[length:var(--space-6)]"
-            >
-              <div className="flex items-center gap-[length:var(--space-2)]">
-                <ScanSearch className="h-4 w-4 text-brand-primary" aria-hidden="true" />
-                <span className="text-[length:var(--text-sm)] text-text-secondary">
-                  {t('includes.aiReview')}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-[length:var(--space-2)]">
-                <UserCheck className="h-4 w-4 text-brand-primary" aria-hidden="true" />
-                <span className="text-[length:var(--text-sm)] text-text-secondary">
-                  {t('includes.adminVerification')}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-[length:var(--space-2)]">
-                <Mail className="h-4 w-4 text-brand-primary" aria-hidden="true" />
-                <span className="text-[length:var(--text-sm)] text-text-secondary">
-                  {t('includes.emailSupport')}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
     </div>
 

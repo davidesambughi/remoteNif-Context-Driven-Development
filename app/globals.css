@@ -114,6 +114,7 @@
   --status-success-subtle: oklch(70% 0.14 165 / 0.08);
   --status-warning-subtle: oklch(78% 0.13 75 / 0.08);
   --status-error-subtle: oklch(62% 0.18 25 / 0.08);
+  --status-info-subtle: oklch(72% 0.11 230 / 0.08);
 
   /* ==========================================
       TYPOGRAPHY
@@ -326,6 +327,7 @@
   --color-success-subtle: var(--status-success-subtle);
   --color-warning-subtle: var(--status-warning-subtle);
   --color-error-subtle: var(--status-error-subtle);
+  --color-info-subtle: var(--status-info-subtle);
 
   /* Photo canvas glass tokens */
   --color-glass-navbar-bg:     var(--glass-navbar-bg);

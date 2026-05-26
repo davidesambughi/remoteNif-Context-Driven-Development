@@ -1,20 +1,28 @@
 ﻿import { getTranslations } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
+import { ArrowLeft } from 'lucide-react'
 
 interface AuthCardProps {
   title: string
   children: React.ReactNode
 }
 
-// Shared card shell used on all auth pages: app name above, titled card below.
+// Shared card shell used on all auth pages: app name + back link above, titled card below.
 export default async function AuthCard({ title, children }: AuthCardProps) {
   const t = await getTranslations('common')
 
   return (
     <div className="w-full max-w-[400px]">
-      {/* App name */}
-      <p className="text-center text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary mb-[length:var(--space-6)]">
-        {t('appName')}
-      </p>
+      {/* App name — links back to homepage */}
+      <Link
+        href="/"
+        className="flex items-center justify-center gap-[length:var(--space-2)] mb-[length:var(--space-6)] group"
+      >
+        <ArrowLeft className="h-4 w-4 text-text-muted transition-colors duration-200 group-hover:text-brand-primary" />
+        <p className="text-center text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary transition-colors duration-200 group-hover:text-brand-primary">
+          {t('appName')}
+        </p>
+      </Link>
 
       {/* Card */}
       <div
