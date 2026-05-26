@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono, Playfair_Display } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import '@/app/globals.css'
 import { JsonLd } from '@/components/shared/JsonLd'
@@ -29,6 +29,16 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ['400', '500', '600', '700'],
 })
 
+// Playfair Display — serif, hero headlines only.
+// Bold weight + both styles needed for the upright → italic headline split.
+// 400 needed for body-weight serif text in cards; 700 for bold headings and the hero.
+const playfairDisplay = Playfair_Display({
+  variable: '--font-playfair',
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+})
+
 // Root layout owns <html> and <body> — required by Next.js 16.
 // getLocale() reads locale from request context set by the proxy (next-intl middleware).
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -40,7 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable}`}
     >
       <head>
         {/* ── 20c: Site-wide JSON-LD — Organization + WebSite ── */}

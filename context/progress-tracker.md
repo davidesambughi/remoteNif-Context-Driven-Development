@@ -4,15 +4,47 @@
 
 ## Current Phase
 
-Active development. Features 01–19 complete. Feature 20 complete.
+Active development. Features 01–20 complete. UI refactor in progress (branch: `ui-refactor`).
 
 ---
 
 ## Current Goal
 
-Feature 21 — Final Polish & Launch Prep (21a Production Smoke Test next).
+**UI Refactor — systematic visual redesign of all marketing and dashboard surfaces.**
+
+All logic, architecture, auth, and tests remain untouched. This is a styling-only pass.
 
 > **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
+
+---
+
+## UI Refactor — Workflow & Status
+
+### The Process (repeat for every section)
+
+1. **Reference image** — user provides a mockup or screenshot of the target visual direction
+2. **Tokens** — derive new/updated design tokens; update `globals.css` only (no component changes yet)
+3. **Design principles** — write/update `context/design-principles.md` to capture what tokens alone cannot: visual hierarchy, contrast, whitespace, proximity, alignment, typographic scale
+4. **Feature spec** — write `context/feature-specs/21x-*.md` exactly as always: scope, out-of-scope, constraints, check-when-done
+5. **Progress tracker** — update this file
+6. **Execute** — implement one component/section at a time; build-check after each
+
+### Hard constraints for every session in this phase
+
+- Touch only CSS classes and layout — never logic, actions, queries, types, or tests
+- All values come from tokens in `globals.css` — no hardcoded colors or spacing
+- Build must pass after every component; run `npm run build` before reporting done
+- `components/ui/*` (shadcn) is read-only — compose, never modify
+- Keep all existing i18n keys intact; only add new ones if a spec explicitly requires it
+
+### Current status
+
+**Blocked — waiting for inputs from user:**
+- [ ] New reference mockup image
+- [ ] Updated `context/design-principles.md`
+- [ ] Updated `globals.css` with any new tokens
+
+Once all three are provided, next step is: write feature spec → execute hero section first.
 
 ---
 

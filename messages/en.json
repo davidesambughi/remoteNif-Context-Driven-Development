@@ -101,7 +101,8 @@
       "stat3Value": "48h",
       "stat3Label": "Express option",
       "stat4Value": "Zero",
-      "stat4Label": "Hidden fees"
+      "stat4Label": "Hidden fees",
+      "badge": "No hidden fees"
     },
     "howItWorks": {
       "title": "A Transparent 3-Step Process",

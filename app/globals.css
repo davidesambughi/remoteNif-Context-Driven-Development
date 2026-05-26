@@ -32,6 +32,11 @@
   --color-blue-100: oklch(93% 0.04 250);
   --color-indigo-600: oklch(55% 0.18 275);
 
+  /* Warm orange — hero CTA, navbar pill, brand highlights */
+  --color-orange-500: oklch(62% 0.18 42);
+  /* Dim version — hover states, tinted surfaces */
+  --color-orange-100: oklch(95% 0.05 42);
+
   --color-emerald-500: oklch(70% 0.14 165);
   --color-amber-500: oklch(78% 0.13 75);
   --color-rose-600: oklch(62% 0.18 25);
@@ -79,9 +84,24 @@
       primary-dim = muted version for hover states and subtle backgrounds
       secondary   = supporting accents and secondary hierarchy
       ========================================== */
-  --brand-primary: var(--color-blue-600);
-  --brand-primary-dim: var(--color-blue-100);
+  /* Remapped to warm orange — was blue-600/blue-100 */
+  --brand-primary: var(--color-orange-500);
+  --brand-primary-dim: var(--color-orange-100);
   --brand-secondary: var(--color-indigo-600);
+
+  /* ==========================================
+      PHOTO CANVAS
+      Glass surfaces for photo-background pages (marketing hero only).
+      Never use these tokens on app-canvas pages (dashboard, admin, auth).
+      ========================================== */
+  --glass-navbar-bg:      oklch(100% 0 0 / 0.10); /* navbar background */
+  --glass-navbar-border:  oklch(100% 0 0 / 0.20); /* navbar bottom border */
+  --glass-badge-bg:       oklch(100% 0 0 / 0.15); /* badge pill background */
+  --glass-badge-border:   oklch(100% 0 0 / 0.40); /* badge pill border */
+  --glass-separator:      oklch(100% 0 0 / 0.30); /* stats row divider */
+  --glass-overlay:        oklch(0% 0 0 / 0.35);   /* photo darkening gradient start */
+  --glass-text:           oklch(100% 0 0);         /* all text on photo */
+  --glass-text-dim:       oklch(100% 0 0 / 0.80);  /* de-emphasised text on photo */
 
   /* ==========================================
       STATUS
@@ -101,6 +121,9 @@
   --font-sans:
     var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
+  /* Serif — hero headlines only. Loaded via next/font/google in the marketing layout. */
+  --font-serif:
+    var(--font-playfair), Georgia, "Times New Roman", serif;
   --font-mono:
     var(--font-jetbrains-mono), "SFMono-Regular", Menlo, Monaco, Consolas,
     monospace;
@@ -229,6 +252,32 @@
    Our components always use text-[var(--text-primary)] directly, not bg-primary shorthand.
    ========================================== */
 @theme inline {
+  /* ⚠️  NAMING COLLISION WARNING — READ BEFORE ADDING TOKENS HERE
+     ─────────────────────────────────────────────────────────────
+     Tailwind v4 turns every --color-* entry below into a utility by stripping the
+     "--color-" prefix: --color-primary → `bg-primary`, `text-primary`, etc.
+
+     shadcn/ui owns several generic names and repurposes them for its own meanings:
+       --color-primary   → brand accent (orange)   ≠ "primary text colour"
+       --color-secondary → bg-subtle (blue tint)   ≠ "secondary text colour"
+       --color-border    → border-default           ≠ our border-subtle token
+
+     This creates silent traps for short, intuitive names:
+       `text-primary`   → ORANGE (brand)  — NOT dark body text
+       `text-secondary` → BLUE BG tint    — NOT slate-700 label text
+       `bg-border`      → slate-300 bg    — probably not what you wanted
+
+     RULES to avoid collisions:
+     1. For text colours always use the prefixed form:  `text-text-primary`,
+        `text-text-secondary`, `text-text-muted`.  Never bare `text-primary`.
+     2. For border colours always use the prefixed form: `border-border-default`,
+        `border-border-subtle`.  Never bare `border-border` or `border-default`.
+     3. Before adding a new --color-* shorthand here, check whether shadcn already
+        claims that unprefixed name.  If in doubt, keep the prefix.
+     4. The same risk applies to spacing/sizing utilities — don't use names that
+        shadow Tailwind built-ins (e.g. --color-base conflicts with text-base font-size).
+     ────────────────────────────────────────────────────────────── */
+
   /* Shadcn variable → Tailwind utility mapping */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -236,16 +285,16 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
+  --color-primary: var(--primary);           /* = brand orange — `text-primary` is ORANGE */
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
+  --color-secondary: var(--secondary);       /* = bg-subtle (blue) — NOT secondary text */
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-border: var(--border);
+  --color-border: var(--border);             /* = border-default — use border-border-default */
   --color-input: var(--input);
   --color-ring: var(--ring);
 
@@ -259,10 +308,14 @@
   --color-brand-primary: var(--brand-primary);
   --color-brand-primary-dim: var(--brand-primary-dim);
   --color-brand-secondary: var(--brand-secondary);
+  /* Prefixed with "text-" to avoid collision with shadcn's `--color-primary` (orange).
+     Use: text-text-primary / text-text-secondary / text-text-muted              */
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
   --color-on-accent: var(--text-on-accent);
+  /* Prefixed with "border-" to avoid collision with shadcn's `--color-border`.
+     Use: border-border-default / border-border-subtle / border-border-strong    */
   --color-border-default: var(--border-default);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
@@ -274,8 +327,19 @@
   --color-warning-subtle: var(--status-warning-subtle);
   --color-error-subtle: var(--status-error-subtle);
 
+  /* Photo canvas glass tokens */
+  --color-glass-navbar-bg:     var(--glass-navbar-bg);
+  --color-glass-navbar-border: var(--glass-navbar-border);
+  --color-glass-badge-bg:      var(--glass-badge-bg);
+  --color-glass-badge-border:  var(--glass-badge-border);
+  --color-glass-separator:     var(--glass-separator);
+  --color-glass-overlay:       var(--glass-overlay);
+  --color-glass-text:          var(--glass-text);
+  --color-glass-text-dim:      var(--glass-text-dim);
+
   /* Fonts */
   --font-family-sans: var(--font-sans);
+  --font-family-serif: var(--font-serif);
   --font-family-mono: var(--font-mono);
 
   /* text-2xs utility — generates the text-2xs Tailwind class (10px micro-captions) */

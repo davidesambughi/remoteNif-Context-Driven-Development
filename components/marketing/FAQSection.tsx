@@ -16,7 +16,7 @@ export function FAQSection() {
     <section className="bg-surface px-4 py-12">
       <div className="max-w-2xl mx-auto">
         <div className="border-l-4 border-brand-primary pl-[length:var(--space-4)]">
-          <h2 className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
+          <h2 className="font-serif text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
             {t('title')}
           </h2>
           <p className="mt-2 text-[length:var(--text-sm)] text-text-secondary">

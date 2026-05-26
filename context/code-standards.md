@@ -33,6 +33,10 @@
 - Long-running work belongs in background tasks, not in request handlers.
 - Do not fetch data inside client components when a server component can do it.
 - Use `next/image` for all images. Use `next/font` for all fonts.
+- **URL-based conditional logic** (e.g. "is this the homepage?") requires `'use client'` and `usePathname()`. There is no Server Component alternative in Next.js 16 — this is intentional by design, not a limitation.
+- **`'use client'` boundary and render-props:** functions cannot be passed from a Server Component to a Client Component across the serialization boundary. If a client component needs a render-prop callback, its parent must also be `'use client'`. Design the client island to wrap the Server Component children, not the other way round.
+
+> **Keep these rules current.** Next.js ships frequently. Before implementing a pattern that feels like a workaround, check https://nextjs.org/docs for the latest App Router guidance. The project currently runs **Next.js 16.2** — verify any new pattern against that version specifically.
 
 ---
 
@@ -86,6 +90,57 @@
 - Return consistent response shapes: `{ data }` on success, `{ error: string }` on failure.
 - Use appropriate HTTP status codes.
 - Keep route handlers thin — push complexity into `lib/` or background tasks.
+
+---
+
+## Internationalisation (next-intl)
+
+> Verified against **next-intl v4.12.0** (May 2026). If a major version has shipped since then, re-verify the patterns below at https://next-intl.dev/docs before implementing.
+
+### Hook import source
+
+Always import locale-aware hooks from `@/i18n/navigation`, **not** from `next/navigation`:
+
+```ts
+// ✅ correct — locale-aware
+import { useRouter, usePathname, Link } from '@/i18n/navigation'
+
+// ❌ wrong — locale-unaware; causes double-locale URLs and broken locale switching
+import { useRouter, usePathname } from 'next/navigation'
+import Link from 'next/link'
+```
+
+**Key difference:** `usePathname()` from `@/i18n/navigation` returns the path **without** the locale prefix (`/pricing`, not `/en/pricing`). Use this when you need to compare or reuse the path for navigation.
+
+### Locale switching
+
+```ts
+const router = useRouter()
+const pathname = usePathname() // locale-stripped: '/', '/pricing', etc.
+
+// Switch locale, stay on current path
+router.replace(pathname, { locale: 'de' })
+```
+
+### Translations — Server vs Client
+
+| Context | Hook | Import |
+|---|---|---|
+| Server Component | `getTranslations('namespace')` | `'next-intl/server'` |
+| Client Component | `useTranslations('namespace')` | `'next-intl'` |
+
+Prefer `getTranslations` in Server Components — messages never leave the server. Use `useTranslations` in Client Components only when the component must be client-side for other reasons (e.g. it already uses `useState`, `usePathname`, etc.). Translating a few short strings in a client component (like a navbar) is acceptable; translating large bodies of copy is not.
+
+### Homepage detection
+
+`usePathname()` from `@/i18n/navigation` strips the locale, so homepage detection is always:
+
+```ts
+const pathname = usePathname()
+const isHome = pathname === '/' || pathname === ''
+```
+
+No `useLocale()` needed. No string length tricks. No regex.
 
 ---
 

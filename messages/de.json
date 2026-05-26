@@ -101,7 +101,8 @@
       "stat3Value": "48h",
       "stat3Label": "Express-Option",
       "stat4Value": "Null",
-      "stat4Label": "Versteckte Gebühren"
+      "stat4Label": "Versteckte Gebühren",
+      "badge": "Keine versteckten Gebühren"
     },
     "howItWorks": {
       "title": "Ein Transparenter 3-Schritte-Prozess",
