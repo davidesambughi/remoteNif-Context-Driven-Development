@@ -34,7 +34,9 @@ export function FAQSection() {
               <AccordionTrigger
                 className={[
                   'text-left text-[length:var(--text-base)] font-[number:var(--font-semibold)] text-text-primary',
-                  // chevron inherits text color; open state turns the whole trigger brand-primary
+                  // smooth color transition on hover + open state
+                  'transition-colors duration-200',
+                  'hover:text-brand-primary',
                   'data-[state=open]:text-brand-primary',
                   '[&>svg]:text-brand-primary [&>svg]:shrink-0',
                 ].join(' ')}

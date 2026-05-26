@@ -52,6 +52,12 @@ export function HeroSection() {
   const upright = headlineParts[0] ?? t('headline')
   const italic = headlineParts[1] ?? null
 
+  // Highlight "NIF" in brand color within the upright clause.
+  // Split on the literal word so it works regardless of surrounding text.
+  const uptightParts = upright.split('NIF')
+  const beforeNif = uptightParts[0] ?? ''
+  const afterNif = uptightParts[1] ?? null
+
   // mt-[-7rem]: cancel both <main>'s pt-14 AND the sticky header's h-14 so the section
   // starts at y=0 and the hero image bleeds behind the glass navbar.
   // min-h-[100dvh]: dynamic viewport height — avoids the mobile address-bar crop
@@ -96,11 +102,14 @@ export function HeroSection() {
             </span>
 
             {/* Headline — upright opening clause + italic closing clause */}
+            {/* "NIF" is highlighted in brand-primary; surrounding text stays glass-text */}
             <h1 className="mt-[length:var(--space-4)] leading-[var(--leading-tight)]">
               <span className="font-serif font-[number:var(--font-bold)]
                 text-[length:var(--text-3xl)] md:text-[length:var(--text-4xl)]
                 text-glass-text">
-                {upright}
+                {beforeNif}
+                <span className="text-brand-primary">{afterNif !== null ? 'NIF' : upright}</span>
+                {afterNif}
               </span>
               {italic && (
                 <>
