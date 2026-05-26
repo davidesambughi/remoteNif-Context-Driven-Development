@@ -12,7 +12,8 @@ export async function DashboardHeader() {
   const t = await getTranslations('common')
 
   return (
-    <header className="sticky top-0 z-50 bg-surface border-b border-border-default">
+    /* Glass header — backdrop-blur keeps it readable over any background image */
+    <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-white/30 shadow-sm">
       <div className="max-w-4xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
         {/* Brand — locale-aware link back to marketing home */}
         <Link

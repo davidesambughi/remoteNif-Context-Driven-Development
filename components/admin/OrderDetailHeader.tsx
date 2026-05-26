@@ -14,7 +14,7 @@ export async function OrderDetailHeader({ order }: OrderDetailHeaderProps) {
 
   const statusColors: Record<string, string> = {
     documents_pending: 'bg-warning-subtle text-warning border-warning',
-    documents_under_review: 'bg-info/10 text-info border-info/20',
+    documents_under_review: 'bg-info-subtle text-info border-info/20',
     documents_approved: 'bg-success-subtle text-success border-success',
     submitted: 'bg-brand-primary-dim text-brand-primary border-brand-primary/20',
     delivered: 'bg-success text-on-accent border-transparent',

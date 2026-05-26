@@ -28,16 +28,22 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)] flex-col bg-[var(--bg-base)]">
-      <main className="flex-1 w-full max-w-4xl mx-auto p-[length:var(--space-6)] py-[length:var(--space-12)] space-y-[length:var(--space-10)]">
+    /* Outer wrapper fills remaining viewport height below the sticky header */
+    <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
+      <main className="flex-1 w-full max-w-4xl mx-auto p-[length:var(--space-6)] py-[length:var(--space-12)]">
         {/*
+         * Glass card — white/semi-transparent with backdrop-blur so the content
+         * stays legible regardless of what the background image shows behind it.
+         *
          * Suspense boundary: streams the static shell immediately, then injects
          * the order/document content once DashboardContent's DB queries resolve.
          * Fallback matches the existing loading.tsx skeleton shape.
          */}
-        <Suspense fallback={<DashboardSkeleton />}>
-          <DashboardContent userId={user.id} />
-        </Suspense>
+        <div className="bg-white/80 backdrop-blur-xl rounded-[length:var(--radius-2xl)] border border-white/50 shadow-xl p-[length:var(--space-8)] space-y-[length:var(--space-10)]">
+          <Suspense fallback={<DashboardSkeleton />}>
+            <DashboardContent userId={user.id} />
+          </Suspense>
+        </div>
       </main>
     </div>
   )

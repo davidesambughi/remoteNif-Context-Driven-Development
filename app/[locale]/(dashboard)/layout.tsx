@@ -28,7 +28,11 @@ export default async function DashboardLayout({ children }: Props) {
   if (!user) redirect({ href: '/signin', locale: locale as Locale })
 
   return (
-    <div className="min-h-screen bg-[var(--bg-base)]">
+    /* Background image covers the full viewport; fixed prevents scroll jitter */
+    <div
+      className="min-h-screen bg-cover bg-center bg-fixed"
+      style={{ backgroundImage: "url('/images/dashboard-background.png')" }}
+    >
       <DashboardHeader />
       <main>{children}</main>
     </div>

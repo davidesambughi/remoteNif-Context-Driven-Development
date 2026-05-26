@@ -77,13 +77,28 @@ export default async function AdminOrderListPage({ searchParams }: Props) {
                 const isExpressApproved =
                   order.tier === 'express' && order.status === 'documents_approved'
 
+                // Left border color tracks the order status.
+                // Express + approved overrides to warning (amber) to signal SLA urgency.
+                const statusBorderMap: Record<SelectOrder['status'], string> = {
+                  documents_pending:       'border-l-border-default',
+                  documents_under_review:  'border-l-info',
+                  documents_approved:      'border-l-success',
+                  submitted:               'border-l-brand-primary',
+                  delivered:               'border-l-success',
+                }
+                const borderColor = isExpressApproved
+                  ? 'border-l-warning'
+                  : (statusBorderMap[order.status as SelectOrder['status']] ?? 'border-l-border-default')
+
                 return (
                   <OrderRow
                     key={order.id}
                     href={`/admin/orders/${order.id}`}
                     className={[
-                      'border-t border-[var(--border-subtle)] hover:bg-subtle cursor-pointer transition-[var(--transition-fast)]',
-                      isExpressApproved ? 'border-l-4 border-l-warning' : '',
+                      // border-t-border-subtle scopes the color to the top edge only,
+                      // keeping it from cascading over border-l-* on the left accent.
+                      'border-t border-t-border-subtle border-l-4 hover:bg-subtle cursor-pointer transition-[var(--transition-fast)]',
+                      borderColor,
                     ]
                       .join(' ')
                       .trim()}
@@ -161,7 +176,7 @@ function StatusBadge({ status, label }: { status: SelectOrder['status']; label: 
   const classMap: Record<SelectOrder['status'], string> = {
     documents_pending: 'bg-subtle text-[var(--text-muted)]',
     documents_under_review: 'bg-subtle text-info',
-    documents_approved: 'bg-warning-subtle text-warning',
+    documents_approved: 'bg-success-subtle text-success',
     submitted: 'bg-success-subtle text-success',
     delivered: 'bg-success text-on-accent',
   }
