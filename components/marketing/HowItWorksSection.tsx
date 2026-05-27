@@ -41,7 +41,7 @@ function StepCard({ number, title, description, imageSrc, imageAlt }: StepCardPr
           alt={imageAlt}
           width={240}
           height={160}
-          className="object-contain"
+          className="object-contain w-auto h-auto"
         />
       </div>
 

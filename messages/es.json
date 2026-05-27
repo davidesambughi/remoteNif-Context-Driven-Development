@@ -19,6 +19,12 @@
     }
   },
   "auth": {
+    "errors": {
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+      "passwordNoUpper": "La contraseña debe contener al menos una letra mayúscula",
+      "passwordNoLower": "La contraseña debe contener al menos una letra minúscula",
+      "passwordNoNumber": "La contraseña debe contener al menos un número"
+    },
     "signIn": {
       "title": "Iniciar sesión",
       "email": "Correo electrónico",
@@ -45,7 +51,7 @@
       "errors": {
         "emailInUse": "Ya existe una cuenta con este correo electrónico.",
         "generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
-        "emailConfirmationRequired": "Check your email — if you signed up with this address, we've sent a confirmation link."
+        "emailConfirmationRequired": "Se requiere confirmación por correo. Por favor, revisa tu bandeja de entrada."
       }
     },
     "resetPassword": {

@@ -19,6 +19,12 @@
     }
   },
   "auth": {
+    "errors": {
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordNoUpper": "Password must contain at least one uppercase letter",
+      "passwordNoLower": "Password must contain at least one lowercase letter",
+      "passwordNoNumber": "Password must contain at least one number"
+    },
     "signIn": {
       "title": "Sign in",
       "email": "Email",

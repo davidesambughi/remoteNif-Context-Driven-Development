@@ -155,17 +155,31 @@ export default async function AdminOrderListPage({ searchParams }: Props) {
 }
 
 // ---------------------------------------------------------------------------
-// Badge sub-components — inline since they're only used here
+// Badge sub-components — inline since they're only used here.
+// Color maps are exported at module level so they can be unit-tested independently.
 // ---------------------------------------------------------------------------
 
+/** Maps tier → Tailwind classes for the admin order list badge. */
+export const TIER_BADGE_CLASS_MAP: Record<string, string> = {
+  essential: 'bg-subtle text-[var(--text-secondary)]',
+  standard: 'bg-brand-primary-dim text-brand-primary',
+  // Solid orange — matches OrderDetailHeader for consistency across views
+  express: 'bg-brand-primary text-on-accent',
+}
+
+/** Maps order status → Tailwind classes for the admin order list badge. */
+export const STATUS_BADGE_CLASS_MAP: Record<SelectOrder['status'], string> = {
+  documents_pending: 'bg-subtle text-[var(--text-muted)]',
+  documents_under_review: 'bg-subtle text-info',
+  documents_approved: 'bg-success-subtle text-success',
+  // Orange-tinted: "in-flight" state — distinct from the solid green of delivered
+  submitted: 'bg-brand-primary-dim text-brand-primary',
+  // Solid green: terminal state — NIF received and done
+  delivered: 'bg-success text-on-accent',
+}
+
 function TierBadge({ tier, label }: { tier: string; label: string }) {
-  const classMap: Record<string, string> = {
-    essential: 'bg-subtle text-[var(--text-secondary)]',
-    standard: 'bg-brand-primary-dim text-brand-primary',
-    // Solid orange — matches OrderDetailHeader for consistency across views
-    express: 'bg-brand-primary text-on-accent',
-  }
-  const cls = classMap[tier] ?? 'bg-subtle text-[var(--text-secondary)]'
+  const cls = TIER_BADGE_CLASS_MAP[tier] ?? 'bg-subtle text-[var(--text-secondary)]'
   return (
     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${cls}`}>
       {label}
@@ -174,17 +188,8 @@ function TierBadge({ tier, label }: { tier: string; label: string }) {
 }
 
 function StatusBadge({ status, label }: { status: SelectOrder['status']; label: string }) {
-  const classMap: Record<SelectOrder['status'], string> = {
-    documents_pending: 'bg-subtle text-[var(--text-muted)]',
-    documents_under_review: 'bg-subtle text-info',
-    documents_approved: 'bg-success-subtle text-success',
-    // Orange-tinted: "in-flight" state — distinct from the solid green of delivered
-    submitted: 'bg-brand-primary-dim text-brand-primary',
-    // Solid green: terminal state — NIF received and done
-    delivered: 'bg-success text-on-accent',
-  }
   return (
-    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${classMap[status]}`}>
+    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE_CLASS_MAP[status]}`}>
       {label}
     </span>
   )
