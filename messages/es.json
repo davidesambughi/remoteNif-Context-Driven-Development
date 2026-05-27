@@ -405,7 +405,9 @@
       "updateStatusNoteRequired": "A note is required when moving the order backward",
       "updateStatusSubmit": "Update",
       "updateStatusSuccess": "Status updated",
+      "updateStatusDescription": "Override the current status manually. Moving the order backward requires a note that will be shown to the customer.",
       "resendEmail": "Resend Email",
+      "resendEmailDescription": "Resend a status notification to the customer in their preferred language.",
       "resendSubmit": "Resend",
       "resendSuccess": "Email sent",
       "customerEmail": "Email",
@@ -440,7 +442,9 @@
     "queue": {
       "title": "Submission Queue",
       "expressSection": "Express Orders",
+      "expressHint": "Sorted by deadline — submit the top item first. The 48-hour window started when the admin approved the documents.",
       "standardSection": "Standard Orders",
+      "standardHint": "No deadline — sorted by order date, oldest first.",
       "emptyExpress": "No express orders pending submission.",
       "emptyStandard": "No standard orders pending submission.",
       "columns": {

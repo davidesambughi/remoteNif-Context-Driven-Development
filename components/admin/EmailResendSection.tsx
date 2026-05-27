@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, CheckCircle2 } from 'lucide-react'
 import { adminResendEmail, type AdminEmailType } from '@/app/actions/admin'
@@ -37,6 +37,8 @@ export function EmailResendSection({ orderId }: EmailResendSectionProps) {
     <Card className="shadow-[var(--shadow-md)] border-[var(--border-default)]">
       <CardHeader>
         <CardTitle className="text-base">{t('resendEmail')}</CardTitle>
+        {/* Hint: sets expectation that the email goes in the customer's language */}
+        <CardDescription className="text-xs">{t('resendEmailDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Select value={emailType} onValueChange={(v) => setEmailType(v as AdminEmailType)} disabled={isPending}>

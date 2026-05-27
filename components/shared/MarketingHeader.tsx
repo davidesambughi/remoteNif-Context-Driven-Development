@@ -16,6 +16,10 @@ import { GlassDetector } from './GlassDetector'
  * On homepage (photo canvas): glass background, white text, orange CTA pill.
  * On all other marketing pages: solid surface background, dark text, outline button.
  */
+// Subtle dark halo applied to white text on the glass canvas.
+// Spreads a soft shadow on all sides to simulate a thin dark border around the letterforms.
+const GLASS_TEXT_SHADOW = '0 0 1px rgba(0,0,0,0.55), 0 1px 4px rgba(0,0,0,0.25)'
+
 export function MarketingHeader() {
   const t = useTranslations('common')
 
@@ -26,7 +30,7 @@ export function MarketingHeader() {
           className={[
             'sticky top-0 z-50 h-14',
             isHome
-              ? 'bg-glass-navbar-bg backdrop-blur-md border-b border-glass-navbar-border'
+              ? 'bg-glass-navbar-bg backdrop-blur-md'
               : 'bg-surface border-b border-border-subtle',
           ].join(' ')}
         >
@@ -36,6 +40,7 @@ export function MarketingHeader() {
             {/* Brand name — white on glass, dark on solid */}
             <Link
               href="/"
+              style={isHome ? { textShadow: GLASS_TEXT_SHADOW } : undefined}
               className={[
                 'font-[number:var(--font-semibold)] text-[length:var(--text-base)]',
                 'hover:opacity-80 transition-[var(--transition-base)]',

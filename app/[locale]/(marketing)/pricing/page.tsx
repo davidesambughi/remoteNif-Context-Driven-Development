@@ -89,9 +89,9 @@ export default async function PricingPage() {
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="max-w-2xl mx-auto px-4 pt-[length:var(--space-16)] text-center">
-        {/* Headline: first word → serif italic brand-primary; rest → bold sans text-primary */}
-        <h1 className="leading-[var(--leading-tight)]">
-          <span className="font-serif italic font-[number:var(--font-bold)]
+        {/* Headline: entire headline → Playfair Display (serif) */}
+        <h1 className="font-serif leading-[var(--leading-tight)]">
+          <span className="italic font-[number:var(--font-bold)]
             text-[length:var(--text-4xl)] text-brand-primary">
             {heroFirstWord}
           </span>

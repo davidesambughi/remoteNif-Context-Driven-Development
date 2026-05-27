@@ -63,25 +63,25 @@ export function HeroSection() {
   // min-h-[100dvh]: dynamic viewport height — avoids the mobile address-bar crop
   // that min-h-screen (100vh) causes on iOS/Android.
   return (
-    <section className="relative min-h-[100dvh] mt-[-7rem] flex flex-col overflow-hidden">
+    <section className="relative @container min-h-[100dvh] mt-[-7rem] flex flex-col overflow-hidden">
 
       {/* ── Background photo ─────────────────────────────────────────── */}
       {/* priority: this is the LCP element — Next.js must preload it.   */}
-      {/* alt="": decorative background, not informational (correct SEO) */}
-      {/* priority: this is the LCP element — Next.js must preload it.   */}
-      {/* alt="": decorative background, not informational (correct SEO) */}
+      {/* sizes: 100vw ensures browser doesn't over-fetch high-res on mobile */}
+      {/* object-[75%_center]: preserves the face (on the right) on mobile */}
       <Image
         src="/images/hero-image.png"
         alt="Smiling Portugal Landscape"
         fill
         priority
-        className="object-cover object-center"
+        sizes="100vw"
+        className="object-cover object-[75%_center] @md:object-center"
       />
 
-      {/* ── Gradient overlay — darkens left side for text legibility ─── */}
-      {/* Fades from glass-overlay (dark) on left to transparent on right */}
-      {/* so the photo subject (right half) stays clean and unobscured.   */}
-      <div className="absolute inset-0 bg-gradient-to-r from-glass-overlay to-transparent pointer-events-none" />
+      {/* ── Gradient overlay — protective shadow for text legibility ─── */}
+      {/* bg-linear-to-t: mobile starts from bottom to protect anchored text */}
+      {/* @md:bg-linear-to-r: desktop shifts to left-to-right protective zone */}
+      <div className="absolute inset-0 bg-linear-to-t from-glass-overlay/90 via-glass-overlay/40 to-transparent @md:bg-linear-to-r @md:from-glass-overlay @md:to-transparent pointer-events-none" />
 
       {/* ── Content + stats wrapper ───────────────────────────────────── */}
       {/* pt-14 re-introduces the header offset so text starts below navbar */}
@@ -89,9 +89,9 @@ export function HeroSection() {
 
         {/* ── Left zone — badge, headline, subtext, CTA ──────────────── */}
         {/* justify-end anchors the block to the lower half of the viewport */}
-        {/* max-w-full md:max-w-[50%] enforces the two-zone layout on desktop */}
-        <div className="flex flex-col justify-end flex-1 px-[length:var(--space-6)] pb-[length:var(--space-12)] md:px-[length:var(--space-16)]">
-          <div className="max-w-full md:max-w-[50%]">
+        {/* max-w-full @md:max-w-[50%] enforces the two-zone layout on desktop */}
+        <div className="flex flex-col justify-end flex-1 px-[length:var(--space-6)] pb-[length:var(--space-12)] @md:px-[length:var(--space-16)]">
+          <div className="max-w-full @md:max-w-[50%]">
 
             {/* Badge */}
             <span className="inline-flex items-center
@@ -105,7 +105,7 @@ export function HeroSection() {
             {/* "NIF" is highlighted in brand-primary; surrounding text stays glass-text */}
             <h1 className="mt-[length:var(--space-4)] leading-[var(--leading-tight)]">
               <span className="font-serif font-[number:var(--font-bold)]
-                text-[length:var(--text-3xl)] md:text-[length:var(--text-4xl)]
+                text-[length:var(--text-3xl)] @md:text-[length:var(--text-4xl)]
                 text-glass-text">
                 {beforeNif}
                 <span className="text-brand-primary">{afterNif !== null ? 'NIF' : upright}</span>
@@ -115,7 +115,7 @@ export function HeroSection() {
                 <>
                   {' — '}
                   <span className="font-serif font-[number:var(--font-bold)] italic
-                    text-[length:var(--text-3xl)] md:text-[length:var(--text-4xl)]
+                    text-[length:var(--text-3xl)] @md:text-[length:var(--text-4xl)]
                     text-glass-text">
                     {italic}.
                   </span>
@@ -144,7 +144,7 @@ export function HeroSection() {
 
             {/* ── Stats row — mobile only (static, below CTA) ──────── */}
             {/* On desktop this row is hidden; the absolute-positioned row below shows instead */}
-            <div className="flex md:hidden items-end justify-center
+            <div className="flex @md:hidden items-end justify-center
               mt-[length:var(--space-8)] pb-[length:var(--space-8)]">
               <StatItem value={t('stat1Value')} label={t('stat1Label')} />
               <StatItem value={t('stat2Value')} label={t('stat2Label')} separator />
@@ -157,7 +157,7 @@ export function HeroSection() {
 
         {/* ── Stats row — desktop only (absolute, bottom-right) ──────── */}
         {/* hidden on mobile; absolute positioning relative to the section  */}
-        <div className="hidden md:flex items-end
+        <div className="hidden @md:flex items-end
           absolute bottom-[length:var(--space-12)] right-[length:var(--space-16)] z-10">
           <StatItem value={t('stat1Value')} label={t('stat1Label')} />
           <StatItem value={t('stat2Value')} label={t('stat2Label')} separator />

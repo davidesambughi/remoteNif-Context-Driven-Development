@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Loader2, CheckCircle2 } from 'lucide-react'
@@ -55,6 +55,8 @@ export function StatusUpdateSection({ orderId, currentStatus }: StatusUpdateSect
     <Card className="shadow-[var(--shadow-md)] border-[var(--border-default)]">
       <CardHeader>
         <CardTitle className="text-base">{t('updateStatus')}</CardTitle>
+        {/* Hint: explains the backward-note requirement before the admin interacts */}
+        <CardDescription className="text-xs">{t('updateStatusDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">

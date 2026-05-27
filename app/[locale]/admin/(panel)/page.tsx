@@ -162,7 +162,8 @@ function TierBadge({ tier, label }: { tier: string; label: string }) {
   const classMap: Record<string, string> = {
     essential: 'bg-subtle text-[var(--text-secondary)]',
     standard: 'bg-brand-primary-dim text-brand-primary',
-    express: 'bg-warning-subtle text-warning',
+    // Solid orange — matches OrderDetailHeader for consistency across views
+    express: 'bg-brand-primary text-on-accent',
   }
   const cls = classMap[tier] ?? 'bg-subtle text-[var(--text-secondary)]'
   return (
@@ -177,7 +178,9 @@ function StatusBadge({ status, label }: { status: SelectOrder['status']; label: 
     documents_pending: 'bg-subtle text-[var(--text-muted)]',
     documents_under_review: 'bg-subtle text-info',
     documents_approved: 'bg-success-subtle text-success',
-    submitted: 'bg-success-subtle text-success',
+    // Orange-tinted: "in-flight" state — distinct from the solid green of delivered
+    submitted: 'bg-brand-primary-dim text-brand-primary',
+    // Solid green: terminal state — NIF received and done
     delivered: 'bg-success text-on-accent',
   }
   return (

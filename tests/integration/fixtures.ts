@@ -1,6 +1,15 @@
 import { db } from '@/lib/db'
-import { users, orders, documents } from '@/lib/db/schema'
-import type { SelectUser, SelectOrder, SelectDocument, InsertUser, InsertOrder, InsertDocument } from '@/lib/db/schema'
+import { users, orders, documents, payments } from '@/lib/db/schema'
+import type {
+  SelectUser,
+  SelectOrder,
+  SelectDocument,
+  SelectPayment,
+  InsertUser,
+  InsertOrder,
+  InsertDocument,
+  InsertPayment,
+} from '@/lib/db/schema'
 
 // ---------------------------------------------------------------------------
 // User
@@ -61,4 +70,30 @@ export async function insertTestDocument(
     .returning()
   if (!doc) throw new Error('insertTestDocument: insert returned no rows')
   return doc
+}
+
+// ---------------------------------------------------------------------------
+// Payment
+// ---------------------------------------------------------------------------
+
+export async function insertTestPayment(
+  orderId: string,
+  userId: string,
+  overrides: Partial<InsertPayment> = {},
+): Promise<SelectPayment> {
+  const [payment] = await db
+    .insert(payments)
+    .values({
+      orderId,
+      userId,
+      stripePaymentIntentId: `pi_${crypto.randomUUID()}`,
+      amount: 12900,
+      currency: 'eur',
+      status: 'succeeded',
+      tier: 'standard',
+      ...overrides,
+    })
+    .returning()
+  if (!payment) throw new Error('insertTestPayment: insert returned no rows')
+  return payment
 }

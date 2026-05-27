@@ -9,6 +9,7 @@ import {
   getActiveDocumentsForOrder,
   markOrderDocumentsUnderReview,
   getOrderBasicInfo,
+  getUserByEmail,
 } from '@/lib/db/queries'
 import { truncateAll } from '../setup'
 import { insertTestUser, insertTestOrder, insertTestDocument } from '../fixtures'
@@ -263,3 +264,37 @@ describe('getOrderBasicInfo', () => {
     expect(result).toBeNull()
   })
 })
+
+// ---------------------------------------------------------------------------
+// getUserByEmail
+// ---------------------------------------------------------------------------
+
+describe('getUserByEmail', () => {
+  it('returns the user when email matches', async () => {
+    const user = await insertTestUser({ email: 'test@example.com' })
+
+    const result = await getUserByEmail('test@example.com')
+
+    expect(result).not.toBeNull()
+    expect(result!.id).toBe(user.id)
+    expect(result!.email).toBe('test@example.com')
+  })
+
+  it('returns null when the email does not exist', async () => {
+    await insertTestUser({ email: 'other@example.com' })
+
+    const result = await getUserByEmail('missing@example.com')
+
+    expect(result).toBeNull()
+  })
+
+  it('is case sensitive (standard DB behavior)', async () => {
+    await insertTestUser({ email: 'test@example.com' })
+
+    // Postgres and Drizzle defaults are usually case sensitive for string comparison
+    const result = await getUserByEmail('TEST@example.com')
+
+    expect(result).toBeNull()
+  })
+})
+
