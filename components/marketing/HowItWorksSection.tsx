@@ -80,7 +80,7 @@ export function HowItWorksSection() {
             )}
             {after}
           </h2>
-          <p className="mt-[length:var(--space-2)] font-serif font-[number:var(--font-normal)] text-[length:var(--text-sm)] text-text-secondary">
+          <p className="mt-[length:var(--space-2)] font-[number:var(--font-normal)] text-[length:var(--text-sm)] text-text-secondary">
             {t('subtitle')}
           </p>
         </div>

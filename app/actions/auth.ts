@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getUserById } from '@/lib/db/queries'
+import { getUserById, getUserByEmail } from '@/lib/db/queries'
 import { env } from '@/lib/env'
 import {
   signUpSchema,
@@ -21,6 +21,14 @@ export async function signUp(input: unknown): Promise<ActionResult> {
   if (!parsed.success) return { success: false, error: 'auth.signUp.errors.generic' }
 
   const { email, password, language } = parsed.data
+
+  // Deliberate UX choice per user-flows.md Flow 2: inform the user if the account exists
+  // instead of silently failing or faking success (enumeration protection).
+  const existingUser = await getUserByEmail(email)
+  if (existingUser) {
+    return { success: false, error: 'auth.signUp.errors.emailInUse' }
+  }
+
   const supabase = await createClient()
 
   const { error, data } = await supabase.auth.signUp({

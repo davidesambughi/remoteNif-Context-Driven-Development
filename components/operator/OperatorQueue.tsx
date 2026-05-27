@@ -26,10 +26,12 @@ export async function OperatorQueue({ items }: Props) {
       <section aria-labelledby="express-heading">
         <h2
           id="express-heading"
-          className="text-[var(--text-primary)] font-semibold text-base mb-3"
+          className="text-[var(--text-primary)] font-semibold text-base mb-1"
         >
           {t('expressSection')}
         </h2>
+        {/* Hint: explains sorting logic and SLA clock origin so operator always knows what to do next */}
+        <p className="text-[var(--text-muted)] text-xs mb-3">{t('expressHint')}</p>
         <div className="bg-surface border border-[var(--border-default)] rounded-[length:var(--radius-lg)] shadow-[var(--shadow-md)] overflow-hidden">
           {expressItems.length === 0 ? (
             <p className="text-[var(--text-muted)] text-sm px-4 py-6">
@@ -54,10 +56,12 @@ export async function OperatorQueue({ items }: Props) {
       <section aria-labelledby="standard-heading">
         <h2
           id="standard-heading"
-          className="text-[var(--text-primary)] font-semibold text-base mb-3"
+          className="text-[var(--text-primary)] font-semibold text-base mb-1"
         >
           {t('standardSection')}
         </h2>
+        {/* Hint: clarifies there is no SLA pressure on Standard orders */}
+        <p className="text-[var(--text-muted)] text-xs mb-3">{t('standardHint')}</p>
         <div className="bg-surface border border-[var(--border-default)] rounded-[length:var(--radius-lg)] shadow-[var(--shadow-md)] overflow-hidden">
           {standardItems.length === 0 ? (
             <p className="text-[var(--text-muted)] text-sm px-4 py-6">
