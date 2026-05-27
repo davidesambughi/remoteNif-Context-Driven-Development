@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import { requireRole } from '@/lib/auth/session'
 import { getAdminOrderDetail } from '@/lib/db/queries'
+import { ORDER_STATUS_SEQUENCE } from '@/lib/db/schema'
 import { OrderDetailHeader } from '@/components/admin/OrderDetailHeader'
 import { DocumentReviewCard } from '@/components/admin/DocumentReviewCard'
 import { ApproveOrderSection } from '@/components/admin/ApproveOrderSection'
@@ -27,7 +28,11 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
     notFound()
   }
 
-  const t = await getTranslations('admin.detail')
+  // Load both namespaces — detail for section labels, admin for shared status strings in the stepper
+  const [t, tAdmin] = await Promise.all([
+    getTranslations('admin.detail'),
+    getTranslations('admin'),
+  ])
 
   // Group documents by type
   const passport = order.documents.find(d => d.type === 'passport')
@@ -59,25 +64,66 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
         </div>
 
         <aside className="space-y-4 mt-8 lg:mt-0 lg:sticky lg:top-6">
-          <ApproveOrderSection
-            orderId={order.id}
-            orderStatus={order.status}
-            allDocsApproved={allDocsApproved}
-            tier={order.tier}
-          />
 
+          {/* Workflow stepper — 5-segment progress bar + current step label.
+              Past steps are green, current is brand-primary, future are muted.
+              Reuses ORDER_STATUS_SEQUENCE and existing admin.statuses.* keys — no new i18n needed. */}
+          <div className="bg-surface border border-[var(--border-default)] rounded-lg px-4 py-3 shadow-[var(--shadow-sm)]">
+            <p className="text-[var(--text-muted)] text-2xs font-medium uppercase tracking-wide mb-2">
+              Workflow
+            </p>
+            <ol className="flex items-center gap-1 mb-2" aria-label="Order workflow progress">
+              {ORDER_STATUS_SEQUENCE.map((s, i) => {
+                const currentIndex = ORDER_STATUS_SEQUENCE.indexOf(order.status)
+                return (
+                  <li key={s} className="flex-1">
+                    <div
+                      className={`h-1.5 rounded-full ${
+                        i < currentIndex
+                          ? 'bg-success'
+                          : i === currentIndex
+                            ? 'bg-brand-primary'
+                            : 'bg-[var(--border-subtle)]'
+                      }`}
+                    />
+                  </li>
+                )
+              })}
+            </ol>
+            <p className="text-[var(--text-primary)] text-xs font-semibold">
+              {tAdmin(`statuses.${order.status}`)}
+            </p>
+          </div>
+
+          {/* Approve — only shown during document review; disabled/irrelevant at all other steps */}
+          {order.status === 'documents_under_review' && (
+            <ApproveOrderSection
+              orderId={order.id}
+              orderStatus={order.status}
+              allDocsApproved={allDocsApproved}
+              tier={order.tier}
+            />
+          )}
+
+          {/* Deliver NIF — shown once submitted to Finanças, and kept visible after delivery
+              for the read-only NIF display (nifNumber !== null handles the delivered state) */}
+          {(order.status === 'submitted' || order.nifNumber !== null) && (
+            <DeliverNifSection
+              orderId={order.id}
+              currentStatus={order.status}
+              existingNifNumber={order.nifNumber}
+            />
+          )}
+
+          {/* Status override — always visible; admin may need to correct at any step */}
           <StatusUpdateSection
             orderId={order.id}
             currentStatus={order.status}
           />
 
+          {/* Email resend — always visible; useful at any step */}
           <EmailResendSection orderId={order.id} />
 
-          <DeliverNifSection
-            orderId={order.id}
-            currentStatus={order.status}
-            existingNifNumber={order.nifNumber}
-          />
         </aside>
       </div>
     </div>
