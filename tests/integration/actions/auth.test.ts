@@ -8,12 +8,45 @@ import * as supabaseServer from '@/lib/supabase/server'
 // Mocks
 // ---------------------------------------------------------------------------
 
-vi.mock('@/lib/supabase/server', () => ({
-  createClient: vi.fn(),
-}))
-
 vi.mock('next/navigation', () => ({
   redirect: vi.fn(),
+  useRouter: vi.fn(),
+  useSearchParams: vi.fn(),
+  usePathname: vi.fn(),
+}))
+
+vi.mock('next-intl', () => ({
+  useTranslations: vi.fn(() => (key: string) => key),
+  useLocale: vi.fn(() => 'en'),
+}))
+
+vi.mock('next-intl/navigation', () => ({
+  createNavigation: vi.fn(() => ({
+    Link: vi.fn(),
+    redirect: vi.fn(),
+    usePathname: vi.fn(),
+    useRouter: vi.fn(),
+    getPathname: vi.fn(),
+  })),
+}))
+
+vi.mock('@/i18n/navigation', () => ({
+  redirect: vi.fn(),
+  Link: vi.fn(),
+  usePathname: vi.fn(),
+  useRouter: vi.fn(),
+}))
+
+vi.mock('next-intl/server', () => ({
+  getLocale: vi.fn().mockResolvedValue('en'),
+}))
+
+vi.mock('@/app/actions/checkout', () => ({
+  createCheckoutSession: vi.fn(),
+}))
+
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn(),
 }))
 
 vi.mock('@/lib/env', () => ({
@@ -83,7 +116,7 @@ describe('signUp integration', () => {
     })
 
     // 3. Assert
-    expect(result).toEqual({ success: true })
+    expect(result).toEqual({ success: true, data: { checkoutUrl: undefined } })
     expect(client.auth.signUp).toHaveBeenCalled()
   })
 })
