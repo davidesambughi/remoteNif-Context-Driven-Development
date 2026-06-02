@@ -4,6 +4,7 @@
 // needs usePathname(). Translations stay here via useTranslations — the message
 // payload for 'common' is small and acceptable in the client bundle.
 
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
@@ -22,6 +23,15 @@ const GLASS_LOGO_FILTER = 'drop-shadow(0 0 3px rgba(255,255,255,0.7)) drop-shado
 
 export function MarketingHeader() {
   const t = useTranslations('common')
+
+  // Flip to true once the user has scrolled past the hero (≈ full viewport height).
+  // Passive listener — never blocks scroll, no layout reads inside the handler.
+  const [pastHero, setPastHero] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.8)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
     <GlassDetector>
@@ -53,7 +63,7 @@ export function MarketingHeader() {
 
             <div className="flex items-center gap-[length:var(--space-4)]">
               {/* Language switcher — variant controls icon/text colour */}
-              <LanguageSwitcher variant={isHome ? 'glass' : 'default'} />
+              <LanguageSwitcher variant={isHome && !pastHero ? 'glass' : 'default'} />
 
               {/* Sign In — orange pill on glass, outline button on solid */}
               {isHome ? (
