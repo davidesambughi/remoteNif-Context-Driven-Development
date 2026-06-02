@@ -102,6 +102,24 @@ Surfaces stack from outermost to innermost. Each layer is visually distinct.
 
 ---
 
+### Glass — Photo-Canvas Surfaces
+
+> ⚠️ **Photo-canvas only.** These tokens exist for pages where UI sits on top of a full-bleed photograph (marketing hero, navbar overlay). Never use them on app-canvas pages (dashboard, auth, operator, admin).
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--glass-navbar-bg` | `oklch(100% 0 0 / 0.10)` | Navbar background on photo pages |
+| `--glass-navbar-border` | `oklch(100% 0 0 / 0.20)` | Navbar bottom border on photo pages |
+| `--glass-badge-bg` | `oklch(100% 0 0 / 0.15)` | Badge/pill background on photo pages |
+| `--glass-badge-border` | `oklch(100% 0 0 / 0.40)` | Badge/pill border on photo pages |
+| `--glass-separator` | `oklch(100% 0 0 / 0.30)` | Stats row dividers on photo pages |
+| `--glass-border-dark` | `oklch(0% 0 0 / 0.18)` | Thin dark edge on glass surfaces |
+| `--glass-overlay` | `oklch(0% 0 0 / 0.35)` | Photo darkening gradient start value |
+| `--glass-text` | `oklch(100% 0 0)` | All text rendered on photo backgrounds |
+| `--glass-text-dim` | `oklch(100% 0 0 / 0.80)` | De-emphasised text on photo backgrounds |
+
+---
+
 ### Status — Feedback States
 
 | Token | Role | Primitive | Value |
@@ -111,9 +129,31 @@ Surfaces stack from outermost to innermost. Each layer is visually distinct.
 | `--status-error` | Errors, destructive actions | `--color-rose-600` | `oklch(62% 0.18 25)` |
 | `--status-info` | Informational messages | `--color-sky-500` | `oklch(72% 0.11 230)` |
 
+**Subtle variants — tinted backgrounds for state-bearing surfaces (8% opacity):**
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--status-success-subtle` | `oklch(70% 0.14 165 / 0.08)` | Tinted green background for success banners/states |
+| `--status-warning-subtle` | `oklch(78% 0.13 75 / 0.08)` | Tinted amber background for warning banners/states |
+| `--status-error-subtle` | `oklch(62% 0.18 25 / 0.08)` | Tinted rose background for error banners/states |
+| `--status-info-subtle` | `oklch(72% 0.11 230 / 0.08)` | Tinted sky background for info banners/states |
+
 **Usage:**
 - Error text: `text-[var(--status-error)]`
 - Success badge: `bg-[var(--status-success)] text-[var(--text-on-accent)]`
+- Tinted banner: `bg-[var(--status-error-subtle)] text-[var(--status-error)]`
+
+---
+
+### Pricing Page — Glassmorphism Tokens (scoped — do not use elsewhere)
+
+> ⚠️ **Pricing page only.** These tokens exist for the `/pricing` card treatment. Do not use on dashboard, auth, operator, or admin pages.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--pricing-card-bg` | `oklch(100% 0 0 / 0.72)` | Semi-transparent white card face — background shows through |
+| `--pricing-card-border` | `oklch(62% 0.18 42 / 0.30)` | Soft orange-tinted card border |
+| `--pricing-glow` | `0 4px 6px -1px oklch(0% 0 0 / 0.07), 0 2px 4px -2px oklch(0% 0 0 / 0.05), 0 0 30px 8px oklch(62% 0.18 42 / 0.20)` | Featured card glow — shadow-md depth + ambient orange halo |
 
 ---
 

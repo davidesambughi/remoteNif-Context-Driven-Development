@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
+import { getLocale } from 'next-intl/server'
+import { redirect } from '@/i18n/navigation'
 import Image from 'next/image'
 import { Link } from '@/i18n/navigation'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -20,14 +21,17 @@ interface Props {
  * Redirects to /admin/signin if unauthenticated, to / if wrong role.
  * Single sticky header embeds brand label + tab nav + sign-out inline.
  */
+type Locale = 'en' | 'fr' | 'es' | 'de'
+
 export default async function AdminLayout({ children }: Props) {
-  const user = await getCurrentUser()
+  const [user, locale] = await Promise.all([getCurrentUser(), getLocale()])
+  const l = locale as Locale
 
   // Unauthenticated → dedicated admin sign-in
-  if (!user) redirect('/admin/signin')
+  if (!user) return redirect({ href: '/admin/signin', locale: l })
 
   // Wrong role → homepage (doesn't expose admin route existence)
-  if (user.role !== 'admin') redirect('/')
+  if (user.role !== 'admin') return redirect({ href: '/', locale: l })
 
   return (
     <div className="min-h-screen bg-[var(--bg-base)]">

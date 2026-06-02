@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
+import { redirect } from '@/i18n/navigation'
 import { ChevronLeft } from 'lucide-react'
 import { requireRole } from '@/lib/auth/session'
 import { getAdminOrderDetail } from '@/lib/db/queries'
@@ -20,7 +21,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
   const { id, locale } = await params
 
   const admin = await requireRole('admin').catch(() => {
-    redirect(`/${locale}/admin/signin`)
+    redirect({ href: '/admin/signin', locale: locale as 'en' | 'fr' | 'es' | 'de' })
   })
 
   const order = await getAdminOrderDetail(id)

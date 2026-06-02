@@ -66,6 +66,9 @@ interface Order {
   fiscalRepExpiresAt: Date | null    // deliveredAt + 12 months
   fiscalRepDismissedAt: Date | null  // set when customer confirms "I no longer need fiscal rep" — suppresses all future renewal emails
 
+  // POA generation
+  poaGeneratedPath: string | null    // Supabase Storage path for the generated POA PDF
+
   // Stripe
   stripeCheckoutSessionId: string | null
   stripePaymentIntentId: string | null
@@ -320,6 +323,7 @@ CREATE INDEX idx_audit_log_created_at ON audit_log(created_at DESC);
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | Stripe dashboard → Developers → Webhooks |
 | `RESEND_API_KEY` | Resend API key | resend.com → API Keys |
 | `RESEND_FROM_EMAIL` | From address for all emails | Verified domain in Resend |
+| `ADMIN_EMAIL` | Internal email for admin notifications (manual review alerts, escalations) | Set manually (team inbox or individual) |
 | `GROQ_API_KEY` | Groq API key | console.groq.com |
 | `CRON_SECRET` | Auth token for Vercel Cron → `/api/cron/*` | Generate any long random string |
 
@@ -343,6 +347,7 @@ const envSchema = z.object({
 
   RESEND_API_KEY: z.string().startsWith('re_'),
   RESEND_FROM_EMAIL: z.string().email(),
+  ADMIN_EMAIL: z.string().email(),
 
   GROQ_API_KEY: z.string().min(1),
 
@@ -374,6 +379,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 # Email
 RESEND_API_KEY=re_...
 RESEND_FROM_EMAIL=noreply@remotenif.com
+ADMIN_EMAIL=admin@remotenif.com
 
 # AI
 GROQ_API_KEY=gsk_...

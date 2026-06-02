@@ -24,7 +24,7 @@
 | **Email** | Resend | Latest | Transactional email delivery | React Email templates, excellent deliverability, simple API |
 | **Validation** | Zod | Latest | Runtime schema validation | Type inference, composable schemas, form validation |
 | **i18n** | next-intl | Latest | Internationalization | App Router support, type-safe translations, locale routing |
-| **AI** | Google Gemini | Latest | Document review and validation | Vision API for document analysis, cost-effective |
+| **AI** | Groq (Llama 4 Scout) | Latest | Document review and validation | Fast inference via `groq-sdk`, PDF text extraction via `pdfjs-dist`, cost-effective |
 
 ---
 
@@ -37,50 +37,64 @@ nif3/
 │   │   ├── (marketing)/          # Public pages (no auth required)
 │   │   │   ├── page.tsx          # Homepage
 │   │   │   ├── pricing/          # Tier selection
-│   │   │   └── about/            # About, legal pages
+│   │   │   ├── privacy/          # Privacy policy
+│   │   │   └── terms/            # Terms of service
 │   │   ├── (auth)/               # Authentication flows
 │   │   │   ├── signin/           # Sign in
 │   │   │   ├── signup/           # Account creation
-│   │   │   └── reset-password/   # Password reset
+│   │   │   ├── reset-password/   # Request password reset
+│   │   │   └── new-password/     # Set new password (from email link)
 │   │   ├── (dashboard)/          # Customer dashboard (auth required)
 │   │   │   ├── layout.tsx        # Dashboard shell
-│   │   │   ├── page.tsx          # Order status / document upload
+│   │   │   ├── dashboard/        # Order status / document upload
+│   │   │   ├── renewal/          # Fiscal rep renewal checkout
 │   │   │   └── settings/         # Account settings
-│   │   ├── (admin)/              # Admin panel (admin role required)
-│   │   │   ├── layout.tsx        # Admin shell
-│   │   │   ├── page.tsx          # Order list
-│   │   │   └── orders/[id]/      # Order detail
-│   │   └── (operator)/           # Operator panel (operator role required)
-│   │       ├── layout.tsx        # Operator shell
-│   │       ├── page.tsx          # Submission queue
-│   │       ├── submitted/        # Submitted orders archive
-│   │       └── preferences/      # Notification settings
-│   ├── api/                      # API routes (REST endpoints)
-│   │   ├── webhooks/             # External webhooks
-│   │   │   └── stripe/           # Stripe payment webhooks
-│   │   └── documents/            # Document operations
-│   │       └── review/           # AI document review endpoint
-│   ├── actions/                  # Server Actions (mutations)
+│   │   ├── admin/                # Admin area
+│   │   │   ├── signin/           # Public admin sign-in (no role guard)
+│   │   │   └── (panel)/          # Guarded admin panel (admin role required)
+│   │   │       ├── layout.tsx    # Admin shell
+│   │   │       ├── page.tsx      # Order list
+│   │   │       └── orders/[id]/  # Order detail
+│   │   └── (operator)/           # Guarded operator panel (operator role required)
+│   │       └── operator/
+│   │           ├── layout.tsx    # Operator shell
+│   │           ├── page.tsx      # Submission queue
+│   │           ├── signin/       # Public operator sign-in (no role guard)
+│   │           ├── submitted/    # Submitted orders archive
+│   │           └── preferences/  # Notification settings
+│   ├── auth/                     # Non-locale auth handlers
+│   │   ├── callback/             # OAuth code exchange (Google OAuth)
+│   │   └── confirm/              # Email confirmation (magic links)
+│   ├── api/                      # API routes (external-facing only)
+│   │   ├── webhooks/stripe/      # Stripe payment webhooks
+│   │   ├── cron/renewals/        # Vercel Cron — renewal reminder emails
+│   │   └── operator/package/[orderId]/  # Operator document package download (ZIP)
+│   ├── actions/                  # Server Actions (all mutations)
 │   │   ├── auth.ts               # Auth actions (signin, signup, signout)
-│   │   ├── orders.ts             # Order mutations (create, update status)
+│   │   ├── orders.ts             # Order mutations + fiscal rep dismissal
 │   │   ├── documents.ts          # Document upload and review
-│   │   ├── admin.ts              # Admin actions (approve, override)
-│   │   └── operator.ts           # Operator actions (markAsSubmitted, deliverNIF, downloadPackage, updateOperatorPreferences)
+│   │   ├── admin.ts              # Admin actions (approve, override, deliver NIF)
+│   │   ├── operator.ts           # Operator actions (submit, preferences)
+│   │   ├── checkout.ts           # Checkout session creation (standard + renewal)
+│   │   └── settings.ts           # Account settings (email, password, delete)
 │   ├── globals.css               # Design tokens and base styles
 │   ├── layout.tsx                # Root layout
 │   └── not-found.tsx             # 404 page
 ├── components/                   # React components
 │   ├── ui/                       # shadcn/ui primitives (DO NOT MODIFY)
+│   ├── auth/                     # Auth form components
 │   ├── marketing/                # Marketing page components
 │   ├── dashboard/                # Dashboard components
 │   ├── admin/                    # Admin panel components
 │   ├── operator/                 # Operator panel components
-│   └── shared/                   # Shared components (header, footer)
+│   └── shared/                   # Shared components (header, footer, JSON-LD)
 ├── lib/                          # Shared infrastructure
 │   ├── supabase/                 # Supabase clients
 │   │   ├── client.ts             # Client-side Supabase client
 │   │   ├── server.ts             # Server-side Supabase client
-│   │   └── admin.ts              # Admin Supabase client (service role)
+│   │   ├── admin.ts              # Admin Supabase client (service role)
+│   │   ├── proxy.ts              # updateSession utility (called from proxy.ts)
+│   │   └── documents.ts          # Signed URL utility for document access
 │   ├── db/                       # Database layer
 │   │   ├── schema.ts             # Drizzle schema definitions
 │   │   ├── queries.ts            # Reusable queries
@@ -89,27 +103,33 @@ nif3/
 │   │   ├── client.ts             # Stripe client
 │   │   └── webhooks.ts           # Webhook handlers
 │   ├── email/                    # Email templates and sending
-│   │   ├── templates/            # React Email templates
-│   │   └── send.ts               # Email sending logic
-│   ├── ai/                       # AI integrations
-│   │   └── gemini.ts             # Document review with Gemini
+│   │   ├── templates/            # React Email templates (11 templates)
+│   │   └── send.ts               # Email dispatch (typed union, fire-and-forget)
+│   ├── ai/                       # AI document review
+│   │   └── document-review.ts    # Groq (Llama 4 Scout) — PDF analysis + flag reasons
 │   ├── auth/                     # Auth utilities
-│   │   ├── session.ts            # Session management
+│   │   ├── session.ts            # getCurrentUser, requireRole (React cache wrapped)
 │   │   └── permissions.ts        # Role-based access control
+│   ├── operator/                 # Operator tooling
+│   │   ├── packageBuilder.ts     # ZIP package assembly (docs + cover sheet)
+│   │   └── CoverSheet.tsx        # React-PDF cover sheet template
+│   ├── pdf/                      # PDF generation
+│   │   ├── generator.ts          # renderPdf utility
+│   │   └── poa-template.tsx      # Power of Attorney React-PDF template
 │   ├── validations/              # Zod schemas
 │   │   ├── auth.ts               # Auth schemas
 │   │   ├── orders.ts             # Order schemas
-│   │   └── documents.ts          # Document schemas
+│   │   ├── documents.ts          # Document schemas
+│   │   └── checkout.ts           # Checkout + renewal session schemas
 │   ├── utils/                    # Utility functions
-│   │   ├── dates.ts              # Date formatting
-│   │   ├── currency.ts           # Currency formatting
-│   │   └── files.ts              # File handling
-│   ├── env.ts                    # Zod env validation — validated at startup, imported wherever env vars are needed
+│   │   ├── countries.ts          # ISO country list + resolveCountry
+│   │   └── dates.ts              # formatSubmissionDate
+│   ├── types.ts                  # Shared TypeScript types (ActionResult<T>, etc.)
+│   ├── og.ts                     # Open Graph image design constants
+│   ├── seo.ts                    # buildAlternates utility for hreflang
+│   ├── jsonld.ts                 # JSON-LD schema builders (Organization, Product, FAQ)
+│   ├── env.ts                    # Zod env validation — validated at startup
 │   └── pricing.ts                # Hardcoded tier + renewal pricing config
-├── types/                        # TypeScript type definitions
-│   ├── database.ts               # Database types (generated from Drizzle)
-│   ├── supabase.ts               # Supabase types
-│   └── index.ts                  # Shared types
 ├── messages/                     # i18n translation files
 │   ├── en.json                   # English
 │   ├── fr.json                   # French
@@ -117,10 +137,17 @@ nif3/
 │   └── de.json                   # German
 ├── public/                       # Static assets
 │   ├── images/                   # Images
-│   └── fonts/                    # Custom fonts (if any)
-├── context/                      # Project documentation (this folder)
+│   ├── fonts/                    # Inter-Bold.woff (Satori OG images)
+│   └── llms.txt                  # LLM crawler context (llmstxt.org spec)
+├── context/                      # Project documentation
+│   ├── references/               # Tech reference docs (Next.js 16.2, next-intl v4, Supabase)
+│   ├── feature-specs/            # Per-feature implementation specs
+│   └── *.md                      # Context docs (architecture, tech-spec, ui-context, etc.)
+├── i18n/                         # next-intl configuration
+│   ├── routing.ts                # defineRouting (locales, defaultLocale, localePrefix)
+│   ├── navigation.ts             # createNavigation exports (Link, redirect, useRouter, usePathname)
+│   └── request.ts                # getRequestConfig (messages loader)
 ├── proxy.ts                      # Request proxy (replaces middleware.ts in Next.js 16)
-├── i18n.ts                       # next-intl configuration
 ├── next.config.ts                # Next.js configuration
 ├── tsconfig.json                 # TypeScript configuration
 ├── drizzle.config.ts             # Drizzle ORM configuration
@@ -143,7 +170,7 @@ nif3/
 | **`lib/`** | Shared infrastructure | Database clients, API clients, utilities, validation schemas | UI components, route-specific logic |
 | **`lib/db/`** | Database access layer | Drizzle queries, schema definitions, migrations | Business logic (belongs in `actions/`), UI |
 | **`lib/validations/`** | Input validation | Zod schemas for forms, API inputs, env vars | Database queries, UI components |
-| **`types/`** | Type definitions only | TypeScript interfaces, types, enums | Runtime logic, functions, components |
+| **`lib/types.ts`** | Shared type definitions | TypeScript interfaces, types, enums (e.g. `ActionResult<T>`) | Runtime logic, functions, components |
 | **`messages/`** | Translations only | JSON translation files for i18n | Code, logic, components |
 
 **Key principles:**

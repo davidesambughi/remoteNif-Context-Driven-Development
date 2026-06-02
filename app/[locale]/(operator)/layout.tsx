@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
+import { getLocale } from 'next-intl/server'
+import { redirect } from '@/i18n/navigation'
 import Image from 'next/image'
 import { Link } from '@/i18n/navigation'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -21,14 +22,17 @@ interface Props {
  * Redirects to /operator/signin if unauthenticated, to / if wrong role.
  * Single sticky header embeds brand label + tab nav + sign-out inline.
  */
+type Locale = 'en' | 'fr' | 'es' | 'de'
+
 export default async function OperatorLayout({ children }: Props) {
-  const user = await getCurrentUser()
+  const [user, locale] = await Promise.all([getCurrentUser(), getLocale()])
+  const l = locale as Locale
 
   // Unauthenticated → dedicated operator sign-in
-  if (!user) redirect('/operator/signin')
+  if (!user) return redirect({ href: '/operator/signin', locale: l })
 
   // Wrong role → homepage (doesn't expose operator route existence)
-  if (user.role !== 'operator') redirect('/')
+  if (user.role !== 'operator') return redirect({ href: '/', locale: l })
 
   return (
     <div className="min-h-screen bg-[var(--bg-base)]">

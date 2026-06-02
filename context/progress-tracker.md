@@ -4,102 +4,31 @@
 
 ## Current Phase
 
-Active development. Features 01–20 complete. UI refactor in progress (branch: `ui-refactor`).
+Active development. Features 01–22 complete. Audit sprints in progress (see `context/audit-sprint-rules.md`). Feature 23 — Google OAuth is next after audits.
 
 ---
 
 ## Current Goal
 
-**UI Refactor — systematic visual redesign of all marketing and dashboard surfaces.**
+**Feature 23 — Google OAuth sign-in for customers.**
 
-All logic, architecture, auth, and tests remain untouched. This is a styling-only pass.
-
-> **Quality audit complete** (2026-05-21). All 3 red violations fixed. 14 yellow smells remain — tracked in `context/quality-audit.md`.
+Customer-only. Admin and operator auth remain email/password only.
 
 ---
 
-## UI Refactor — Workflow & Status
-
-### The Process (repeat for every section)
-
-1. **Reference image** — user provides a mockup or screenshot of the target visual direction
-2. **Tokens** — derive new/updated design tokens; update `globals.css` only (no component changes yet)
-3. **Design principles** — write/update `context/design-principles.md` to capture what tokens alone cannot: visual hierarchy, contrast, whitespace, proximity, alignment, typographic scale
-4. **Feature spec** — write `context/feature-specs/21x-*.md` exactly as always: scope, out-of-scope, constraints, check-when-done
-5. **Progress tracker** — update this file
-6. **Execute** — implement one component/section at a time; build-check after each
-
-### Hard constraints for every session in this phase
-
-- Touch only CSS classes and layout — never logic, actions, queries, types, or tests
-- All values come from tokens in `globals.css` — no hardcoded colors or spacing
-- Build must pass after every component; run `npm run build` before reporting done
-- `components/ui/*` (shadcn) is read-only — compose, never modify
-- Keep all existing i18n keys intact; only add new ones if a spec explicitly requires it
-
-### Current status
-
-**In Progress:**
-- [x] 21a — Hero Section Redesign (photo-canvas, glass navbar, Playfair headline)
-- [x] 21b — HowItWorks Section Redesign (illustrated cards, brand-tinted background)
-- [x] 21c — Pricing Page Alignment + Auth Background
-  - Per-card badge pills (Wallet/Star/Zap icons) straddling top border; badge text translated in all 4 locales
-  - Glassmorphism card redesign: semi-transparent bg, backdrop-blur, soft orange-tinted border
-  - Warm ecru→pale grey gradient background on pricing page
-  - Standard card orange ambient glow (`isFeatured` moved from Express to Standard)
-  - Fully pill-shaped CTA buttons (both unauthenticated Link and authenticated CheckoutButton)
-  - Auth layout background replaced with `sign-in-up-background.png` (covers signin, signup, reset-password, new-password)
-  - 3 new glassmorphism tokens added to `globals.css` (`--pricing-card-bg`, `--pricing-card-border`, `--pricing-glow`)
-- [x] 21d-partial — Hero mobile brand tint: flat `bg-brand-primary/20` overlay added to `HeroSection.tsx`, mobile-only (`@md:hidden`), improves text contrast without affecting desktop layout
-- [ ] 21d — Dashboard Visual Pass (status-subtle cards, layout refinement)
-
-**Next step:** execute dashboard visual pass (21d).
-
 ---
-
-## Handoff Note — Feature 20 complete
-
-**Feature 20 — SEO & GEO Routing** — done.
-- 20a: Foundation & Alternates (robots: noindex for sensitive pages, buildAlternates utility).
-- 20b: Social Graph (OG/Twitter cards, dynamic opengraph-image.tsx with Satori).
-- 20c: JSON-LD (Organization, WebSite, Product, FAQPage schemas).
-- 20d: Technical Routing (robots.ts with crawler blocks, sitemap.ts with 8 entries + alternates, llms.txt following llmstxt.org spec).
-
-**Key context for next session:**
-- Build passed: `robots.txt` and `sitemap.xml` are static.
-- CCBot and Bytespider are blocked in `robots.ts`.
-- `llms.txt` is static in `public/`.
-- Ready for final smoke tests and launch.
-
-**Next feature:** 21a — Production Smoke Test (verify all marketing, auth, and dashboard routes in production-like environment).
-
----
-
-## Handoff Note (read before starting next session)
-
-**Next feature is 17b** — Account Settings: language preference selector.
-
-**Key context for 17b:**
-- Add a fourth card to the existing `/settings` page (below Delete Account).
-- Language selector saves to `public.users.language` via a Server Action in `app/actions/settings.ts`.
-- On save, page reloads in the selected locale — use `router.push` with the new locale via `@/i18n/navigation`.
-- i18n keys go under `settings.languagePreference.*` namespace in all 4 locale files.
-- All forms use react-hook-form + Zod + shadcn `Form` primitives — same pattern as Personal Details form.
-- Supabase Auth handles email change and password update — use `supabase.auth.updateUser()`.
-- Delete account: delete from `auth.users` (Supabase admin client) + `public.users` cascade handles FK cleanup.
-- All copy via next-intl keys under `settings.*` namespace in all 4 locale files.
-
-**Test order reset (if needed for Feature 16 testing):**
-```sql
-UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at = NULL, fiscal_rep_expires_at = NULL WHERE id = '0f449877-f56c-4411-9f5c-eef0190d606e';
-```
-
-**Operator test account:** promote your own user account via `UPDATE public.users SET role = 'operator' WHERE email = 'YOUR_EMAIL'`, sign out, sign back in.
 
 ---
 
 ## Completed
 
+- **Audit Sprint 7 — `project-overview.md`** — O1: "Gemini API" replaced with "Groq API (Llama 4 Scout)" in two places (AI Document Pre-Check section and Scope list). O2: Renewal email description updated from single "email at 11 months" to the actual 3-cohort sequence (30d / 15d / 0d before expiry). All other claims verified clean (prices, timeout, escalation threshold, scope, regulatory context). Build clean.
+- **Audit Sprint 0** — Reference docs created: `context/references/nextjs-16-2.md`, `next-intl-v4.md`, `supabase-2026.md`. `context/audit-sprint-rules.md` written.
+- **Audit Sprint 1 — `tech-spec.md`** — 2 doc fixes: `poaGeneratedPath` added to Order interface (Feature 09b gap); `ADMIN_EMAIL` added to env var table + Zod schema example + `.env.local` template (Feature 11b gap). F3 (Gemini→Groq in stack table) is in `architecture-context.md` — deferred to Sprint 3.
+- **Audit Sprint 2 — `ui-context.md`** — 3 doc fixes: (G1) `status-*-subtle` 4-token table added to Status section (subtle tinted backgrounds, 8% opacity); (G2) dedicated Pricing Page Tokens subsection added (3 scoped glassmorphism tokens with OKLCH values and scoping rule); (G3) Glass tokens expanded from a one-liner to a full 9-token table with OKLCH values and photo-canvas-only warning. No banned token violations found in any component file. Build clean.
+- **Audit Sprint 3 — `architecture-context.md`** — A1: stack table AI row updated Gemini→Groq (Llama 4 Scout). A2/A3: project tree fully rewritten to reflect actual codebase (added lib/operator/, lib/pdf/, lib/og.ts, lib/seo.ts, lib/jsonld.ts, app/auth/, app/api/cron/, app/api/operator/package/, renewal/, references/, feature-specs/; removed types/ dir, about/, api/documents/review/; fixed admin/operator nested route structure). A4: 6 files fixed from `next/navigation` redirect to `@/i18n/navigation` redirect with `{ href, locale }` form + `return redirect()` pattern (locale bug for FR/ES/DE users). A5: `process.env.NEXT_PUBLIC_APP_URL` in `app/layout.tsx` replaced with validated `env.NEXT_PUBLIC_APP_URL`. Reference doc `next-intl-v4.md` updated with server-side redirect gotcha (`return redirect` required for TS narrowing). Build clean.
+- **Audit Sprint 5 — `progress-tracker.md`** — P1: Two stale handoff notes removed (referenced Features 17b and 21a which are complete). P2: Audit sprint entries reordered to 0–4 in the Completed log. P3: Feature 14d caching note updated — `cacheComponents: true` is now stable in Next.js 16 (was deferred when unstable; deferral remains intentional, pending feature spec). P4: UI Refactor section collapsed — replaced full in-progress workflow block with clean divider (marked complete). Build clean.
+- **Audit Sprint 4 — `code-standards.md`** — D1: File Organization section corrected (`emails/`→`lib/email/templates/`, `types/`→`lib/types.ts`). D2: Framer Motion section removed (not installed). D3: Server Action return shape (`ActionResult<T>`) documented. D4: next-intl server-side `return redirect({ href, locale })` pattern added to i18n section. D5: Caching section added — `revalidatePath` preferred, `revalidateTag` single-arg broken in Next.js 16, `use cache` deliberately deferred. C1: `locale as any` → `locale as Locale` in `app/actions/auth.ts`. Intentional deviations logged: `dbOrTx: any` and `sql as any` in `queries.ts` (Drizzle type limitations, ESLint-disabled with comments). Open question logged: `t(errorKey as any)` in `CheckoutResumer.tsx` — needs next-intl key union typing research before fixing. Build clean.
 - **Context docs** — all 8 context files complete.
 - **Feature 01 — Dev Environment** — TypeScript strict, ESLint, `lib/env.ts`, `lib/pricing.ts`, design tokens in `globals.css`.
 - **Feature 02 — Database Schema** — all 7 tables + 9 enums, 3 Supabase client factories, migrations applied.
@@ -135,7 +64,7 @@ UPDATE public.orders SET status = 'submitted', nif_number = NULL, delivered_at =
 - **Feature 14b — Operator Archive, Preferences & Submission Email** — `lib/utils/dates.ts` created with `formatSubmissionDate`; 4 new DB queries (`getOrderDataForSubmissionEmail`, `getSubmittedOrders`, `getOperatorPreferencesOrDefaults`, `upsertOperatorPreferences`); `lib/email/templates/order-submitted-customer.tsx` in 4 locales; `send.ts` extended with `order_submitted_customer` template; `markOrderAsSubmitted` wired with fire-and-forget email + second `revalidatePath` for archive; `updateOperatorPreferences` Server Action (validate → role check → phone guard → upsert → audit log); shadcn `Switch` installed; `OperatorNav` client component with locale-aware active detection; operator layout updated with nav; `/operator/submitted` page (read-only archive table); `/operator/preferences` page + `PreferencesForm` client component; translation keys added to all 4 locale files; operator test file updated (sendEmail mock, new queries mock) + 16 new tests for both actions. 274 unit tests passing, `npm run build` passes.
 - **Feature 14b — Tests** — 18 new unit tests: `formatSubmissionDate` (6 cases in `tests/unit/lib/utils/dates.test.ts`), `OrderSubmittedCustomerEmail` template smoke tests in 4 locales + key content assertions + `getOrderSubmittedCustomerSubject` locale uniqueness (10 cases appended to `templates.test.tsx`), `sendEmail` dispatch for `order_submitted_customer` in 2 locales (appended to `send.test.ts`). 23 new integration tests in `tests/integration/db/operator-14b.test.ts`: `getSubmittedOrders` (empty, filter, exclusion, ordering, shape), `getOperatorPreferencesOrDefaults` (defaults when missing, stored values, read-only guarantee), `upsertOperatorPreferences` (insert, ON CONFLICT update, phone number), `getOrderDataForSubmissionEmail` (null for missing, join shape, null fullName, all 4 locales). 292 unit tests passing.
 - **Feature 14c — App-Wide Navigation** — `DashboardSignOutButton` (client), `DashboardHeader` (server, sticky, brand link + LanguageSwitcher + sign-out), `DashboardLayout` (new `app/[locale]/(dashboard)/layout.tsx` — auth guard + header shell); `OperatorNavLinks` (client, tab nav with active indicator replacing `OperatorNav`); `AdminNavLinks` (client, same pattern); operator layout rewritten to single sticky bar (brand + tabs inline); admin layout rewritten to single sticky bar (brand + tabs inline); `OperatorNav.tsx` deleted; i18n keys `nav.signOut` / `nav.accountSettings` added to all 4 locale files. Build: clean. 292 unit tests passing.
-- **Feature 14d — Performance: Loading States & Auth Caching** — `getCurrentUser()` wrapped in React `cache()` in `lib/auth/session.ts` (deduplicates layout + page DB calls per request); `loading.tsx` skeletons added for `/operator`, `/operator/submitted`, `/operator/preferences`, `/signin`, `/signup`. Note: `unstable_instant` (Next.js 16.2) was researched and specced but requires `cacheComponents: true` in `next.config.ts` — enabling it is an architectural decision deferred to a future feature. Skeletons deliver their core UX benefit without it. 292 unit tests passing, build clean.
+- **Feature 14d — Performance: Loading States & Auth Caching** — `getCurrentUser()` wrapped in React `cache()` in `lib/auth/session.ts` (deduplicates layout + page DB calls per request); `loading.tsx` skeletons added for `/operator`, `/operator/submitted`, `/operator/preferences`, `/signin`, `/signup`. Note: `cacheComponents: true` (required for the `use cache` directive) was deliberately deferred — it is now stable in Next.js 16 but enabling it is an architectural decision that requires a dedicated feature spec. Skeletons deliver the core loading-state UX benefit without it. 292 unit tests passing, build clean.
 - **Feature 15 — NIF Delivery** — `AdminOrderDetail` interface extended with `nifNumber`; `getAdminOrderDetail` SELECT updated; `getOrderNifAndTier` (lightweight read for immutability check) and `deliverNifNumber` (atomic UPDATE: `nifNumber`, `status = 'delivered'`, `deliveredAt`, `fiscalRepExpiresAt = deliveredAt + 12 months` for Standard/Express, null for Essential) added to `lib/db/queries.ts`; `adminDeliverNif` Server Action added to `app/actions/admin.ts` (validate → requireRole → immutability guard → deliverNifNumber → audit log → revalidate); `DeliverNifSection` client component created (`components/admin/DeliverNifSection.tsx`) with inline confirmation pattern, digit-only input, delivered read-only state; wired into admin order detail aside; i18n keys added under `admin.detail.deliverNif` in all 4 locales. Customer dashboard was already wired (08b placeholder, `getUserActiveOrder` returns all fields). 7 new unit tests, 300 total passing, build clean.
 - **Feature 17b — Account Settings (Language Preference)** — `updateLanguagePreference` action + `updateUserLanguage` DB query + `LanguagePreferenceForm` (shadcn Select, `useState`, locale-aware `router.push`). Enum derived from `routing.locales` — no hardcoded strings. i18n keys in all 4 locales. Bugfix: `text-secondary` shorthand collision in `OrderDetailHeader`. 363 unit tests passing, build clean.
 - **Feature 17a — Account Settings (Security & Deletion)** — `app/[locale]/(dashboard)/settings/page.tsx` (calls `setRequestLocale(locale)` — required so `NextIntlClientProvider` serialises locale to client; fixes "No intl context" in `LanguageSwitcher`) + `loading.tsx` (3-card skeleton); `app/actions/settings.ts` (`changeEmail`, `changePassword`, `deleteAccount`); `lib/validations/settings.ts` (`changeEmailSchema`, `changePasswordSchema`, `deleteAccountSchema`); `strongPassword` exported from `lib/validations/auth.ts`; `components/dashboard/settings/` (`ChangeEmailForm`, `ChangePasswordForm`, `DeleteAccountSection`); `settings` namespace added to all 4 locale files (← arrow removed from `backToDashboard` to fix double-arrow visual bug); `DashboardHeader` updated: text link replaced with gear icon (`Settings` from lucide-react, `aria-label` for accessibility). Tests: `tests/unit/validations/settings.test.ts` (23 tests — strongPassword, changeEmailSchema, changePasswordSchema, deleteAccountSchema) + `tests/unit/actions/settings.test.ts` (24 tests — all 3 actions, error branches, signOut/updateUser call guards). 363 unit tests passing, build clean.

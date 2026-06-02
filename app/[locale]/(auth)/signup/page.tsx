@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { redirect } from 'next/navigation'
+import { redirect } from '@/i18n/navigation'
 import { getTranslations } from 'next-intl/server'
 import { getCurrentUser } from '@/lib/auth/session'
 import AuthCard from '@/components/auth/AuthCard'
@@ -14,7 +14,7 @@ export default async function SignUpPage({ params }: Props) {
 
   // Redirect already-authenticated users
   const user = await getCurrentUser()
-  if (user) redirect('/dashboard')
+  if (user) redirect({ href: '/dashboard', locale: locale as 'en' | 'fr' | 'es' | 'de' })
 
   const t = await getTranslations('auth.signUp')
 

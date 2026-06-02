@@ -9,7 +9,7 @@ import { env } from '@/lib/env'
 // Base metadata — individual pages override title via the template.
 // metadataBase is required for absolute OG/canonical URLs.
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://remotenif.com'),
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
   title: {
     template: '%s | RemoteNIF',
     default: 'RemoteNIF — Get Your Portuguese NIF Online',

@@ -47,7 +47,7 @@ RemoteNIF v2 is a web application that allows non-residents to apply for a Portu
 
 ### AI Document Pre-Check
 
-- Gemini API evaluates uploaded documents.
+- Groq API (Llama 4 Scout) evaluates uploaded documents.
 - Returns specific, actionable text for flagged items (e.g., "Utility bill is older than 3 months").
 - Auto-escalates to manual admin review after 2 failed upload attempts. Customer sees: "Our team will review your documents within 4 hours."
 - If AI review exceeds 30 seconds, badge updates to "Still reviewing…". On full timeout, transitions to manual review state and admin is notified.
@@ -62,7 +62,7 @@ RemoteNIF v2 is a web application that allows non-residents to apply for a Portu
 
 ### Fiscal Rep Renewal
 
-- Automated email at 11 months with a direct Stripe Checkout link for the €89/year renewal.
+- Three automated reminder emails before expiry: 30 days before (≈ 11 months), 15 days before (≈ 11.5 months), and on expiry day — each containing a direct Stripe Checkout link for the €89/year renewal.
 - Dynamic copy reflecting Decree-Law 44/2022 to advise users if they still legally require a fiscal representative based on Portuguese tax obligations.
 - Renewal is handled via a new Stripe Checkout session linked in the renewal email — no saved payment method required.
 
@@ -116,7 +116,7 @@ Fiscal representation cannot be marketed as a universal requirement. Standard an
 - Next.js 16 App Router UI and Server Actions.
 - Supabase Authentication and Database setup.
 - Stripe Checkout and webhook integration.
-- Gemini API integration for document review.
+- Groq API (Llama 4 Scout) integration for document review.
 - Internal admin dashboard and operator queues.
 - Resend transactional emails.
 - Internationalization (i18n) for EN, FR, ES, and DE.

@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { redirect } from 'next/navigation'
+import { redirect } from '@/i18n/navigation'
 import { getTranslations } from 'next-intl/server'
 import { getCurrentUser } from '@/lib/auth/session'
 import AuthCard from '@/components/auth/AuthCard'
@@ -10,15 +10,18 @@ interface Props {
   searchParams: Promise<{ redirectTo?: string; error?: string }>
 }
 
+type Locale = 'en' | 'fr' | 'es' | 'de'
+
 export default async function SignInPage({ params, searchParams }: Props) {
-  await params // locale not needed in this page — form is client-side
+  const { locale } = await params
 
   // Redirect already-authenticated users to role-appropriate destination
   const user = await getCurrentUser()
   if (user) {
-    if (user.role === 'admin') redirect('/admin')
-    else if (user.role === 'operator') redirect('/operator')
-    else redirect('/dashboard')
+    const l = locale as Locale
+    if (user.role === 'admin') redirect({ href: '/admin', locale: l })
+    else if (user.role === 'operator') redirect({ href: '/operator', locale: l })
+    else redirect({ href: '/dashboard', locale: l })
   }
 
   const { redirectTo, error } = await searchParams
