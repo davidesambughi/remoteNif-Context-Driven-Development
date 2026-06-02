@@ -28,9 +28,9 @@ interface TierCardProps {
 // Maps tier → badge icon. Wallet = affordable entry, Star = best value, Zap = fast/priority.
 function BadgeIcon({ tierId }: { tierId: Tier }) {
   switch (tierId) {
-    case 'essential': return <Wallet className="h-3 w-3 shrink-0" />
-    case 'standard':  return <Star    className="h-3 w-3 shrink-0" />
-    case 'express':   return <Zap     className="h-3 w-3 shrink-0" />
+    case 'essential': return <Wallet className="h-3 w-3 shrink-0 text-brand-primary" />
+    case 'standard':  return <Star    className="h-3 w-3 shrink-0 text-brand-primary" />
+    case 'express':   return <Zap     className="h-3 w-3 shrink-0 text-brand-primary" />
   }
 }
 

@@ -85,8 +85,10 @@ export default async function PricingPage() {
 
   return (
     <>
-    {/* Warm ecru → pale grey gradient — the glass cards need a visible background to blur against */}
-    <div className="bg-gradient-to-b from-[oklch(97.5%_0.012_60)] to-[oklch(94%_0.006_264)] pb-[length:var(--space-16)]">
+    {/* Full-screen background image — the glass cards need a visible background to blur against.
+        mt-[-3.5rem] cancels the layout padding to bleed behind the transparent navbar.
+        pt-[3.5rem] ensures the actual content starts below the navbar. */}
+    <div className="relative min-h-screen bg-[url('/images/sign-in-up-background.png')] bg-cover bg-center bg-no-repeat mt-[-3.5rem] pt-[3.5rem] pb-[length:var(--space-16)]">
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="max-w-2xl mx-auto px-4 pt-[length:var(--space-8)] text-center">
