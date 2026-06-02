@@ -17,6 +17,9 @@ export default async function OperatorQueuePage() {
     <div className="max-w-5xl mx-auto px-4 md:px-6 py-8">
       <h1 className="text-[var(--text-primary)] text-2xl font-bold mb-8">
         {t('title')}
+        <span className="text-[var(--text-muted)] text-sm font-normal ml-2">
+          - Orders approved and ready to submit to ebalcão. Express first, then Standard and Essential.
+        </span>
       </h1>
       <OperatorQueue items={items} />
     </div>

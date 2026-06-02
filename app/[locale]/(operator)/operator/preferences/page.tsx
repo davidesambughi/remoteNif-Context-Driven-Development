@@ -21,6 +21,9 @@ export default async function OperatorPreferencesPage() {
     <div className="max-w-5xl mx-auto px-4 md:px-6 py-8">
       <h1 className="text-[var(--text-primary)] text-2xl font-bold mb-8">
         {t('title')}
+        <span className="text-[var(--text-muted)] text-sm font-normal ml-2">
+          - Configure how you receive alerts when new orders are ready to submit.
+        </span>
       </h1>
 
       {/* Client component receives the preferences data as props.

@@ -17,7 +17,8 @@ export async function OperatorQueue({ items }: Props) {
 
   // Split items by tier — order from DB is already correct (Express first)
   const expressItems = items.filter((item) => item.tier === 'express')
-  const standardItems = items.filter((item) => item.tier !== 'express')
+  const standardItems = items.filter((item) => item.tier === 'standard')
+  const essentialItems = items.filter((item) => item.tier === 'essential')
 
   return (
     <div className="space-y-6">
@@ -49,7 +50,6 @@ export async function OperatorQueue({ items }: Props) {
         </div>
       </section>
 
-      {/* Visual separator between sections */}
       <Separator />
 
       {/* Standard Orders section */}
@@ -60,7 +60,6 @@ export async function OperatorQueue({ items }: Props) {
         >
           {t('standardSection')}
         </h2>
-        {/* Hint: clarifies there is no SLA pressure on Standard orders */}
         <p className="text-[var(--text-muted)] text-xs mb-3">{t('standardHint')}</p>
         <div className="bg-surface border border-[var(--border-default)] rounded-[length:var(--radius-lg)] shadow-[var(--shadow-md)] overflow-hidden">
           {standardItems.length === 0 ? (
@@ -70,6 +69,34 @@ export async function OperatorQueue({ items }: Props) {
           ) : (
             <ul role="list" className="divide-y divide-[var(--border-subtle)]">
               {standardItems.map((item) => (
+                <li key={item.id}>
+                  <QueueRow item={item} isExpress={false} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      <Separator />
+
+      {/* Essential Orders section — no SLA, no fiscal representation */}
+      <section aria-labelledby="essential-heading">
+        <h2
+          id="essential-heading"
+          className="text-[var(--text-primary)] font-semibold text-base mb-1"
+        >
+          {t('essentialSection')}
+        </h2>
+        <p className="text-[var(--text-muted)] text-xs mb-3">{t('essentialHint')}</p>
+        <div className="bg-surface border border-[var(--border-default)] rounded-[length:var(--radius-lg)] shadow-[var(--shadow-md)] overflow-hidden">
+          {essentialItems.length === 0 ? (
+            <p className="text-[var(--text-muted)] text-sm px-4 py-6">
+              {t('emptyEssential')}
+            </p>
+          ) : (
+            <ul role="list" className="divide-y divide-[var(--border-subtle)]">
+              {essentialItems.map((item) => (
                 <li key={item.id}>
                   <QueueRow item={item} isExpress={false} />
                 </li>

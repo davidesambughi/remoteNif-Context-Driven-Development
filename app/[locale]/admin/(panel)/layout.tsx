@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import Image from 'next/image'
+import { Link } from '@/i18n/navigation'
 import { getCurrentUser } from '@/lib/auth/session'
 import { AdminSignOutButton } from '@/components/admin/AdminSignOutButton'
 import { AdminNavLinks } from '@/components/admin/AdminNavLinks'
@@ -30,12 +32,16 @@ export default async function AdminLayout({ children }: Props) {
   return (
     <div className="min-h-screen bg-[var(--bg-base)]">
       {/* Single sticky admin header: brand | nav links | email + sign-out */}
-      <header className="sticky top-0 z-50 bg-surface border-b border-border-default">
+      <header className="sticky top-0 z-50 bg-surface border-b border-border-default overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 md:px-6 h-14 flex items-center">
-          {/* Brand label — hidden on small screens to make room for nav links */}
-          <span className="hidden sm:block font-semibold text-sm text-text-primary flex-none">
-            RemoteNIF Admin
-          </span>
+          {/* Brand logo — links back to homepage */}
+          <Link href="/" className="flex-none hover:opacity-80 transition-[var(--transition-base)]">
+            <img
+              src="/images/logo.png"
+              alt="RemoteNIF"
+              className="h-24 w-auto block [mix-blend-mode:multiply]"
+            />
+          </Link>
 
           {/* Tab nav: Orders (and future items) */}
           <AdminNavLinks />
@@ -50,6 +56,17 @@ export default async function AdminLayout({ children }: Props) {
 
       {/* Page content */}
       <main>{children}</main>
+
+      {/* Decorative logo watermark — fixed, centered, purely visual */}
+      <div className="fixed inset-0 flex items-center justify-center pointer-events-none select-none z-0" aria-hidden="true">
+        <Image
+          src="/images/logo.png"
+          alt=""
+          width={480}
+          height={160}
+          className="opacity-[0.07] [mix-blend-mode:multiply]"
+        />
+      </div>
     </div>
   )
 }
