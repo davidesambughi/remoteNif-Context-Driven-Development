@@ -1,6 +1,7 @@
 ﻿import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { ArrowLeft } from 'lucide-react'
+import Image from 'next/image'
 
 interface AuthCardProps {
   title: string
@@ -18,10 +19,14 @@ export default async function AuthCard({ title, children }: AuthCardProps) {
         href="/"
         className="flex items-center justify-center gap-[length:var(--space-2)] mb-[length:var(--space-6)] group"
       >
-        <ArrowLeft className="h-4 w-4 text-text-muted transition-colors duration-200 group-hover:text-brand-primary" />
-        <p className="text-center text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary transition-colors duration-200 group-hover:text-brand-primary">
-          {t('appName')}
-        </p>
+        <ArrowLeft className="h-4 w-4 text-text-muted transition-colors duration-200 group-hover:text-brand-primary flex-none" />
+        <Image
+          src="/images/logo.png"
+          alt={t('appName')}
+          width={160}
+          height={54}
+          className="[mix-blend-mode:multiply] group-hover:opacity-80 transition-opacity duration-200"
+        />
       </Link>
 
       {/* Card */}
