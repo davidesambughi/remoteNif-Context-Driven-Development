@@ -1,4 +1,5 @@
-﻿import { useTranslations } from 'next-intl'
+﻿import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import {
   Accordion,
   AccordionContent,
@@ -13,8 +14,20 @@ export function FAQSection() {
   const t = useTranslations('home.faq')
 
   return (
-    <section className="bg-surface px-4 py-12">
-      <div className="max-w-2xl mx-auto">
+    <section className="relative overflow-hidden bg-surface px-4 py-12">
+
+      {/* Decorative logo watermark — same treatment as admin/operator panels */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
+        <Image
+          src="/images/logo.png"
+          alt=""
+          width={480}
+          height={160}
+          className="opacity-[0.07] [mix-blend-mode:multiply]"
+        />
+      </div>
+
+      <div className="relative max-w-2xl mx-auto">
         <div className="border-l-4 border-brand-primary pl-[length:var(--space-4)]">
           <h2 className="font-serif text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
             {t('title')}

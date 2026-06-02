@@ -18,6 +18,9 @@ export default async function SubmittedOrdersPage() {
     <div className="max-w-5xl mx-auto px-4 md:px-6 py-8">
       <h1 className="text-[var(--text-primary)] text-2xl font-bold mb-8">
         {t('title')}
+        <span className="text-[var(--text-muted)] text-sm font-normal ml-2">
+          - Read-only archive of all applications successfully submitted to Finanças.
+        </span>
       </h1>
 
       {orders.length === 0 ? (

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import Image from 'next/image'
+import { Link } from '@/i18n/navigation'
 import { getCurrentUser } from '@/lib/auth/session'
 import { Toaster } from '@/components/ui/sonner'
 import { OperatorSignOutButton } from '@/components/operator/OperatorSignOutButton'
@@ -31,12 +33,16 @@ export default async function OperatorLayout({ children }: Props) {
   return (
     <div className="min-h-screen bg-[var(--bg-base)]">
       {/* Single sticky operator header: brand | nav links | email + sign-out */}
-      <header className="sticky top-0 z-50 bg-surface border-b border-border-default">
+      <header className="sticky top-0 z-50 bg-surface border-b border-border-default overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 md:px-6 h-14 flex items-center">
-          {/* Brand label — hidden on small screens to make room for nav links */}
-          <span className="hidden sm:block font-semibold text-sm text-text-primary flex-none">
-            RemoteNIF Operator
-          </span>
+          {/* Brand logo — links back to homepage */}
+          <Link href="/" className="flex-none hover:opacity-80 transition-[var(--transition-base)]">
+            <img
+              src="/images/logo.png"
+              alt="RemoteNIF"
+              className="h-24 w-auto block [mix-blend-mode:multiply]"
+            />
+          </Link>
 
           {/* Tab nav: Queue / Archive / Preferences */}
           <OperatorNavLinks />
@@ -54,6 +60,17 @@ export default async function OperatorLayout({ children }: Props) {
 
       {/* Sonner toast container — operator-scoped */}
       <Toaster richColors position="bottom-right" />
+
+      {/* Decorative logo watermark — fixed, centered, purely visual */}
+      <div className="fixed inset-0 flex items-center justify-center pointer-events-none select-none z-0" aria-hidden="true">
+        <Image
+          src="/images/logo.png"
+          alt=""
+          width={480}
+          height={160}
+          className="opacity-[0.07] [mix-blend-mode:multiply]"
+        />
+      </div>
     </div>
   )
 }

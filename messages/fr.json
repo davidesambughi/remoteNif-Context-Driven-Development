@@ -461,6 +461,9 @@
       "standardHint": "No deadline — sorted by order date, oldest first.",
       "emptyExpress": "No express orders pending submission.",
       "emptyStandard": "No standard orders pending submission.",
+      "essentialSection": "Essential Orders",
+      "essentialHint": "No deadline — sorted by order date, oldest first. No fiscal representation included.",
+      "emptyEssential": "No essential orders pending submission.",
       "columns": {
         "customer": "Customer",
         "ordered": "Ordered",

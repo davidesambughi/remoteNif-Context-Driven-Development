@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, CheckCircle2, Hash } from 'lucide-react'
+import { Loader2, CheckCircle2 } from 'lucide-react'
 import { adminDeliverNif } from '@/app/actions/admin'
 import type { SelectOrder } from '@/lib/db/schema'
 
@@ -93,7 +93,7 @@ export function DeliverNifSection({
     <Card className="shadow-[var(--shadow-md)] border-border-default">
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
-          <Hash className="h-4 w-4 text-brand-primary" />
+          <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-brand-primary text-on-accent text-[10px] font-bold shrink-0">3</span>
           {t('sectionTitle')}
         </CardTitle>
         <CardDescription className="text-xs">{t('description')}</CardDescription>
