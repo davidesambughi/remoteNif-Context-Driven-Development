@@ -17,12 +17,14 @@ export const signUpSchema = z.object({
   email: z.string().email(),
   password: strongPassword,
   language: localeEnum,
+  tier: z.enum(['essential', 'standard', 'express']).optional(),
 })
 
 // Sign-in intentionally accepts any non-empty password — user may have an older account.
 export const signInSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
+  tier: z.enum(['essential', 'standard', 'express']).optional(),
 })
 
 export const requestPasswordResetSchema = z.object({

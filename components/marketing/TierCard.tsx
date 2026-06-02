@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
-import { Check, Clock, Zap, Minus } from 'lucide-react'
+import { Check, Minus, Wallet, Star, Zap } from 'lucide-react'
 import type { Tier } from '@/lib/pricing'
 import { CheckoutButton } from './CheckoutButton'
 
@@ -21,8 +21,17 @@ interface TierCardProps {
   href: string
   isAuthenticated: boolean
   isFeatured?: boolean
-  badge?: string
+  badge: string
   ctaVariant: 'default' | 'outline'
+}
+
+// Maps tier → badge icon. Wallet = affordable entry, Star = best value, Zap = fast/priority.
+function BadgeIcon({ tierId }: { tierId: Tier }) {
+  switch (tierId) {
+    case 'essential': return <Wallet className="h-3 w-3 shrink-0" />
+    case 'standard':  return <Star    className="h-3 w-3 shrink-0" />
+    case 'express':   return <Zap     className="h-3 w-3 shrink-0" />
+  }
 }
 
 // Maps icon variant → Lucide icon + colour token.
@@ -57,26 +66,43 @@ export function TierCard({
   href,
   isAuthenticated,
   isFeatured,
+  badge,
   ctaVariant,
 }: TierCardProps) {
   const priceEur = Math.floor(priceEurCents / 100)
 
   return (
+    // overflow-visible so the badge pill can straddle the top border without clipping
+    // backdrop-blur-sm requires a visible background behind the card (the page gradient)
     <Card
       className={[
-        // Base card: white surface, medium shadow, no extra padding (inner layout handles it)
-        'relative flex flex-col bg-surface shadow-[var(--shadow-md)] overflow-hidden',
-        // Featured (Express): top accent border for hierarchy without background change
-        isFeatured ? 'border-t-4 border-t-brand-primary' : '',
+        'relative flex flex-col bg-[var(--pricing-card-bg)] backdrop-blur-sm',
+        'border-[var(--pricing-card-border)] overflow-visible',
+        isFeatured ? 'shadow-[var(--pricing-glow)]' : 'shadow-[var(--shadow-md)]',
       ]
         .filter(Boolean)
         .join(' ')}
     >
+      {/* ── Badge — sits centred on the top border, half above / half below ── */}
+      {/* z-10 keeps it above adjacent card edges in the grid */}
+      <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 z-10
+        flex items-center gap-[length:var(--space-1)]
+        bg-[var(--bg-surface)] border border-[var(--border-default)]
+        shadow-[var(--shadow-sm)]
+        px-[length:var(--space-3)] py-[length:var(--space-1)]
+        rounded-[length:var(--radius-full)]
+        text-[length:var(--text-2xs)] font-[number:var(--font-semibold)]
+        text-text-secondary tracking-widest uppercase whitespace-nowrap">
+        <BadgeIcon tierId={tierId} />
+        {badge}
+      </div>
+
       {/* ── Inner two-column layout ────────────────────────────────────── */}
-      {/* Single shared padding on the wrapper; columns use flex-1 equal split.
-          No divider line between columns — mockup uses whitespace only.
+      {/* pt accounts for the badge height so content doesn't sit under it.
           On mobile the columns stack vertically. */}
-      <div className="flex flex-col sm:flex-row flex-1 p-[length:var(--space-6)] gap-[length:var(--space-6)]">
+      <div className="flex flex-col sm:flex-row flex-1
+        pt-[length:var(--space-8)] px-[length:var(--space-6)] pb-[length:var(--space-6)]
+        gap-[length:var(--space-6)]">
 
         {/* ── LEFT — brand identity + price + CTA ───────────────────────── */}
         <div className="flex flex-col flex-1 min-w-0">
@@ -116,7 +142,7 @@ export function TierCard({
             {isAuthenticated ? (
               <CheckoutButton tier={tierId} cta={cta} ctaVariant={ctaVariant} />
             ) : (
-              <Button variant={ctaVariant} size="sm" className="w-full" asChild>
+              <Button variant={ctaVariant} size="sm" className="w-full rounded-full" asChild>
                 <Link href={href}>{cta}</Link>
               </Button>
             )}
@@ -124,17 +150,19 @@ export function TierCard({
 
         </div>
 
+        {/* ── Separator — vertical rule between columns, hidden on mobile stack ── */}
+        {/* my insets it from the card's top and bottom padding so it doesn't reach the edges */}
+        <div className="hidden sm:block w-px shrink-0 bg-[var(--border-subtle)]
+          my-[length:var(--space-4)]" />
+
         {/* ── RIGHT — feature list ───────────────────────────────────────── */}
-        {/* flex-1 + min-w-0 lets the column shrink/grow freely with the card.
-            Items top-aligned (no justify-center) to match the mockup.
-            text-xs keeps each line short enough to not overflow the narrow column. */}
         <div className="flex flex-col flex-1 min-w-0 gap-[length:var(--space-3)] justify-center">
           {features.map((feature) => (
             <div key={feature.label} className="flex items-start gap-[length:var(--space-2)]">
               <FeatureIcon icon={feature.icon} />
               <span
                 className={[
-                  'text-[length:var(--text-xs)] leading-[var(--leading-normal)]',
+                  'text-[length:var(--text-xs)] leading-[var(--leading-normal)] font-[number:var(--font-semibold)]',
                   feature.icon === 'disabled'
                     ? 'text-text-muted line-through'
                     : 'text-text-secondary',

@@ -146,6 +146,7 @@
     "tiers": {
       "essential": {
         "name": "Essential",
+        "badge": "Affordable Basic",
         "subtitle": "NIF only, no fiscal representation",
         "features": {
           "delivery": "5 business days delivery",
@@ -156,6 +157,7 @@
       },
       "standard": {
         "name": "Standard",
+        "badge": "Best Value",
         "subtitle": "NIF + 12 months fiscal representation",
         "features": {
           "delivery": "5 business days delivery",
@@ -187,7 +189,13 @@
   "checkout": {
     "errors": {
       "generic": "Unable to create checkout session. Please try again.",
-      "unauthorized": "You must be signed in to checkout."
+      "unauthorized": "You must be signed in to checkout.",
+      "title": "Checkout Error",
+      "close": "Go to Dashboard"
+    },
+    "resuming": {
+      "title": "Resuming your checkout...",
+      "subtitle": "Please wait while we redirect you to Stripe."
     }
   },
   "dashboard": {

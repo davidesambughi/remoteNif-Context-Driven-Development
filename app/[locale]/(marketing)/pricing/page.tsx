@@ -85,10 +85,11 @@ export default async function PricingPage() {
 
   return (
     <>
-    <div className="bg-[var(--bg-base)] pb-[length:var(--space-16)]">
+    {/* Warm ecru → pale grey gradient — the glass cards need a visible background to blur against */}
+    <div className="bg-gradient-to-b from-[oklch(97.5%_0.012_60)] to-[oklch(94%_0.006_264)] pb-[length:var(--space-16)]">
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="max-w-2xl mx-auto px-4 pt-[length:var(--space-16)] text-center">
+      <section className="max-w-2xl mx-auto px-4 pt-[length:var(--space-8)] text-center">
         {/* Headline: entire headline → Playfair Display (serif) */}
         <h1 className="font-serif leading-[var(--leading-tight)]">
           <span className="italic font-[number:var(--font-bold)]
@@ -109,7 +110,7 @@ export default async function PricingPage() {
       </section>
 
       {/* ── Tier cards ───────────────────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-4 mt-[length:var(--space-12)]">
+      <section className="max-w-5xl mx-auto px-[length:var(--space-6)] mt-[length:var(--space-10)]">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-[length:var(--space-6)]">
 
           {/* Essential */}
@@ -126,6 +127,7 @@ export default async function PricingPage() {
             cta={t('tiers.essential.cta')}
             href={`${ctaBase}?tier=essential`}
             isAuthenticated={!!user}
+            badge={t('tiers.essential.badge')}
             ctaVariant="default"
           />
 
@@ -143,6 +145,8 @@ export default async function PricingPage() {
             cta={t('tiers.standard.cta')}
             href={`${ctaBase}?tier=standard`}
             isAuthenticated={!!user}
+            isFeatured
+            badge={t('tiers.standard.badge')}
             ctaVariant="default"
           />
 
@@ -161,7 +165,6 @@ export default async function PricingPage() {
             cta={t('tiers.express.cta')}
             href={`${ctaBase}?tier=express`}
             isAuthenticated={!!user}
-            isFeatured
             badge={t('tiers.express.badge')}
             ctaVariant="default"
           />

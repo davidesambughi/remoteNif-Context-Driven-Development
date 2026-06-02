@@ -210,6 +210,20 @@
     0 20px 25px -5px oklch(0% 0 0 / 0.1), 0 8px 10px -6px oklch(0% 0 0 / 0.05);
 
   /* ==========================================
+      PRICING PAGE — glassmorphism tokens
+      Scoped to the pricing card treatment only.
+      ========================================== */
+  /* Semi-transparent white card face — background shows through */
+  --pricing-card-bg: oklch(100% 0 0 / 0.72);
+  /* Soft orange-tinted border replacing the stark slate outline */
+  --pricing-card-border: oklch(62% 0.18 42 / 0.30);
+  /* Standard (featured) card glow: shadow-md depth + ambient orange halo */
+  --pricing-glow:
+    0 4px 6px -1px oklch(0% 0 0 / 0.07),
+    0 2px 4px -2px oklch(0% 0 0 / 0.05),
+    0 0 30px 8px oklch(62% 0.18 42 / 0.20);
+
+  /* ==========================================
       TRANSITIONS
       ========================================== */
   --transition-fast: 150ms ease;

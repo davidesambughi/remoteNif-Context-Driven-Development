@@ -146,6 +146,7 @@
     "tiers": {
       "essential": {
         "name": "Essentiel",
+        "badge": "Basique Abordable",
         "subtitle": "NIF uniquement, sans représentation fiscale",
         "features": {
           "delivery": "Livraison en 5 jours ouvrables",
@@ -156,6 +157,7 @@
       },
       "standard": {
         "name": "Standard",
+        "badge": "Meilleur Rapport",
         "subtitle": "NIF + 12 mois de représentation fiscale",
         "features": {
           "delivery": "Livraison en 5 jours ouvrables",
@@ -187,7 +189,13 @@
   "checkout": {
     "errors": {
       "generic": "Impossible de créer la session de paiement. Veuillez réessayer.",
-      "unauthorized": "Vous devez être connecté pour passer à la caisse."
+      "unauthorized": "Vous devez être connecté pour passer à la caisse.",
+      "title": "Erreur de paiement",
+      "close": "Aller au tableau de bord"
+    },
+    "resuming": {
+      "title": "Reprise de votre paiement...",
+      "subtitle": "Veuillez patienter pendant que nous vius redirigeons vers Stripe."
     }
   },
   "dashboard": {

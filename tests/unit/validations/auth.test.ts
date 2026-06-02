@@ -111,6 +111,27 @@ describe('signUpSchema', () => {
     })
     expect(result.success).toBe(true)
   })
+
+  // Feature 22: Optional tier validation
+  it.each(['essential', 'standard', 'express'])('accepts tier "%s"', (tier) => {
+    const result = signUpSchema.safeParse({
+      email: 'user@example.com',
+      password: 'Password123',
+      language: 'en',
+      tier,
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects an invalid tier name', () => {
+    const result = signUpSchema.safeParse({
+      email: 'user@example.com',
+      password: 'Password123',
+      language: 'en',
+      tier: 'premium', // invalid tier
+    })
+    expect(result.success).toBe(false)
+  })
 })
 
 // ---------------------------------------------------------------------------
@@ -124,6 +145,25 @@ describe('signInSchema', () => {
       password: 'anypassword',
     })
     expect(result.success).toBe(true)
+  })
+
+  // Feature 22: Optional tier validation
+  it.each(['essential', 'standard', 'express'])('accepts tier "%s"', (tier) => {
+    const result = signInSchema.safeParse({
+      email: 'user@example.com',
+      password: 'anypassword',
+      tier,
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects an invalid tier name', () => {
+    const result = signInSchema.safeParse({
+      email: 'user@example.com',
+      password: 'anypassword',
+      tier: 'premium',
+    })
+    expect(result.success).toBe(false)
   })
 
   // Sign-in intentionally allows passwords shorter than 8 chars —

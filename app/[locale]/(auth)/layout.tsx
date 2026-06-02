@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 // No navigation bar. Admin and operator signin pages have their own layouts.
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[var(--bg-base)] flex flex-col items-center justify-center px-[length:var(--space-4)]">
+    <div className="min-h-screen bg-[url('/images/sign-in-up-background.png')] bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center px-[length:var(--space-4)]">
       {children}
     </div>
   )

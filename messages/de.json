@@ -146,6 +146,7 @@
     "tiers": {
       "essential": {
         "name": "Essential",
+        "badge": "Günstig & Einfach",
         "subtitle": "Nur NIF, ohne Steuervertretung",
         "features": {
           "delivery": "Lieferung in 5 Werktagen",
@@ -156,6 +157,7 @@
       },
       "standard": {
         "name": "Standard",
+        "badge": "Bestes Angebot",
         "subtitle": "NIF + 12 Monate Steuervertretung",
         "features": {
           "delivery": "Lieferung in 5 Werktagen",
@@ -187,7 +189,13 @@
   "checkout": {
     "errors": {
       "generic": "Checkout-Sitzung konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
-      "unauthorized": "Sie müssen angemeldet sein, um den Checkout durchzuführen."
+      "unauthorized": "Sie müssen angemeldet sein, um den Checkout durchzuführen.",
+      "title": "Fehler beim Checkout",
+      "close": "Zum Dashboard"
+    },
+    "resuming": {
+      "title": "Checkout wird fortgesetzt...",
+      "subtitle": "Bitte warten Sie, während wir Sie zu Stripe weiterleiten."
     }
   },
   "dashboard": {

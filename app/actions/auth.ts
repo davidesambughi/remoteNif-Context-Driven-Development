@@ -1,9 +1,11 @@
 'use server'
 
-import { redirect } from 'next/navigation'
+import { redirect } from '@/i18n/navigation'
+import { getLocale } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { getUserById, getUserByEmail } from '@/lib/db/queries'
 import { env } from '@/lib/env'
+import { createCheckoutSession } from '@/app/actions/checkout'
 import {
   signUpSchema,
   signInSchema,
@@ -16,11 +18,13 @@ import type { ActionResult } from '@/lib/types'
 // signUp
 // ---------------------------------------------------------------------------
 
-export async function signUp(input: unknown): Promise<ActionResult> {
+export async function signUp(
+  input: unknown,
+): Promise<ActionResult<{ checkoutUrl?: string }>> {
   const parsed = signUpSchema.safeParse(input)
   if (!parsed.success) return { success: false, error: 'auth.signUp.errors.generic' }
 
-  const { email, password, language } = parsed.data
+  const { email, password, language, tier } = parsed.data
 
   // Deliberate UX choice per user-flows.md Flow 2: inform the user if the account exists
   // instead of silently failing or faking success (enumeration protection).
@@ -31,6 +35,10 @@ export async function signUp(input: unknown): Promise<ActionResult> {
 
   const supabase = await createClient()
 
+  // Feature 22b: If a tier is selected, pass it as a query parameter in the redirect URL
+  // so the user can resume the checkout after confirming their email.
+  const nextPath = tier ? `/dashboard?checkout_tier=${tier}` : '/dashboard'
+
   const { error, data } = await supabase.auth.signUp({
     email,
     password,
@@ -38,8 +46,8 @@ export async function signUp(input: unknown): Promise<ActionResult> {
       // language written to raw_user_meta_data — the handle_new_user trigger reads it
       data: { language },
       // Without this, Supabase redirects the confirmation link to the site root.
-      // /auth/confirm exchanges the token; next=/dashboard lands the user after confirmation.
-      emailRedirectTo: `${env.NEXT_PUBLIC_APP_URL}/auth/confirm?next=/dashboard`,
+      // /auth/confirm exchanges the token; next lands the user after confirmation.
+      emailRedirectTo: `${env.NEXT_PUBLIC_APP_URL}/auth/confirm?next=${encodeURIComponent(nextPath)}`,
     },
   })
 
@@ -57,9 +65,17 @@ export async function signUp(input: unknown): Promise<ActionResult> {
   if (!data.session) {
     return { success: false, error: 'auth.signUp.errors.emailConfirmationRequired' }
   }
-  
 
-  return { success: true }
+  // Feature 22: If a tier was selected pre-signup, prepare the checkout URL
+  let checkoutUrl: string | undefined
+  if (tier) {
+    const checkoutResult = await createCheckoutSession({ tier, locale: language })
+    if (checkoutResult.success && checkoutResult.data?.url) {
+      checkoutUrl = checkoutResult.data.url
+    }
+  }
+
+  return { success: true, data: { checkoutUrl } }
 }
 
 // ---------------------------------------------------------------------------
@@ -70,38 +86,48 @@ async function _signInWithRole(
   input: unknown,
   requiredRole?: 'admin' | 'operator' | 'customer',
   errorKey: string = 'auth.signIn.errors.invalidCredentials',
-): Promise<ActionResult<{ role: string }>> {
+): Promise<ActionResult<{ role: string; checkoutUrl?: string }>> {
   const parsed = signInSchema.safeParse(input)
   if (!parsed.success) return { success: false, error: errorKey }
 
-  const { email, password } = parsed.data
+  const { email, password, tier } = parsed.data
   const supabase = await createClient()
 
   const { error, data } = await supabase.auth.signInWithPassword({ email, password })
   if (error) return { success: false, error: errorKey }
 
-  if (requiredRole) {
-    const user = await getUserById(data.user.id)
-    if (!user || user.role !== requiredRole) {
-      // Sign out to avoid leaving an orphaned session, then return the same opaque error
-      // — do not reveal whether it was wrong password vs wrong role
-      await supabase.auth.signOut()
-      return { success: false, error: errorKey }
-    }
-    return { success: true, data: { role: user.role } }
+  const user = await getUserById(data.user.id)
+  if (!user) return { success: false, error: errorKey }
+
+  if (requiredRole && user.role !== requiredRole) {
+    // Sign out to avoid leaving an orphaned session, then return the same opaque error
+    // — do not reveal whether it was wrong password vs wrong role
+    await supabase.auth.signOut()
+    return { success: false, error: errorKey }
   }
 
-  const user = await getUserById(data.user.id)
-  return { success: true, data: { role: user?.role ?? 'customer' } }
+  // Feature 22: If a tier was selected pre-signin, prepare the checkout URL
+  let checkoutUrl: string | undefined
+  if (tier && user.role === 'customer') {
+    const checkoutResult = await createCheckoutSession({
+      tier,
+      locale: user.language ?? 'en',
+    })
+    if (checkoutResult.success && checkoutResult.data?.url) {
+      checkoutUrl = checkoutResult.data.url
+    }
+  }
+
+  return { success: true, data: { role: user.role, checkoutUrl } }
 }
 
 // ---------------------------------------------------------------------------
-// signIn — accepts any valid account; returns role for client-side redirect
+// signIn — accepts any valid account; returns role and optional checkout URL
 // ---------------------------------------------------------------------------
 
 export async function signIn(
   input: unknown,
-): Promise<ActionResult<{ role: string }>> {
+): Promise<ActionResult<{ role: string; checkoutUrl?: string }>> {
   return _signInWithRole(input)
 }
 
@@ -129,10 +155,11 @@ export async function operatorSignIn(
 // signOut
 // ---------------------------------------------------------------------------
 
-export async function signOut(): Promise<never> {
+export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
-  redirect('/')
+  const locale = await getLocale()
+  redirect({ href: '/', locale: locale as any })
 }
 
 // ---------------------------------------------------------------------------

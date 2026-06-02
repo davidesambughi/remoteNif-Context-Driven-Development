@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { signUp } from '@/app/actions/auth'
 import { signUpSchema, type SignUpInput } from '@/lib/validations/auth'
 import {
@@ -28,11 +29,19 @@ interface Props {
 export default function SignUpForm({ locale }: Props) {
   const t = useTranslations('auth.signUp')
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [serverError, setServerError] = useState<string | null>(null)
+
+  const tier = searchParams.get('tier') as SignUpInput['tier']
 
   const form = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { email: '', password: '', language: locale as SignUpInput['language'] },
+    defaultValues: { 
+      email: '', 
+      password: '', 
+      language: locale as SignUpInput['language'],
+      tier
+    },
   })
 
   async function onSubmit(values: SignUpInput) {
@@ -48,6 +57,14 @@ export default function SignUpForm({ locale }: Props) {
       setServerError(messages[result.error] ?? result.error)
       return
     }
+
+    // Feature 22: If a checkout URL was returned (tier selection pre-signup),
+    // redirect to Stripe instead of the dashboard.
+    if (result.data?.checkoutUrl) {
+      window.location.href = result.data.checkoutUrl
+      return
+    }
+
     router.push('/dashboard')
   }
 
@@ -56,6 +73,9 @@ export default function SignUpForm({ locale }: Props) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[length:var(--space-4)]">
         {/* Hidden language field — passes locale to the server action */}
         <input type="hidden" {...form.register('language')} value={locale} />
+        
+        {/* Hidden tier field — captured from URL, used to trigger Stripe redirect post-signup */}
+        {tier && <input type="hidden" {...form.register('tier')} value={tier} />}
 
         <FormField
           control={form.control}
@@ -123,7 +143,7 @@ export default function SignUpForm({ locale }: Props) {
       <p className="text-center text-[length:var(--text-sm)] text-text-secondary mt-[length:var(--space-4)]">
         {t('hasAccount')}{' '}
         <Link
-          href="/signin"
+          href={tier ? `/signin?tier=${tier}` : '/signin'}
           className="text-brand-secondary underline-offset-4 hover:underline"
         >
           {t('signInLink')}

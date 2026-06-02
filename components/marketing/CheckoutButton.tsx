@@ -58,7 +58,7 @@ export function CheckoutButton({ tier, cta, ctaVariant }: CheckoutButtonProps) {
       <Button 
         variant={ctaVariant} 
         size="lg" 
-        className="w-full" 
+        className="w-full rounded-full"
         onClick={handleCheckout}
         disabled={isLoading}
       >

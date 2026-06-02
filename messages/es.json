@@ -146,6 +146,7 @@
     "tiers": {
       "essential": {
         "name": "Esencial",
+        "badge": "Básico Asequible",
         "subtitle": "Solo NIF, sin representación fiscal",
         "features": {
           "delivery": "Entrega en 5 días hábiles",
@@ -156,6 +157,7 @@
       },
       "standard": {
         "name": "Estándar",
+        "badge": "Mejor Valor",
         "subtitle": "NIF + 12 meses de representación fiscal",
         "features": {
           "delivery": "Entrega en 5 días hábiles",
@@ -187,7 +189,13 @@
   "checkout": {
     "errors": {
       "generic": "No se ha podido crear la sesión de pago. Por favor, inténtalo de nuevo.",
-      "unauthorized": "Debes iniciar sesión para realizar el pago."
+      "unauthorized": "Debes iniciar sesión para realizar el pago.",
+      "title": "Error de pago",
+      "close": "Ir al panel de control"
+    },
+    "resuming": {
+      "title": "Reanudando su pago...",
+      "subtitle": "Por favor, espere mientras le redirigimos a Stripe."
     }
   },
   "dashboard": {

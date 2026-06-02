@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { signIn } from '@/app/actions/auth'
 import { signInSchema, type SignInInput } from '@/lib/validations/auth'
 import {
@@ -29,6 +30,7 @@ interface Props {
 export default function SignInForm({ redirectTo, initialError }: Props) {
   const t = useTranslations('auth.signIn')
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   // Map URL error params (set by auth/confirm redirect) to translated messages
   const knownErrors: Record<string, string> = {
@@ -38,9 +40,11 @@ export default function SignInForm({ redirectTo, initialError }: Props) {
     initialError ? (knownErrors[initialError] ?? null) : null
   )
 
+  const tier = searchParams.get('tier') as SignInInput['tier']
+
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: '', password: '', tier },
   })
 
   async function onSubmit(values: SignInInput) {
@@ -55,7 +59,15 @@ export default function SignInForm({ redirectTo, initialError }: Props) {
       return
     }
 
-    const role = result.data?.role
+    const { role, checkoutUrl } = result.data
+
+    // Feature 22: If a checkout URL was returned (tier selection pre-signin),
+    // redirect to Stripe instead of the dashboard.
+    if (checkoutUrl) {
+      window.location.href = checkoutUrl
+      return
+    }
+
     if (role === 'admin') {
       router.push('/admin')
     } else if (role === 'operator') {
@@ -71,6 +83,9 @@ export default function SignInForm({ redirectTo, initialError }: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[length:var(--space-4)]">
+        {/* Hidden tier field — captured from URL, used to trigger Stripe redirect post-signin */}
+        {tier && <input type="hidden" {...form.register('tier')} value={tier} />}
+
         <FormField
           control={form.control}
           name="email"
@@ -145,7 +160,7 @@ export default function SignInForm({ redirectTo, initialError }: Props) {
         <p className="text-[length:var(--text-sm)] text-text-secondary">
           {t('noAccount')}{' '}
           <Link
-            href="/signup"
+            href={tier ? `/signup?tier=${tier}` : '/signup'}
             className="text-brand-secondary underline-offset-4 hover:underline"
           >
             {t('signUpLink')}

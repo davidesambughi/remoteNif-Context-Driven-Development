@@ -39,12 +39,20 @@ All logic, architecture, auth, and tests remain untouched. This is a styling-onl
 
 ### Current status
 
-**Blocked — waiting for inputs from user:**
-- [ ] New reference mockup image
-- [ ] Updated `context/design-principles.md`
-- [ ] Updated `globals.css` with any new tokens
+**In Progress:**
+- [x] 21a — Hero Section Redesign (photo-canvas, glass navbar, Playfair headline)
+- [x] 21b — HowItWorks Section Redesign (illustrated cards, brand-tinted background)
+- [x] 21c — Pricing Page Alignment + Auth Background
+  - Per-card badge pills (Wallet/Star/Zap icons) straddling top border; badge text translated in all 4 locales
+  - Glassmorphism card redesign: semi-transparent bg, backdrop-blur, soft orange-tinted border
+  - Warm ecru→pale grey gradient background on pricing page
+  - Standard card orange ambient glow (`isFeatured` moved from Express to Standard)
+  - Fully pill-shaped CTA buttons (both unauthenticated Link and authenticated CheckoutButton)
+  - Auth layout background replaced with `sign-in-up-background.png` (covers signin, signup, reset-password, new-password)
+  - 3 new glassmorphism tokens added to `globals.css` (`--pricing-card-bg`, `--pricing-card-border`, `--pricing-glow`)
+- [ ] 21d — Dashboard Visual Pass (status-subtle cards, layout refinement)
 
-Once all three are provided, next step is: write feature spec → execute hero section first.
+**Next step:** execute dashboard visual pass (21d).
 
 ---
 
