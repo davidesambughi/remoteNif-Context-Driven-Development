@@ -75,23 +75,25 @@ export function QueueRow({ item, isExpress }: Props) {
           )}
         </div>
 
-        {/* Middle column — SLA countdown (Express) or ordered date (Standard) */}
+        {/* Middle column — SLA countdown (Express) or tier badge + ordered date (Standard/Essential) */}
         <div className="flex items-center gap-2">
           {isExpress ? (
             <>
-              {/* Express badge */}
-              <Badge className="bg-warning text-on-accent border-0 text-xs">
-                Express
-              </Badge>
+              <Badge className="bg-warning text-on-accent border-0 text-xs">Express</Badge>
               <SlaCountdown
                 documentsApprovedAt={item.documentsApprovedAt.toISOString()}
                 className="text-sm"
               />
             </>
           ) : (
-            <span className="text-[var(--text-muted)] text-sm hidden sm:block">
-              {orderedDate}
-            </span>
+            <>
+              <Badge variant="outline" className="text-xs shrink-0">
+                {item.tier === 'essential' ? 'Essential' : 'Standard'}
+              </Badge>
+              <span className="text-[var(--text-muted)] text-sm hidden sm:block">
+                {orderedDate}
+              </span>
+            </>
           )}
         </div>
 

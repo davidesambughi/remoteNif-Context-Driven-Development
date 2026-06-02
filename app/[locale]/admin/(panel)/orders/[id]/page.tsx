@@ -56,7 +56,10 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           <OrderDetailHeader order={order} />
 
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-[var(--text-primary)] px-1">{t('documents')}</h2>
+            <h2 className="text-lg font-bold text-[var(--text-primary)] px-1 flex items-center gap-2">
+                <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-brand-primary text-on-accent text-[10px] font-bold shrink-0">1</span>
+                {t('documents')}
+              </h2>
             <DocumentReviewCard doc={passport} type="passport" orderId={order.id} />
             <DocumentReviewCard doc={proofOfAddress} type="proof_of_address" orderId={order.id} />
             <DocumentReviewCard doc={signedPoa} type="signed_poa" orderId={order.id} />
@@ -126,6 +129,28 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
 
         </aside>
       </div>
+
+      {/* Step legend — quick reference for the numbered sidebar actions */}
+      <div className="mt-10 border-t border-[var(--border-subtle)] pt-6">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-3">Legend</p>
+        <ol className="flex flex-wrap gap-x-6 gap-y-2">
+          {[
+            'Review and approve each uploaded document',
+            'Confirm all docs and advance the order to submitted',
+            'Enter the 9-digit NIF received from Finanças',
+            'Manually override the order stage if something needs correcting',
+            'Trigger a status notification email to the customer',
+          ].map((label, i) => (
+            <li key={i} className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+              <span className="inline-flex items-center justify-center h-4 w-4 rounded-full bg-brand-primary text-on-accent text-[9px] font-bold shrink-0">
+                {i + 1}
+              </span>
+              {label}
+            </li>
+          ))}
+        </ol>
+      </div>
+
     </div>
   )
 }

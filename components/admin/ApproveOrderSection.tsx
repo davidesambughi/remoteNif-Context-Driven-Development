@@ -41,7 +41,10 @@ export function ApproveOrderSection({ orderId, orderStatus, allDocsApproved, tie
   return (
     <Card className="shadow-[var(--shadow-md)] border-[var(--border-default)]">
       <CardHeader>
-        <CardTitle className="text-base">{t('approveOrder')}</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">
+          <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-brand-primary text-on-accent text-[10px] font-bold shrink-0">2</span>
+          {t('approveOrder')}
+        </CardTitle>
         <CardDescription className="text-xs">
           {t('approveOrderDescription')}
         </CardDescription>

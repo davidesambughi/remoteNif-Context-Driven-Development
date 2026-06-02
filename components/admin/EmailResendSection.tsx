@@ -36,7 +36,10 @@ export function EmailResendSection({ orderId }: EmailResendSectionProps) {
   return (
     <Card className="shadow-[var(--shadow-md)] border-[var(--border-default)]">
       <CardHeader>
-        <CardTitle className="text-base">{t('resendEmail')}</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">
+          <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-brand-primary text-on-accent text-[10px] font-bold shrink-0">5</span>
+          {t('resendEmail')}
+        </CardTitle>
         {/* Hint: sets expectation that the email goes in the customer's language */}
         <CardDescription className="text-xs">{t('resendEmailDescription')}</CardDescription>
       </CardHeader>
