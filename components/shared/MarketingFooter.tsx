@@ -19,8 +19,8 @@ export function MarketingFooter() {
   const navLinks = [
     { href: '/pricing',      label: t('footer.pricing') },
     { href: '#how-it-works', label: t('footer.process') },
-    { href: '#terms',        label: t('footer.terms')   },
-    { href: '#privacy',      label: t('footer.privacy') },
+    { href: '/terms',         label: t('footer.terms')   },
+    { href: '/privacy',      label: t('footer.privacy') },
   ]
 
   return (
@@ -35,10 +35,15 @@ export function MarketingFooter() {
           ].join(' ')}
         >
           <div className="max-w-7xl mx-auto">
-            {/* Brand name — always dark */}
-            <p className="text-[length:var(--text-base)] font-[number:var(--font-semibold)] text-text-primary">
-              {t('appName')}
-            </p>
+            {/* Brand logo — links back to homepage */}
+            <Link href="/" className="inline-block hover:opacity-80 transition-[var(--transition-base)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo.png"
+                alt={t('appName')}
+                className="h-24 w-auto block [mix-blend-mode:multiply]"
+              />
+            </Link>
 
             {/* Copyright — always dark muted */}
             <p className="text-[length:var(--text-xs)] text-text-muted mt-1">
