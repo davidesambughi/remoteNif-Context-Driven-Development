@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -25,7 +26,9 @@ export default async function SignInPage({ params, searchParams }: Props) {
 
   return (
     <AuthCard title={t('title')}>
-      <SignInForm redirectTo={redirectTo} initialError={error} />
+      <Suspense fallback={null}>
+        <SignInForm redirectTo={redirectTo} initialError={error} />
+      </Suspense>
     </AuthCard>
   )
 }

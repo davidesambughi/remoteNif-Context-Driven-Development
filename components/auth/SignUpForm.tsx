@@ -32,7 +32,11 @@ export default function SignUpForm({ locale }: Props) {
   const searchParams = useSearchParams()
   const [serverError, setServerError] = useState<string | null>(null)
 
-  const tier = searchParams.get('tier') as SignUpInput['tier']
+  // searchParams.get() returns null when absent — coerce to undefined so Zod's optional() accepts it
+  const tierParam = searchParams.get('tier')
+  const tier = (tierParam === 'essential' || tierParam === 'standard' || tierParam === 'express')
+    ? tierParam
+    : undefined
 
   const form = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),

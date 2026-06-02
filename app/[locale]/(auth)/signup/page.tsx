@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -19,7 +20,9 @@ export default async function SignUpPage({ params }: Props) {
 
   return (
     <AuthCard title={t('title')}>
-      <SignUpForm locale={locale} />
+      <Suspense fallback={null}>
+        <SignUpForm locale={locale} />
+      </Suspense>
     </AuthCard>
   )
 }

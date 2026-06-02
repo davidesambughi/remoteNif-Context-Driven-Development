@@ -40,7 +40,11 @@ export default function SignInForm({ redirectTo, initialError }: Props) {
     initialError ? (knownErrors[initialError] ?? null) : null
   )
 
-  const tier = searchParams.get('tier') as SignInInput['tier']
+  // searchParams.get() returns null when absent — coerce to undefined so Zod's optional() accepts it
+  const tierParam = searchParams.get('tier')
+  const tier = (tierParam === 'essential' || tierParam === 'standard' || tierParam === 'express')
+    ? tierParam
+    : undefined
 
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
