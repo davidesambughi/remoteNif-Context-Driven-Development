@@ -4,15 +4,13 @@
 
 ## Current Phase
 
-Active development. Features 01–22 complete. Audit sprints in progress (see `context/audit-sprint-rules.md`). Feature 23 — Google OAuth is next after audits.
+Active development. Features 01–22 complete. Audit sprints 0–5 and 7 complete. Sprint 6 (`user-flows.md`) research complete — awaiting findings review. Feature 23 — Google OAuth is next after Sprint 6.
 
 ---
 
 ## Current Goal
 
-**Feature 23 — Google OAuth sign-in for customers.**
-
-Customer-only. Admin and operator auth remain email/password only.
+**Audit Sprint 6 — `user-flows.md`** (Research complete — awaiting findings review).
 
 ---
 
@@ -22,7 +20,9 @@ Customer-only. Admin and operator auth remain email/password only.
 
 ## Completed
 
-- **Audit Sprint 7 — `project-overview.md`** — O1: "Gemini API" replaced with "Groq API (Llama 4 Scout)" in two places (AI Document Pre-Check section and Scope list). O2: Renewal email description updated from single "email at 11 months" to the actual 3-cohort sequence (30d / 15d / 0d before expiry). All other claims verified clean (prices, timeout, escalation threshold, scope, regulatory context). Build clean.
+- **Audit Sprint 3 — `architecture-context.md`** — A1: stack table AI row updated Gemini→Groq (Llama 4 Scout). A2/A3: project tree fully rewritten to reflect actual codebase (added lib/operator/, lib/pdf/, lib/og.ts, lib/seo.ts, lib/jsonld.ts, app/auth/, app/api/cron/, app/api/operator/package/, renewal/, references/, feature-specs/; removed types/ dir, about/, api/documents/review/; fixed admin/operator nested route structure). A4: stack versions verified against `package.json` (Next.js 16.2.4, React 19.2.4). A5: Invariant #9 updated to explicitly allow intentional `any` usage in `lib/db/queries.ts` for Drizzle transaction support. A6: `proxy.ts` example in doc synchronized with the actual implementation (including `AUTH_PAGES` and `CUSTOMER_PROTECTED` logic). Build clean.
+- **Audit Sprint 7 — `project-overview.md`**
+ — O1: "Gemini API" replaced with "Groq API (Llama 4 Scout)" in two places (AI Document Pre-Check section and Scope list). O2: Renewal email description updated from single "email at 11 months" to the actual 3-cohort sequence (30d / 15d / 0d before expiry). All other claims verified clean (prices, timeout, escalation threshold, scope, regulatory context). Build clean.
 - **Audit Sprint 0** — Reference docs created: `context/references/nextjs-16-2.md`, `next-intl-v4.md`, `supabase-2026.md`. `context/audit-sprint-rules.md` written.
 - **Audit Sprint 1 — `tech-spec.md`** — 2 doc fixes: `poaGeneratedPath` added to Order interface (Feature 09b gap); `ADMIN_EMAIL` added to env var table + Zod schema example + `.env.local` template (Feature 11b gap). F3 (Gemini→Groq in stack table) is in `architecture-context.md` — deferred to Sprint 3.
 - **Audit Sprint 2 — `ui-context.md`** — 3 doc fixes: (G1) `status-*-subtle` 4-token table added to Status section (subtle tinted backgrounds, 8% opacity); (G2) dedicated Pricing Page Tokens subsection added (3 scoped glassmorphism tokens with OKLCH values and scoping rule); (G3) Glass tokens expanded from a one-liner to a full 9-token table with OKLCH values and photo-canvas-only warning. No banned token violations found in any component file. Build clean.

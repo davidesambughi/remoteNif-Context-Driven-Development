@@ -402,7 +402,7 @@ export const config = {
 
 8. **Never reference raw colors in components** — use design token CSS variables only (semantic tokens, not primitives).
 
-9. **Every data boundary is typed** — API responses, form inputs, DB queries, and env variables must have explicit TypeScript types or Zod schemas.
+9. **Every data boundary is typed** — API responses, form inputs, DB queries, and env variables must have explicit TypeScript types or Zod schemas. (Intentional exception: `any` is permitted in `lib/db/queries.ts` for Drizzle transaction support to avoid complex generic overhead).
 
 10. **Translations are never hardcoded** — all user-facing text must use next-intl translation keys.
 
@@ -411,6 +411,17 @@ export const config = {
 12. **Proxy (`proxy.ts`) is for routing only** — no business logic, no database queries, no complex operations. Keep it fast and simple.
 
 13. **Server Actions return structured results** — always return `{ success: true, data }` or `{ success: false, error }`, never throw errors to the client.
+
+14. **Email templates are React components** — use React Email for all transactional emails, never string concatenation.
+
+15. **Environment variables are validated at startup** — use Zod to validate all env vars in a single place, fail fast if misconfigured.
+
+16. **shadcn/ui components are the default** — always reach for a shadcn component before writing a custom one. Build custom components only when no shadcn primitive fits; custom components must still use design tokens (no raw colors, no hardcoded spacing).
+
+17. **Mobile-first layout** — all layouts are built for mobile first. Add `md:` / `lg:` breakpoint variants only where the layout actually changes. Never design desktop-first and patch mobile afterward.
+
+---
+tructured results** — always return `{ success: true, data }` or `{ success: false, error }`, never throw errors to the client.
 
 14. **Email templates are React components** — use React Email for all transactional emails, never string concatenation.
 
