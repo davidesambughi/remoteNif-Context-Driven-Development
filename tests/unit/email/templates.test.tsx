@@ -492,3 +492,64 @@ describe('getRenewalReminderSubject', () => {
     expect(new Set(subjects).size).toBe(4)
   })
 })
+
+// ---------------------------------------------------------------------------
+// AdminSlaBreachEmail (Feature S6-Fix10)
+// ---------------------------------------------------------------------------
+
+import {
+  AdminSlaBreachEmail,
+  getAdminSlaBreachSubject,
+} from '@/lib/email/templates/admin-sla-breach'
+
+describe('AdminSlaBreachEmail', () => {
+  const baseProps = {
+    orderId: 'test-order-sla-1',
+    customerName: 'Pedro Alves',
+    hoursOverdue: 56,
+    adminOrderUrl: 'https://example.com/en/admin/orders/test-order-sla-1',
+  }
+
+  it('renders without throwing', async () => {
+    await expect(render(AdminSlaBreachEmail(baseProps))).resolves.not.toThrow()
+  })
+
+  it('contains the customer name in the rendered output', async () => {
+    const html = await render(AdminSlaBreachEmail(baseProps))
+    expect(html).toContain('Pedro Alves')
+  })
+
+  it('contains the orderId in the rendered output', async () => {
+    const html = await render(AdminSlaBreachEmail(baseProps))
+    expect(html).toContain('test-order-sla-1')
+  })
+
+  it('contains the hoursOverdue value in the rendered output', async () => {
+    const html = await render(AdminSlaBreachEmail(baseProps))
+    expect(html).toContain('56')
+  })
+
+  it('contains the admin order URL as a link', async () => {
+    const html = await render(AdminSlaBreachEmail(baseProps))
+    expect(html).toContain('https://example.com/en/admin/orders/test-order-sla-1')
+  })
+})
+
+describe('getAdminSlaBreachSubject', () => {
+  it('returns a non-empty string', () => {
+    const subject = getAdminSlaBreachSubject('test-order-sla-1')
+    expect(typeof subject).toBe('string')
+    expect(subject.length).toBeGreaterThan(0)
+  })
+
+  it('contains the first 8 characters of the orderId', () => {
+    const subject = getAdminSlaBreachSubject('abcdefghijklmnop')
+    expect(subject).toContain('abcdefgh')
+    expect(subject).not.toContain('ijklmnop')
+  })
+
+  it('contains "SLA breach" in the subject', () => {
+    const subject = getAdminSlaBreachSubject('test-order-sla-1')
+    expect(subject.toLowerCase()).toContain('sla breach')
+  })
+})

@@ -147,7 +147,7 @@
       "essential": {
         "name": "Essential",
         "badge": "Günstig & Einfach",
-        "subtitle": "Nur NIF, ohne Steuervertretung",
+        "subtitle": "Geeignet, wenn Sie keine aktiven steuerlichen Bindungen in Portugal haben.",
         "features": {
           "delivery": "Lieferung in 5 Werktagen",
           "nif": "NIF-Nummer",
@@ -169,7 +169,8 @@
       "express": {
         "name": "Express",
         "badge": "Schnellste",
-        "subtitle": "Schnelleinreichung innerhalb von 48 Stunden",
+        "subtitle": "Schnelleinreichung innerhalb von 48 Stunden.",
+        "help": "Ihr 48-Stunden-Zeitfenster beginnt, sobald Ihre Dokumente die Prüfung bestanden haben.",
         "features": {
           "submission": "Antrag in 48h eingereicht",
           "nif": "NIF-Nummer",
@@ -355,7 +356,7 @@
       "pendingReview": "In Prüfung",
       "stillReviewing": "Wird noch geprüft… das dauert länger als gewöhnlich.",
       "approved": "Genehmigt",
-      "manualReview": "Our team has been notified and will review your document manually."
+      "manualReview": "Unser Team wurde benachrichtigt und wird Ihr Dokument innerhalb von 4 Stunden prüfen."
     },
     "flagReasons": {
       "passport_expired": "Ihr Reisepass ist abgelaufen. Bitte laden Sie einen gültigen Reisepass hoch.",

@@ -1034,6 +1034,65 @@ export async function getOrdersForRenewalReminders(
     ) as unknown as Promise<RenewalReminderTarget[]>
 }
 
+// ---------------------------------------------------------------------------
+// SLA breach queries (Feature S6-Fix10)
+// ---------------------------------------------------------------------------
+
+/**
+ * Shape returned by getOverdueExpressOrders.
+ * Contains only what the SLA breach alert email needs — no customer PII beyond name.
+ */
+export type OverdueExpressOrder = {
+  id: string
+  fullName: string | null
+  documentsApprovedAt: Date
+}
+
+/**
+ * Returns Express orders that have exceeded the 48-hour operator SLA and have not
+ * yet had a breach alert sent.
+ *
+ * Filters:
+ *  - tier = 'express'
+ *  - status = 'documents_approved'
+ *  - documentsApprovedAt < NOW() - 48h
+ *  - slaBreachAlertSentAt IS NULL   — dedup: one alert per order per breach
+ */
+export async function getOverdueExpressOrders(): Promise<OverdueExpressOrder[]> {
+  const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000)
+
+  const rows = await db
+    .select({
+      id: orders.id,
+      fullName: orders.fullName,
+      documentsApprovedAt: orders.documentsApprovedAt,
+    })
+    .from(orders)
+    .where(
+      and(
+        eq(orders.tier, 'express'),
+        eq(orders.status, 'documents_approved'),
+        lt(orders.documentsApprovedAt, fortyEightHoursAgo),
+        isNull(orders.slaBreachAlertSentAt),
+      ),
+    )
+
+  // documentsApprovedAt is non-null on all documents_approved rows; cast is safe
+  return rows.map((r) => ({ ...r, documentsApprovedAt: r.documentsApprovedAt as Date }))
+}
+
+/**
+ * Marks an order's SLA breach alert as sent.
+ * Called immediately after sending the admin alert email.
+ * Sets slaBreachAlertSentAt once — never cleared.
+ */
+export async function markSlaBreachAlertSent(orderId: string): Promise<void> {
+  await db
+    .update(orders)
+    .set({ slaBreachAlertSentAt: new Date(), updatedAt: new Date() })
+    .where(eq(orders.id, orderId))
+}
+
 /**
  * Sets fiscalRepDismissedAt to NOW() for the given order.
  * Ownership is verified by the caller (Server Action) before this runs.

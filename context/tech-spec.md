@@ -65,6 +65,7 @@ interface Order {
   // Fiscal representation (Standard and Express only)
   fiscalRepExpiresAt: Date | null    // deliveredAt + 12 months
   fiscalRepDismissedAt: Date | null  // set when customer confirms "I no longer need fiscal rep" — suppresses all future renewal emails
+  slaBreachAlertSentAt: Date | null  // set when the admin SLA breach alert has been sent — prevents duplicate alerts
 
   // POA generation
   poaGeneratedPath: string | null    // Supabase Storage path for the generated POA PDF

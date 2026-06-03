@@ -147,7 +147,7 @@
       "essential": {
         "name": "Essential",
         "badge": "Affordable Basic",
-        "subtitle": "NIF only, no fiscal representation",
+        "subtitle": "Suitable if you have no active tax ties in Portugal.",
         "features": {
           "delivery": "5 business days delivery",
           "nif": "NIF number",
@@ -169,7 +169,8 @@
       "express": {
         "name": "Express",
         "badge": "Fastest",
-        "subtitle": "Fast-track submission within 48 hours",
+        "subtitle": "Fast-track submission within 48 hours.",
+        "help": "Your 48-hour window begins once your documents pass review.",
         "features": {
           "submission": "Application submitted in 48h",
           "nif": "NIF number",
@@ -355,7 +356,7 @@
       "pendingReview": "Under review",
       "stillReviewing": "Still reviewing… this is taking longer than usual.",
       "approved": "Approved",
-      "manualReview": "Our team has been notified and will review your document manually."
+      "manualReview": "Our team has been notified and will review your document within 4 hours."
     },
     "flagReasons": {
       "passport_expired": "Your passport is expired. Please upload a valid passport.",

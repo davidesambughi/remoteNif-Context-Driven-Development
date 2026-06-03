@@ -5,6 +5,7 @@ import { redirect } from '@/i18n/navigation'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DashboardContent } from '@/components/dashboard/DashboardContent'
 import { CheckoutResumer } from '@/components/dashboard/CheckoutResumer'
+import { WebhookPoller } from '@/components/dashboard/WebhookPoller'
 
 /**
  * Main Customer Dashboard — thin shell with streaming.
@@ -43,6 +44,11 @@ export default async function DashboardPage({
       {/* Feature 22b: Detects ?checkout_tier=... and resumes the Stripe flow if needed */}
       <Suspense>
         <CheckoutResumer />
+      </Suspense>
+
+      {/* Finding 1: Detects ?session_id=... post-Stripe redirect and polls for the order */}
+      <Suspense>
+        <WebhookPoller />
       </Suspense>
 
       {!isResuming && (

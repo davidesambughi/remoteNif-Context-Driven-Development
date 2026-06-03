@@ -147,7 +147,7 @@
       "essential": {
         "name": "Esencial",
         "badge": "Básico Asequible",
-        "subtitle": "Solo NIF, sin representación fiscal",
+        "subtitle": "Adecuado si no tiene vínculos fiscales activos en Portugal.",
         "features": {
           "delivery": "Entrega en 5 días hábiles",
           "nif": "Número de NIF",
@@ -169,7 +169,8 @@
       "express": {
         "name": "Express",
         "badge": "Más rápido",
-        "subtitle": "Envío urgente en menos de 48 horas",
+        "subtitle": "Envío urgente en menos de 48 horas.",
+        "help": "Su plazo de 48 horas comienza una vez que sus documentos superen la revisión.",
         "features": {
           "submission": "Solicitud enviada en 48h",
           "nif": "Número de NIF",
@@ -355,7 +356,7 @@
       "pendingReview": "En revisión",
       "stillReviewing": "Revisando… esto está tardando más de lo habitual.",
       "approved": "Aprobado",
-      "manualReview": "Our team has been notified and will review your document manually."
+      "manualReview": "Nuestro equipo ha sido notificado y revisará su documento en un plazo de 4 horas."
     },
     "flagReasons": {
       "passport_expired": "Tu pasaporte está caducado. Por favor, sube un pasaporte válido.",

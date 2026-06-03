@@ -4,18 +4,15 @@
 
 ## Current Phase
 
-Active development. Features 01–22 complete. All audit sprints 0–7 complete. Next: implement Sprint 6 code fixes (Findings 5, 6, 8, 10) then Feature 23 — Google OAuth.
+Active development. Features 01–22 complete. All audit sprints 0–7 complete. Sprint 6 code fixes complete (Findings 1, 5, 6, 8, 10). Next: Feature 23 — Google OAuth.
 
 ---
 
 ## Current Goal
 
-**Sprint 6 implementation** — apply agreed code fixes from audit findings.
+**Feature 23 — Google OAuth**
 
-- [x] Finding 5 — NIF copy to clipboard (`NifCopyBlock` client component, wired into `DashboardContent`)
-- [x] Finding 6 — Delivered state order details record (`OrderDetailsRecord` server component, `getFormatter` wired into `DashboardContent`, 4 locale files updated)
-- [x] Finding 8 — `status_update_with_note` email template + wire into `adminUpdateOrderStatus`
-- [ ] Finding 10 — SLA breach alert cron + `slaBreachAlertSentAt` migration
+Sprint 6 complete. All 5 findings implemented and tested.
 
 ---
 
@@ -25,6 +22,7 @@ Active development. Features 01–22 complete. All audit sprints 0–7 complete.
 
 ## Completed
 
+- **Sprint 6 — Code fixes from audit findings** — Finding 1: `WebhookPoller` + `checkHasActiveOrder` (webhook-delay polling). Finding 5: `NifCopyBlock` (NIF copy to clipboard). Finding 6: `OrderDetailsRecord` (delivered state order details). Finding 8: `status_update_with_note` email template wired into `adminUpdateOrderStatus`. Finding 10: `slaBreachAlertSentAt` migration + `getOverdueExpressOrders` / `markSlaBreachAlertSent` + `admin-sla-breach` template + `app/api/cron/sla-breach` route. Unit + integration tests written for Finding 10. Build clean.
 - **Audit Sprint 3 — `architecture-context.md`** — A1: stack table AI row updated Gemini→Groq (Llama 4 Scout). A2/A3: project tree fully rewritten to reflect actual codebase (added lib/operator/, lib/pdf/, lib/og.ts, lib/seo.ts, lib/jsonld.ts, app/auth/, app/api/cron/, app/api/operator/package/, renewal/, references/, feature-specs/; removed types/ dir, about/, api/documents/review/; fixed admin/operator nested route structure). A4: stack versions verified against `package.json` (Next.js 16.2.4, React 19.2.4). A5: Invariant #9 updated to explicitly allow intentional `any` usage in `lib/db/queries.ts` for Drizzle transaction support. A6: `proxy.ts` example in doc synchronized with the actual implementation (including `AUTH_PAGES` and `CUSTOMER_PROTECTED` logic). Build clean.
 - **Audit Sprint 7 — `project-overview.md`**
  — O1: "Gemini API" replaced with "Groq API (Llama 4 Scout)" in two places (AI Document Pre-Check section and Scope list). O2: Renewal email description updated from single "email at 11 months" to the actual 3-cohort sequence (30d / 15d / 0d before expiry). All other claims verified clean (prices, timeout, escalation threshold, scope, regulatory context). Build clean.

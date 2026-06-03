@@ -158,6 +158,7 @@ export default async function PricingPage() {
             tierId="express"
             priceEurCents={TIERS.express.priceEurCents}
             subtitle={expressSub}
+            infoHint={t('tiers.express.help')}
             features={[
               { label: t('tiers.express.features.submission'), icon: 'zap' },
               { label: t('tiers.express.features.nif'),        icon: 'check' },
