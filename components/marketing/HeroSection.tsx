@@ -33,8 +33,8 @@ function StatItem({ value, label, separator = false }: StatItemProps) {
  *
  * Layout rules (from design-principles.md):
  * - Photo fills the entire viewport, object-cover.
- * - Left-to-right gradient overlay darkens the left side for text legibility;
- *   the right side stays clean (photo subject lives there).
+ * - Mobile-only gradient overlay darkens the bottom for text legibility;
+ *   on desktop, the image is clean (text remains legible due to layout/contrast).
  * - Content block (badge → headline → subtext → CTA) is anchored bottom-left,
  *   confined to ≤50% width on desktop. Right half is deliberately empty.
  * - Stats row: horizontal flex, bottom-right on desktop; static centered row
@@ -79,16 +79,12 @@ export function HeroSection() {
       />
 
       {/* ── Gradient overlay — protective shadow for text legibility ─── */}
-      {/* bg-linear-to-t: mobile starts from bottom to protect anchored text */}
-      {/* @md:bg-linear-to-r: desktop shifts to left-to-right protective zone */}
-      <div className="absolute inset-0 bg-linear-to-t from-glass-overlay/90 via-glass-overlay/40 to-transparent @md:bg-linear-to-r @md:from-glass-overlay @md:to-transparent pointer-events-none" />
-
-      {/* ── Mobile brand tint — extra contrast layer for text readability ── */}
-      {/* bottom-right is the brand-colored anchor; fades to transparent top-left */}
-      {/* hidden on desktop — desktop contrast is handled by the left-to-right overlay above */}
-      <div className="@md:hidden absolute inset-0 bg-brand-primary/20 pointer-events-none" />
+      {/* bg-linear-to-t: mobile starts from bottom to protect anchored text; uses orange-based overlay */}
+      {/* @md:hidden: desktop removes the overlay for a cleaner look as requested by the user */}
+      <div className="absolute inset-0 bg-linear-to-t from-glass-overlay-mobile via-glass-overlay-mobile/40 to-transparent @md:hidden pointer-events-none" />
 
       {/* ── Content + stats wrapper ───────────────────────────────────── */}
+
       {/* pt-14 re-introduces the header offset so text starts below navbar */}
       <div className="relative z-10 flex flex-col flex-1 pt-14">
 

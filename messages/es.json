@@ -136,6 +136,32 @@
       "a4": "Depende de tu situación en Portugal. Bajo el Decreto-Ley 44/2022, los residentes de la UE/EEE nunca están obligados a nombrar un representante fiscal. Los residentes de fuera de la UE/EEE solo lo necesitan si tienen obligaciones fiscales portuguesas activas — como propiedad inmobiliaria, ingresos por alquiler o actividad empresarial en Portugal. Nuestro plan Esencial es para cualquier persona sin necesidad de representación fiscal, independientemente de su nacionalidad. Los planes Estándar y Express incluyen 12 meses de representación fiscal autorizada.",
       "q5": "He oído que la ley sobre el representante fiscal cambió — ¿cuál es la normativa actual?",
       "a5": "La ley ya cambió en julio de 2022. El Decreto-Ley 44/2022 eliminó la obligación general para los residentes de fuera de la UE/EEE de nombrar un representante fiscal. Hoy, la obligación solo se aplica a los residentes no pertenecientes a la UE/EEE con obligaciones fiscales portuguesas activas. Si no tienes propiedades, ingresos ni actividad empresarial en Portugal, no estás legalmente obligado a nombrar uno. Algunos servicios todavía describen esto como un requisito universal — eso no ha sido correcto desde 2022."
+    },
+    "comingSoon": {
+      "titleBefore": "What comes ",
+      "titleHighlight": "next",
+      "subtitle": "Everything you need to settle in Portugal — guides coming soon.",
+      "badge": "Coming Soon",
+      "dotsAriaLabel": "Carousel navigation",
+      "slideAriaLabel": "Slide",
+      "card1Title": "Open a Portuguese Bank Account",
+      "card1Description": "From Millennium BCP to Revolut — find the right account for your situation.",
+      "card1ImageAlt": "Bank account illustration",
+      "card2Title": "Apply for a Portuguese Visa",
+      "card2Description": "Passive income, digital nomad, or remote work — understand which visa fits you.",
+      "card2ImageAlt": "Visa illustration",
+      "card3Title": "Buy Property in Portugal",
+      "card3Description": "From promissory contract to deed — what your NIF is needed for and when.",
+      "card3ImageAlt": "Property illustration",
+      "card4Title": "Understand the NHR & IFICI Tax Regimes",
+      "card4Description": "Flat-rate tax benefits for new residents — who qualifies and how to apply.",
+      "card4ImageAlt": "Tax regime illustration",
+      "card5Title": "Register for Social Security (NISS)",
+      "card5Description": "Required if you work or live in Portugal — how to get your number fast.",
+      "card5ImageAlt": "Social security illustration",
+      "card6Title": "Access the Portuguese Health System (SNS)",
+      "card6Description": "Register at your local health centre and get your SNS user number.",
+      "card6ImageAlt": "Healthcare illustration"
     }
   },
   "pricing": {

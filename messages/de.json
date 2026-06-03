@@ -136,6 +136,32 @@
       "a4": "Das hängt von Ihrer Situation in Portugal ab. Gemäß Gesetzesdekret 44/2022 sind EU/EWR-Bürger niemals verpflichtet, einen steuerlichen Vertreter zu benennen. Nicht-EU/EWR-Bürger benötigen nur dann einen, wenn sie aktive portugiesische Steuerpflichten haben — wie Immobilieneigentum, Mieteinnahmen oder Geschäftstätigkeit in Portugal. Unser Essential-Paket richtet sich an alle ohne Bedarf an steuerlicher Vertretung, unabhängig von der Nationalität. Standard und Express beinhalten 12 Monate lizenzierte steuerliche Vertretung.",
       "q5": "Ich habe gehört, dass das Gesetz zur steuerlichen Vertretung geändert wurde — was gilt derzeit?",
       "a5": "Das Gesetz wurde bereits im Juli 2022 geändert. Gesetzesdekret 44/2022 hat die pauschale Pflicht für Nicht-EU/EWR-Bürger zur Benennung eines steuerlichen Vertreters abgeschafft. Heute gilt die Pflicht nur noch für Nicht-EU/EWR-Bürger mit aktiven portugiesischen Steuerpflichten. Wenn Sie keine Immobilien, Einkünfte oder Geschäftstätigkeiten in Portugal haben, sind Sie gesetzlich nicht verpflichtet, einen zu benennen. Einige Dienste beschreiben dies noch als universelle Anforderung — das ist seit 2022 nicht mehr korrekt."
+    },
+    "comingSoon": {
+      "titleBefore": "What comes ",
+      "titleHighlight": "next",
+      "subtitle": "Everything you need to settle in Portugal — guides coming soon.",
+      "badge": "Coming Soon",
+      "dotsAriaLabel": "Carousel navigation",
+      "slideAriaLabel": "Slide",
+      "card1Title": "Open a Portuguese Bank Account",
+      "card1Description": "From Millennium BCP to Revolut — find the right account for your situation.",
+      "card1ImageAlt": "Bank account illustration",
+      "card2Title": "Apply for a Portuguese Visa",
+      "card2Description": "Passive income, digital nomad, or remote work — understand which visa fits you.",
+      "card2ImageAlt": "Visa illustration",
+      "card3Title": "Buy Property in Portugal",
+      "card3Description": "From promissory contract to deed — what your NIF is needed for and when.",
+      "card3ImageAlt": "Property illustration",
+      "card4Title": "Understand the NHR & IFICI Tax Regimes",
+      "card4Description": "Flat-rate tax benefits for new residents — who qualifies and how to apply.",
+      "card4ImageAlt": "Tax regime illustration",
+      "card5Title": "Register for Social Security (NISS)",
+      "card5Description": "Required if you work or live in Portugal — how to get your number fast.",
+      "card5ImageAlt": "Social security illustration",
+      "card6Title": "Access the Portuguese Health System (SNS)",
+      "card6Description": "Register at your local health centre and get your SNS user number.",
+      "card6ImageAlt": "Healthcare illustration"
     }
   },
   "pricing": {

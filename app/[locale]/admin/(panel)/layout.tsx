@@ -69,6 +69,7 @@ export default async function AdminLayout({ children }: Props) {
           width={480}
           height={160}
           className="opacity-[0.07] [mix-blend-mode:multiply]"
+          style={{ height: 'auto' }}
         />
       </div>
     </div>

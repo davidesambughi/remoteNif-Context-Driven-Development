@@ -45,23 +45,44 @@ export function MarketingHeader() {
           ].join(' ')}
         >
           {/* px-[length:var(--space-4)] matches the token grid (--space-4 = 1rem = 16px) */}
-          <div className="max-w-7xl mx-auto px-[length:var(--space-4)] h-full flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-[length:var(--space-4)] h-full flex items-center">
 
-            {/* Brand logo — drop-shadow on glass for legibility over the hero photo */}
-            <Link
-              href="/"
-              className="hover:opacity-80 transition-[var(--transition-base)]"
-              style={isHome ? { filter: GLASS_LOGO_FILTER } : undefined}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/logo.png"
-                alt={t('appName')}
-                className="h-24 w-auto block [mix-blend-mode:multiply]"
-              />
-            </Link>
+            {/* Brand logo — left side */}
+            <div className="flex-1 flex items-center">
+              <Link
+                href="/"
+                className="hover:opacity-80 transition-[var(--transition-base)]"
+                style={isHome ? { filter: GLASS_LOGO_FILTER } : undefined}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/logo.png"
+                  alt={t('appName')}
+                  className="h-24 w-auto block [mix-blend-mode:multiply]"
+                />
+              </Link>
+            </div>
 
-            <div className="flex items-center gap-[length:var(--space-4)]">
+            {/* Centered navigation links — hidden on mobile */}
+            <nav className="hidden md:flex items-center gap-8">
+              {[
+                { href: '/#how-it-works', label: t('footer.process') },
+                { href: '/pricing',      label: t('footer.pricing') },
+                { href: '/#faq',          label: 'FAQ' },
+                { href: '/privacy',      label: t('footer.privacy') },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm font-medium transition-[var(--transition-base)] hover:opacity-70 text-text-primary"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Right side: language switcher + sign in */}
+            <div className="flex-1 flex items-center justify-end gap-[length:var(--space-4)]">
               {/* Language switcher — variant controls icon/text colour */}
               <LanguageSwitcher variant={isHome && !pastHero ? 'glass' : 'default'} />
 
