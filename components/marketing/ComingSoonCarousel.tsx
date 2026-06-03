@@ -7,8 +7,9 @@ import { cn } from '@/lib/utils'
 import { ComingSoonCard } from './ComingSoonCard'
 
 
-// Distance from center accounting for loop wrap-around
-function getLoopDistance(index: number, selectedIndex: number, total: number): number {
+// Distance from center accounting for loop wrap-around.
+// Exported for unit testing — not part of the public component API.
+export function getLoopDistance(index: number, selectedIndex: number, total: number): number {
   const diff = Math.abs(index - selectedIndex)
   return Math.min(diff, total - diff)
 }
