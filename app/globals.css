@@ -102,7 +102,8 @@
   --glass-badge-border:   oklch(100% 0 0 / 0.40); /* badge pill border */
   --glass-separator:      oklch(100% 0 0 / 0.30); /* stats row divider */
   --glass-border-dark:    oklch(0% 0 0 / 0.18);   /* thin dark edge on glass surfaces */
-  --glass-overlay:        var(--color-orange-950); /* dark orange darkening gradient */
+  --glass-overlay:        oklch(0% 0 0 / 0.35);   /* photo darkening gradient start (desktop) */
+  --glass-overlay-mobile: oklch(35% 0.15 42 / 0.85); /* lighter dark orange for mobile contrast */
   --glass-text:           oklch(100% 0 0);         /* all text on photo */
   --glass-text-dim:       oklch(100% 0 0 / 0.80);  /* de-emphasised text on photo */
 
@@ -355,6 +356,7 @@
   --color-glass-separator:     var(--glass-separator);
   --color-glass-border-dark:   var(--glass-border-dark);
   --color-glass-overlay:       var(--glass-overlay);
+  --color-glass-overlay-mobile: var(--glass-overlay-mobile);
   --color-glass-text:          var(--glass-text);
   --color-glass-text-dim:      var(--glass-text-dim);
 

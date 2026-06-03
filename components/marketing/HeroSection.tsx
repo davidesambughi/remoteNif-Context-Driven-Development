@@ -79,15 +79,12 @@ export function HeroSection() {
       />
 
       {/* ── Gradient overlay — protective shadow for text legibility ─── */}
-      {/* bg-linear-to-t: mobile starts from bottom to protect anchored text */}
-      {/* @md:bg-linear-to-r: desktop shifts to left-to-right protective zone */}
-      <div className="absolute inset-0 bg-linear-to-t from-glass-overlay/90 via-glass-overlay/40 to-transparent @md:bg-linear-to-r @md:from-glass-overlay @md:to-transparent pointer-events-none" />
-
-      {/* ── Mobile brand tint — extra contrast layer for text readability ── */}
-      {/* Anchored bottom-left to protect the text block; hidden on desktop */}
-      <div className="@md:hidden absolute inset-0 bg-linear-to-tr from-orange-950/50 to-transparent pointer-events-none" />
+      {/* bg-linear-to-t: mobile starts from bottom to protect anchored text; uses orange-based overlay */}
+      {/* @md:bg-linear-to-r: desktop shifts to left-to-right protective zone; uses black-based overlay */}
+      <div className="absolute inset-0 bg-linear-to-t from-glass-overlay-mobile via-glass-overlay-mobile/40 to-transparent @md:bg-linear-to-r @md:from-glass-overlay @md:to-transparent pointer-events-none" />
 
       {/* ── Content + stats wrapper ───────────────────────────────────── */}
+
       {/* pt-14 re-introduces the header offset so text starts below navbar */}
       <div className="relative z-10 flex flex-col flex-1 pt-14">
 
