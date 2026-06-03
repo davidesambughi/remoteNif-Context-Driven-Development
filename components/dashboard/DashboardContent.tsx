@@ -1,4 +1,4 @@
-import { getTranslations, getLocale } from 'next-intl/server'
+import { getTranslations, getLocale, getFormatter } from 'next-intl/server'
 import { getUserActiveOrder, getActiveDocumentsForOrder } from '@/lib/db/queries'
 import { getPoaSignedUrl } from '@/lib/pdf/generator'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,6 +7,8 @@ import { Link } from '@/i18n/navigation'
 import OrderTimeline from '@/components/dashboard/OrderTimeline'
 import { PersonalDetailsForm } from '@/components/dashboard/PersonalDetailsForm'
 import { RenewalBanner } from '@/components/dashboard/RenewalBanner'
+import { NifCopyBlock } from '@/components/dashboard/NifCopyBlock'
+import { OrderDetailsRecord } from '@/components/dashboard/OrderDetailsRecord'
 import { Mail, ShieldCheck, FileCheck, Send, CheckCircle2 } from 'lucide-react'
 
 interface Props {
@@ -25,11 +27,12 @@ interface Props {
 export async function DashboardContent({ userId }: Props) {
   // Fetch translations in parallel with order data — getTranslations is fast (in-memory)
   // but getUserActiveOrder is the slow DB query we want to Suspense-boundary.
-  const [t, tc, locale, order] = await Promise.all([
+  const [t, tc, locale, order, fmt] = await Promise.all([
     getTranslations('dashboard'),
     getTranslations('common'),
     getLocale(),
     getUserActiveOrder(userId),
+    getFormatter(),
   ])
 
   // Conditionally fetch POA signed URL and document records in parallel.
@@ -164,33 +167,39 @@ export async function DashboardContent({ userId }: Props) {
             )}
 
             {/* Delivered State: Final NIF delivery with prominent mono-spaced display */}
-            {order.status === 'delivered' && (
-              <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-lg)] bg-surface border-success border-2">
-                <CardHeader className="flex flex-row items-center gap-[length:var(--space-4)] space-y-0 text-center sm:text-left">
-                  <div className="h-12 w-12 rounded-full bg-success flex items-center justify-center text-on-accent shrink-0">
-                    <CheckCircle2 className="h-6 w-6" />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-[length:var(--text-2xl)] text-success">
-                      {t('states.delivered.title')}
-                    </CardTitle>
-                    <CardDescription className="text-[length:var(--text-base)] text-text-secondary">
-                      {t('states.delivered.description')}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center sm:items-start gap-[length:var(--space-4)]">
-                  <div className="bg-subtle p-[length:var(--space-6)] rounded-[length:var(--radius-lg)] border border-border-subtle w-full text-center">
-                    <div className="text-[length:var(--text-sm)] text-text-muted uppercase tracking-widest font-[number:var(--font-bold)] mb-[length:var(--space-2)]">
-                      {t('states.delivered.nifLabel')}
+            {order.status === 'delivered' && (() => {
+              // Pre-format dates here so OrderDetailsRecord stays a pure presentational component
+              const orderDate = fmt.dateTime(order.createdAt, { dateStyle: 'medium' })
+              const deliveredDate = order.deliveredAt
+                ? fmt.dateTime(order.deliveredAt, { dateStyle: 'medium' })
+                : '—'
+              return (
+                <Card className="rounded-[length:var(--radius-xl)] shadow-[var(--shadow-lg)] bg-surface border-success border-2">
+                  <CardHeader className="flex flex-row items-center gap-[length:var(--space-4)] space-y-0 text-center sm:text-left">
+                    <div className="h-12 w-12 rounded-full bg-success flex items-center justify-center text-on-accent shrink-0">
+                      <CheckCircle2 className="h-6 w-6" />
                     </div>
-                    <div className="text-[length:var(--text-4xl)] text-text-primary font-[number:var(--font-bold)] font-mono tracking-tighter">
-                      {order.nifNumber || '--- --- ---'}
+                    <div className="flex-1">
+                      <CardTitle className="text-[length:var(--text-2xl)] text-success">
+                        {t('states.delivered.title')}
+                      </CardTitle>
+                      <CardDescription className="text-[length:var(--text-base)] text-text-secondary">
+                        {t('states.delivered.description')}
+                      </CardDescription>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                  </CardHeader>
+                  <CardContent className="flex flex-col items-center sm:items-start gap-[length:var(--space-4)]">
+                    <NifCopyBlock nifNumber={order.nifNumber} />
+                    <OrderDetailsRecord
+                      referenceId={order.id.slice(0, 8).toUpperCase()}
+                      tier={order.tier}
+                      orderDate={orderDate}
+                      deliveredDate={deliveredDate}
+                    />
+                  </CardContent>
+                </Card>
+              )
+            })()}
 
             {/* Support contact — always visible regardless of order status */}
             <div className="pt-[length:var(--space-8)] border-t border-border-subtle">

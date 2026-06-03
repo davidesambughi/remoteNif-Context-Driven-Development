@@ -40,6 +40,10 @@ import {
   getRenewalReminderSubject,
   type RenewalReminderInterval,
 } from './templates/renewal-reminder'
+import {
+  StatusUpdateWithNoteEmail,
+  getStatusUpdateWithNoteSubject,
+} from './templates/status-update-with-note'
 
 export type EmailLocale = 'en' | 'fr' | 'es' | 'de'
 export type EmailTemplateName =
@@ -52,6 +56,7 @@ export type EmailTemplateName =
   | 'nif_delivered'
   | 'fiscal_rep_renewal_confirmation'
   | 'renewal_reminder'
+  | 'status_update_with_note'
 
 // Discriminated union — add a new member here when a new template is introduced,
 // then add a matching case in the switch below.
@@ -65,6 +70,7 @@ export type EmailPayload =
   | { template: 'nif_delivered'; customerName: string; nifNumber: string }
   | { template: 'fiscal_rep_renewal_confirmation'; customerName: string; newExpiresAt: string }
   | { template: 'renewal_reminder'; interval: RenewalReminderInterval; customerName: string; renewalUrl: string }
+  | { template: 'status_update_with_note'; customerName: string; note: string; newStatus: string }
 
 /**
  * Central email sending helper. All outbound emails go through here — never call
@@ -182,6 +188,17 @@ export async function sendEmail(
           interval: payload.interval,
           customerName: payload.customerName,
           renewalUrl,
+        })
+        break
+      }
+      case 'status_update_with_note': {
+        subject = getStatusUpdateWithNoteSubject(locale)
+        reactElement = StatusUpdateWithNoteEmail({
+          locale,
+          customerName: payload.customerName,
+          note: payload.note,
+          newStatus: payload.newStatus,
+          dashboardUrl,
         })
         break
       }

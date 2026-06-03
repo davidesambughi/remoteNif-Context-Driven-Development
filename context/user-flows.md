@@ -44,7 +44,7 @@
 | Admin — Order List | `/admin` | All orders with status, tier, Express SLA countdown |
 | Admin — Order Detail | `/admin/orders/[id]` | Customer details, documents, AI results, action buttons |
 | Operator Sign In | `/operator/signin` | Operator authentication (separate from customer and admin auth) |
-| Operator — Queue | `/operator` | Express + Standard order queue with priority and SLA countdowns |
+| Operator — Queue | `/operator` | Express + Standard + Essential order queue with priority and SLA countdowns |
 | Operator — Submitted Orders | `/operator/submitted` | Read-only archive of all submitted orders with timestamps |
 | Operator — Preferences | `/operator/preferences` | Toggle email and SMS notification channels |
 | Renewal Checkout | Stripe-hosted | €89 fiscal representation renewal payment |
@@ -133,7 +133,7 @@
 5. User downloads the POA, signs it physically (handwritten signature required), scans or photographs it
 6. User uploads passport → AI review runs (see AI review states below)
 7. User uploads proof of address → AI review runs
-8. User uploads signed POA → system validates file type (PDF/JPG/PNG only) and size (max 10MB), no AI review, accepted immediately
+8. User uploads signed POA → AI review runs (same flow as passport and proof of address — all document types go through AI review, none are auto-approved on upload)
 9. All three slots show a clear/accepted state → order status transitions to `documents_under_review`, admin is notified
 
 **Outcome:** All documents uploaded and accepted, order moves to admin review
@@ -147,7 +147,7 @@
 
 ---
 
-#### AI Review States (passport and proof of address only)
+#### AI Review States (all document types: passport, proof of address, and signed POA)
 
 **Clear:**
 - Document slot updates to approved state
@@ -198,10 +198,9 @@
 #### State 4: `submitted` — waiting for Finanças
 
 **What the user sees:**
-- Status timeline updated to show application submitted
-- Estimated delivery date with honest copy: "Typically 5–10 business days from submission. This is an estimate — Finanças processing times are outside our control."
-- Direct support contact link — accessible from this page without hunting for an email
-- Content section below the timeline: useful reading while they wait (what to do after receiving NIF, how to open a Portuguese bank account, what NHR/IFICI is)
+- Status card showing application submitted with description: "Your application has been submitted to Finanças. We are waiting for them to issue your NIF number. This usually takes 5-10 business days."
+- Persistent support footer always visible below all state cards: "Need help with your application? support@remotenif.com"
+- *(Post-launch)* Content section with useful reading while they wait: what to do after receiving NIF, how to open a Portuguese bank account, what NHR/IFICI is.
 
 **No actions required from the user.**
 
@@ -212,10 +211,10 @@
 **What the user sees:**
 - NIF number displayed prominently — large, clear, copyable with one click
 - Permanent record of their order details below
-- "What comes next?" section — condensed version of the post-NIF journey guide (same content as the automated email, available immediately on screen)
+- *(Post-launch)* "What comes next?" section — condensed post-NIF guide (bank account, NHR/IFICI, property steps). Content not yet written; removed from delivery email during Feature 16 for regulatory/bias reasons.
 
 **Triggered automatically:**
-- System sends post-NIF journey guide email
+- System sends NIF delivery email (intentionally minimal — NIF number + dashboard CTA only)
 - Order is permanently marked as complete
 
 **Edge cases:**
@@ -447,10 +446,15 @@
 - Each row shows: customer name, time remaining against 48h SLA (large, color-coded — green → amber → red as deadline approaches), "Download package" button
 - Priority is unmistakable at a glance — no thinking required about what to work on next
 
-**Standard orders (bottom section):**
+**Standard orders (middle section):**
 - Sorted by date ordered, oldest first
 - Each row shows: customer name, date ordered, "Download package" button
 - No countdown — no SLA pressure
+
+**Essential orders (bottom section):**
+- Sorted by date ordered, oldest first
+- Each row shows: customer name, date ordered, "Download package" button
+- No SLA, no fiscal representation — operator submits the NIF application only
 
 ---
 

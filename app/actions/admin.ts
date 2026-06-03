@@ -222,11 +222,12 @@ export async function adminUpdateOrderStatus(
     await adminUpdateOrderStatusQuery(orderId, validated.newStatus, timestamps)
 
     if (validated.note) {
-      // NOTE: The note is saved to the audit log below but is NOT emailed to the customer.
-      // Until a status_update_with_note email template is implemented, admins who write a
-      // note expecting the customer to see it must contact them manually via support email.
-      // When implementing: send a transactional email here using sendEmail() with the note
-      // content and the new status label in the customer's language preference.
+      void sendEmail(order.customerEmail, order.customerLanguage, {
+        template: 'status_update_with_note',
+        customerName: order.fullName ?? 'there',
+        note: validated.note,
+        newStatus: validated.newStatus,
+      })
     }
 
     await insertAuditLog({

@@ -18,7 +18,7 @@ We never silently skip a gap.
 | ✅ 3 | A1 | Audit `architecture-context.md` — invariants, tree, boundaries | Medium |
 | ✅ 4 | A3 | Audit `code-standards.md` — Next.js patterns, i18n, TypeScript | Medium |
 | ✅ 5 | A5 | Audit `progress-tracker.md` — accuracy check | Low |
-| 6 | A6 | Audit `user-flows.md` — flows vs Server Actions | High |
+| ✅ 6 | A6 | Audit `user-flows.md` — flows vs Server Actions | High |
 | ✅ 7 | A7 | Audit `project-overview.md` — scope and constraints | Low |
 
 ## Pattern for Every Sprint

@@ -231,7 +231,21 @@
       "delivered": {
         "title": "NIF geliefert!",
         "description": "Herzlichen Glückwunsch! Ihre portugiesische Steuernummer wurde erfolgreich ausgestellt.",
-        "nifLabel": "Ihre NIF-Nummer"
+        "nifLabel": "Ihre NIF-Nummer",
+        "copyButton": "NIF kopieren",
+        "copiedButton": "Kopiert!",
+        "orderRecord": {
+          "title": "Order Details",
+          "reference": "Reference",
+          "plan": "Plan",
+          "orderDate": "Order Date",
+          "deliveredDate": "Delivered Date",
+          "tiers": {
+            "essential": "Essential",
+            "standard": "Standard",
+            "express": "Express"
+          }
+        }
       }
     },
     "renewalBanner": {
@@ -247,6 +261,15 @@
       },
       "errors": {
         "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+      }
+    },
+    "processing": {
+      "title": "Processing your payment…",
+      "subtitle": "We're confirming your order. This usually takes a few seconds.",
+      "timeout": {
+        "title": "Still processing",
+        "message": "Your payment was successful, but we're still processing your order. Check your email for confirmation, or contact support if you don't receive it within 10 minutes.",
+        "dismiss": "Got it"
       }
     }
   },
