@@ -25,6 +25,7 @@ export default async function AuthCard({ title, children }: AuthCardProps) {
           alt={t('appName')}
           width={160}
           height={54}
+          priority
           className="[mix-blend-mode:multiply] group-hover:opacity-80 transition-opacity duration-200"
         />
       </Link>
