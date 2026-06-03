@@ -34,6 +34,8 @@
 
   /* Warm orange — hero CTA, navbar pill, brand highlights */
   --color-orange-500: oklch(62% 0.18 42);
+  /* Dark version — for gradients and text contrast */
+  --color-orange-950: oklch(25% 0.12 42);
   /* Dim version — hover states, tinted surfaces */
   --color-orange-100: oklch(95% 0.05 42);
 
@@ -100,7 +102,7 @@
   --glass-badge-border:   oklch(100% 0 0 / 0.40); /* badge pill border */
   --glass-separator:      oklch(100% 0 0 / 0.30); /* stats row divider */
   --glass-border-dark:    oklch(0% 0 0 / 0.18);   /* thin dark edge on glass surfaces */
-  --glass-overlay:        oklch(0% 0 0 / 0.35);   /* photo darkening gradient start */
+  --glass-overlay:        var(--color-orange-950); /* dark orange darkening gradient */
   --glass-text:           oklch(100% 0 0);         /* all text on photo */
   --glass-text-dim:       oklch(100% 0 0 / 0.80);  /* de-emphasised text on photo */
 
@@ -324,6 +326,7 @@
   --color-brand-primary: var(--brand-primary);
   --color-brand-primary-dim: var(--brand-primary-dim);
   --color-brand-secondary: var(--brand-secondary);
+  --color-orange-950: var(--color-orange-950);
   /* Prefixed with "text-" to avoid collision with shadcn's `--color-primary` (orange).
      Use: text-text-primary / text-text-secondary / text-text-muted              */
   --color-text-primary: var(--text-primary);

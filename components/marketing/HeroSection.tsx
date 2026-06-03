@@ -84,9 +84,8 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-linear-to-t from-glass-overlay/90 via-glass-overlay/40 to-transparent @md:bg-linear-to-r @md:from-glass-overlay @md:to-transparent pointer-events-none" />
 
       {/* ── Mobile brand tint — extra contrast layer for text readability ── */}
-      {/* bottom-right is the brand-colored anchor; fades to transparent top-left */}
-      {/* hidden on desktop — desktop contrast is handled by the left-to-right overlay above */}
-      <div className="@md:hidden absolute inset-0 bg-brand-primary/20 pointer-events-none" />
+      {/* Anchored bottom-left to protect the text block; hidden on desktop */}
+      <div className="@md:hidden absolute inset-0 bg-linear-to-tr from-orange-950/50 to-transparent pointer-events-none" />
 
       {/* ── Content + stats wrapper ───────────────────────────────────── */}
       {/* pt-14 re-introduces the header offset so text starts below navbar */}
