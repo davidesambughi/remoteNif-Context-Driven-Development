@@ -90,6 +90,8 @@ jobs:
             -f lib/db/migrations/0002_flowery_amphibian.sql
           psql -h localhost -p 5433 -U postgres -d nif3_test \
             -f lib/db/migrations/0003_even_katie_power.sql
+          psql -h localhost -p 5433 -U postgres -d nif3_test \
+            -f lib/db/migrations/0004_sla_breach_alert.sql
           # 0001_handle_new_user.sql is Supabase Auth specific (auth.users trigger)
           # and is intentionally skipped — plain Postgres has no auth schema.
 
