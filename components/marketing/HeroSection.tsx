@@ -33,8 +33,8 @@ function StatItem({ value, label, separator = false }: StatItemProps) {
  *
  * Layout rules (from design-principles.md):
  * - Photo fills the entire viewport, object-cover.
- * - Left-to-right gradient overlay darkens the left side for text legibility;
- *   the right side stays clean (photo subject lives there).
+ * - Mobile-only gradient overlay darkens the bottom for text legibility;
+ *   on desktop, the image is clean (text remains legible due to layout/contrast).
  * - Content block (badge → headline → subtext → CTA) is anchored bottom-left,
  *   confined to ≤50% width on desktop. Right half is deliberately empty.
  * - Stats row: horizontal flex, bottom-right on desktop; static centered row
@@ -80,8 +80,8 @@ export function HeroSection() {
 
       {/* ── Gradient overlay — protective shadow for text legibility ─── */}
       {/* bg-linear-to-t: mobile starts from bottom to protect anchored text; uses orange-based overlay */}
-      {/* @md:bg-linear-to-r: desktop shifts to left-to-right protective zone; uses black-based overlay */}
-      <div className="absolute inset-0 bg-linear-to-t from-glass-overlay-mobile via-glass-overlay-mobile/40 to-transparent @md:bg-linear-to-r @md:from-glass-overlay @md:to-transparent pointer-events-none" />
+      {/* @md:hidden: desktop removes the overlay for a cleaner look as requested by the user */}
+      <div className="absolute inset-0 bg-linear-to-t from-glass-overlay-mobile via-glass-overlay-mobile/40 to-transparent @md:hidden pointer-events-none" />
 
       {/* ── Content + stats wrapper ───────────────────────────────────── */}
 

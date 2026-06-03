@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { HeroSection } from '@/components/marketing/HeroSection'
 import { HowItWorksSection } from '@/components/marketing/HowItWorksSection'
 import { FAQSection } from '@/components/marketing/FAQSection'
+import { ComingSoonSection } from '@/components/marketing/ComingSoonSection'
 import type { Locale } from '@/i18n/routing'
 import { buildAlternates } from '@/lib/seo'
 import { JsonLd } from '@/components/shared/JsonLd'
@@ -60,6 +61,7 @@ export default function HomePage({
       <HeroSection />
       <HowItWorksSection />
       <FAQSection />
+      <ComingSoonSection />
       {/* ── 20c: FAQPage JSON-LD — AI crawlers parse this even though Google
            deprecated FAQ rich results in May 2026. Placed after <FAQSection />
            so the schema is near the content it describes. */}

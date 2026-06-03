@@ -136,6 +136,32 @@
       "a4": "It depends on your situation in Portugal. Under Decree-Law 44/2022, EU/EEA residents are never required to appoint a fiscal representative. Non-EU/EEA residents only need one if they have active Portuguese tax obligations — such as property ownership, rental income, or business activity in Portugal. Our Essential tier is for anyone without fiscal representation needs, regardless of nationality. Standard and Express include 12 months of licensed fiscal representation.",
       "q5": "I've heard the fiscal representative law changed — what's the current rule?",
       "a5": "The law already changed in July 2022. Decree-Law 44/2022 removed the blanket requirement for non-EU/EEA residents to appoint a fiscal representative. Today, the requirement applies only to non-EU/EEA residents with active Portuguese tax obligations. If you have no property, income, or business activity in Portugal, you are not legally required to appoint one. Some services still describe it as a universal requirement — that has not been accurate since 2022."
+    },
+    "comingSoon": {
+      "titleBefore": "What comes ",
+      "titleHighlight": "next",
+      "subtitle": "Everything you need to settle in Portugal — guides coming soon.",
+      "badge": "Coming Soon",
+      "dotsAriaLabel": "Carousel navigation",
+      "slideAriaLabel": "Slide",
+      "card1Title": "Open a Portuguese Bank Account",
+      "card1Description": "From Millennium BCP to Revolut — find the right account for your situation.",
+      "card1ImageAlt": "Bank account illustration",
+      "card2Title": "Apply for a Portuguese Visa",
+      "card2Description": "Passive income, digital nomad, or remote work — understand which visa fits you.",
+      "card2ImageAlt": "Visa illustration",
+      "card3Title": "Buy Property in Portugal",
+      "card3Description": "From promissory contract to deed — what your NIF is needed for and when.",
+      "card3ImageAlt": "Property illustration",
+      "card4Title": "Understand the NHR & IFICI Tax Regimes",
+      "card4Description": "Flat-rate tax benefits for new residents — who qualifies and how to apply.",
+      "card4ImageAlt": "Tax regime illustration",
+      "card5Title": "Register for Social Security (NISS)",
+      "card5Description": "Required if you work or live in Portugal — how to get your number fast.",
+      "card5ImageAlt": "Social security illustration",
+      "card6Title": "Access the Portuguese Health System (SNS)",
+      "card6Description": "Register at your local health centre and get your SNS user number.",
+      "card6ImageAlt": "Healthcare illustration"
     }
   },
   "pricing": {

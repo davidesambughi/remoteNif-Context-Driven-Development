@@ -12,7 +12,7 @@ Active development. Features 01–22 complete. All audit sprints 0–7 complete.
 
 **Feature 23 — Google OAuth**
 
-Sprint 6 complete. All 5 findings implemented and tested.
+Feature 24 complete. Next: Feature 23 — Google OAuth.
 
 ---
 
@@ -92,5 +92,6 @@ Sprint 6 complete. All 5 findings implemented and tested.
 
 ---
 
+- **Feature 24 — Coming Soon Section** — `ComingSoonSection` (Server Component), `ComingSoonCarousel` (Client, Embla direct), `ComingSoonCard` (presentational). Center-focused carousel: 78%/40%/36% card widths create natural peek; scale-100/88/80 + opacity-100/60/40 by loop distance; 6 pagination dots with click-to-scroll. `home.comingSoon` i18n keys added to all 4 locale files. Build clean.
 - **Audit Sprint 6 — `user-flows.md`** — 10 findings reviewed. 5 doc updates applied (Findings 2, 3, 4, 7, 9). 5 code fixes agreed for next session (Findings 1, 5, 6, 8, 10). 2 post-launch features logged. Build clean.
 - **Feature 22a — Checkout Resume: Suspense Fix** — `signin/page.tsx` and `signup/page.tsx` now wrap their form components in `<Suspense fallback={null}>`. This fixes a hydration regression where `useSearchParams()` in `SignInForm`/`SignUpForm` prevented click handlers from attaching. Additionally, the unsafe `as SignInInput['tier']` / `as SignUpInput['tier']` type casts in both form components were replaced with explicit type guards (null-coercion to undefined) — this was a bonus type-safety fix bundled with the session. The checkout tier resume flow (reading `?tier=` from URL post-auth and redirecting to Stripe) was implemented without a formal spec; the de-facto implementation lives in `SignInForm.tsx`, `SignUpForm.tsx`, `app/actions/auth.ts`, and `lib/validations/auth.ts`. Build clean, 436 unit tests passing.
