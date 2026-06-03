@@ -34,40 +34,38 @@ export function MarketingFooter() {
               : 'bg-surface border-t border-border-subtle',
           ].join(' ')}
         >
-          <div className="max-w-7xl mx-auto">
-            {/* Brand logo — links back to homepage */}
-            <Link href="/" className="inline-block hover:opacity-80 transition-[var(--transition-base)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/logo.png"
-                alt={t('appName')}
-                className="h-24 w-auto block [mix-blend-mode:multiply]"
-              />
-            </Link>
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            {/* Left — logo + copyright */}
+            <div>
+              <Link href="/" className="inline-block hover:opacity-80 transition-[var(--transition-base)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/logo.png"
+                  alt={t('appName')}
+                  className="h-24 w-auto block [mix-blend-mode:multiply]"
+                />
+              </Link>
+              <p className="text-[length:var(--text-xs)] text-text-muted mt-1">
+                {t('footer.copyright')}
+              </p>
+            </div>
 
-            {/* Copyright — always dark muted */}
-            <p className="text-[length:var(--text-xs)] text-text-muted mt-1">
-              {t('footer.copyright')}
-            </p>
-
-            {/* Nav links — always dark */}
-            <nav
-              className="mt-4 flex flex-wrap gap-x-4 gap-y-2"
-              aria-label="Footer navigation"
-            >
-              {navLinks.map(({ href, label }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  className="text-[length:var(--text-sm)] text-text-secondary hover:text-text-primary transition-[var(--transition-base)]"
-                >
-                  {label}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Language switcher — always default (dark) variant */}
-            <div className="mt-4">
+            {/* Right — nav links + language switcher */}
+            <div className="flex flex-col items-start sm:items-end gap-3">
+              <nav
+                className="flex flex-wrap gap-x-4 gap-y-2 sm:justify-end"
+                aria-label="Footer navigation"
+              >
+                {navLinks.map(({ href, label }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    className="text-[length:var(--text-sm)] text-text-secondary hover:text-text-primary transition-[var(--transition-base)]"
+                  >
+                    {label}
+                  </Link>
+                ))}
+              </nav>
               <LanguageSwitcher />
             </div>
           </div>

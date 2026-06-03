@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { AnimateOnScroll } from './AnimateOnScroll'
 
 const FAQ_KEYS = ['1', '2', '3', '4', '5'] as const
 
@@ -28,7 +29,7 @@ export function FAQSection() {
         />
       </div>
 
-      <div className="relative max-w-2xl mx-auto">
+      <AnimateOnScroll className="relative max-w-2xl mx-auto">
         <div className="border-l-4 border-brand-primary pl-[length:var(--space-4)]">
           <h2 className="font-serif text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-text-primary">
             {t('title')}
@@ -68,7 +69,7 @@ export function FAQSection() {
             </AccordionItem>
           ))}
         </Accordion>
-      </div>
+      </AnimateOnScroll>
     </section>
   )
 }
