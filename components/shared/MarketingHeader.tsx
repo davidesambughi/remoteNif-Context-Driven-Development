@@ -74,10 +74,7 @@ export function MarketingHeader() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={[
-                    'text-sm font-medium transition-[var(--transition-base)] hover:opacity-70',
-                    isHome && !pastHero ? 'text-white' : 'text-text-secondary',
-                  ].join(' ')}
+                  className="text-sm font-medium transition-[var(--transition-base)] hover:opacity-70 text-text-primary"
                 >
                   {link.label}
                 </Link>
