@@ -118,6 +118,9 @@ export const orders = pgTable(
     // Set when customer confirms "I no longer need fiscal rep" — suppresses all future renewal emails
     fiscalRepDismissedAt: timestamp('fiscal_rep_dismissed_at'),
 
+    // Set once when the admin SLA breach alert has been sent — prevents duplicate alerts
+    slaBreachAlertSentAt: timestamp('sla_breach_alert_sent_at'),
+
     // Generated POA — Supabase Storage path; null until the user generates the document
     poaGeneratedPath: text('poa_generated_path'),
 

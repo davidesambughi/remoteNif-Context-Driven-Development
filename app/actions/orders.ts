@@ -101,6 +101,20 @@ export async function generatePoa(
 }
 
 /**
+ * Lightweight poll used by WebhookPoller to detect when the Stripe webhook has
+ * created the order in the DB. Returns quickly — no heavy joins.
+ */
+export async function checkHasActiveOrder(): Promise<ActionResult<{ hasOrder: boolean }>> {
+  try {
+    const user = await requireAuth()
+    const order = await getUserActiveOrder(user.id)
+    return { success: true, data: { hasOrder: order !== null } }
+  } catch {
+    return { success: false, error: 'dashboard.errors.generic' }
+  }
+}
+
+/**
  * Marks the customer's fiscal representation as dismissed.
  * Sets fiscalRepDismissedAt = NOW(), which permanently hides the renewal banner
  * and suppresses all future renewal reminder emails for this order.

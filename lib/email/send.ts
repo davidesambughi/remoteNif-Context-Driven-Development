@@ -40,6 +40,14 @@ import {
   getRenewalReminderSubject,
   type RenewalReminderInterval,
 } from './templates/renewal-reminder'
+import {
+  StatusUpdateWithNoteEmail,
+  getStatusUpdateWithNoteSubject,
+} from './templates/status-update-with-note'
+import {
+  AdminSlaBreachEmail,
+  getAdminSlaBreachSubject,
+} from './templates/admin-sla-breach'
 
 export type EmailLocale = 'en' | 'fr' | 'es' | 'de'
 export type EmailTemplateName =
@@ -52,6 +60,8 @@ export type EmailTemplateName =
   | 'nif_delivered'
   | 'fiscal_rep_renewal_confirmation'
   | 'renewal_reminder'
+  | 'status_update_with_note'
+  | 'admin_sla_breach'
 
 // Discriminated union — add a new member here when a new template is introduced,
 // then add a matching case in the switch below.
@@ -65,6 +75,8 @@ export type EmailPayload =
   | { template: 'nif_delivered'; customerName: string; nifNumber: string }
   | { template: 'fiscal_rep_renewal_confirmation'; customerName: string; newExpiresAt: string }
   | { template: 'renewal_reminder'; interval: RenewalReminderInterval; customerName: string; renewalUrl: string }
+  | { template: 'status_update_with_note'; customerName: string; note: string; newStatus: string }
+  | { template: 'admin_sla_breach'; orderId: string; customerName: string; hoursOverdue: number }
 
 /**
  * Central email sending helper. All outbound emails go through here — never call
@@ -182,6 +194,29 @@ export async function sendEmail(
           interval: payload.interval,
           customerName: payload.customerName,
           renewalUrl,
+        })
+        break
+      }
+      case 'status_update_with_note': {
+        subject = getStatusUpdateWithNoteSubject(locale)
+        reactElement = StatusUpdateWithNoteEmail({
+          locale,
+          customerName: payload.customerName,
+          note: payload.note,
+          newStatus: payload.newStatus,
+          dashboardUrl,
+        })
+        break
+      }
+      case 'admin_sla_breach': {
+        // Admin-only alert — always English, no locale-aware dashboardUrl needed
+        const adminOrderUrl = `${env.NEXT_PUBLIC_APP_URL}/en/admin/orders/${payload.orderId}`
+        subject = getAdminSlaBreachSubject(payload.orderId)
+        reactElement = AdminSlaBreachEmail({
+          orderId: payload.orderId,
+          customerName: payload.customerName,
+          hoursOverdue: payload.hoursOverdue,
+          adminOrderUrl,
         })
         break
       }

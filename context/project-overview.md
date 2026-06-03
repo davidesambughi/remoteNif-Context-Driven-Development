@@ -50,7 +50,7 @@ RemoteNIF v2 is a web application that allows non-residents to apply for a Portu
 - Groq API (Llama 4 Scout) evaluates uploaded documents.
 - Returns specific, actionable text for flagged items (e.g., "Utility bill is older than 3 months").
 - Auto-escalates to manual admin review after 2 failed upload attempts. Customer sees: "Our team will review your documents within 4 hours."
-- If AI review exceeds 30 seconds, badge updates to "Still reviewing…". On full timeout, transitions to manual review state and admin is notified.
+- If AI review exceeds 30 seconds, badge updates to "Still reviewing…". On full timeout, transitions to manual review state.
 - **Accepted proof of address documents:** utility bill (electricity, water, gas — not phone/TV) less than 3 months old; bank statement less than 3 months old; rental/lease agreement; official government letter with address.
 
 ### Admin & Operator Tools

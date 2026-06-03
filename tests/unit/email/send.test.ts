@@ -252,4 +252,35 @@ describe('sendEmail dispatch routing', () => {
     const [call] = vi.mocked(resendClient.emails.send).mock.calls
     expect(call![0].subject).toContain('expiré')
   })
+
+  // Feature S6-Fix10 — admin_sla_breach
+  it('routes admin_sla_breach to the correct template and subject', async () => {
+    await sendEmail(TO, 'en', {
+      template: 'admin_sla_breach',
+      orderId: ORDER_ID,
+      customerName: CUSTOMER_NAME,
+      hoursOverdue: 52,
+    })
+
+    expect(resendClient.emails.send).toHaveBeenCalledOnce()
+    const [call] = vi.mocked(resendClient.emails.send).mock.calls
+    // Subject includes the first 8 chars of the order ID
+    expect(call![0].subject).toContain(ORDER_ID.slice(0, 8))
+    expect(call![0].react).toBeTruthy()
+    expect(call![0].from).toBe('noreply@remotenif.com')
+    expect(call![0].to).toBe(TO)
+  })
+
+  it('routes admin_sla_breach without throwing for various hoursOverdue values', async () => {
+    await expect(
+      sendEmail(TO, 'en', {
+        template: 'admin_sla_breach',
+        orderId: ORDER_ID,
+        customerName: CUSTOMER_NAME,
+        hoursOverdue: 120,
+      }),
+    ).resolves.toBeUndefined()
+
+    expect(resendClient.emails.send).toHaveBeenCalledOnce()
+  })
 })

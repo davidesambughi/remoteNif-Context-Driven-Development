@@ -4,13 +4,15 @@
 
 ## Current Phase
 
-Active development. Features 01–22 complete. Audit sprints 0–5 and 7 complete. Sprint 6 (`user-flows.md`) research complete — awaiting findings review. Feature 23 — Google OAuth is next after Sprint 6.
+Active development. Features 01–22 complete. All audit sprints 0–7 complete. Sprint 6 code fixes complete (Findings 1, 5, 6, 8, 10). Next: Feature 23 — Google OAuth.
 
 ---
 
 ## Current Goal
 
-**Audit Sprint 6 — `user-flows.md`** (Research complete — awaiting findings review).
+**Feature 23 — Google OAuth**
+
+Sprint 6 complete. All 5 findings implemented and tested.
 
 ---
 
@@ -20,6 +22,7 @@ Active development. Features 01–22 complete. Audit sprints 0–5 and 7 complet
 
 ## Completed
 
+- **Sprint 6 — Code fixes from audit findings** — Finding 1: `WebhookPoller` + `checkHasActiveOrder` (webhook-delay polling). Finding 5: `NifCopyBlock` (NIF copy to clipboard). Finding 6: `OrderDetailsRecord` (delivered state order details). Finding 8: `status_update_with_note` email template wired into `adminUpdateOrderStatus`. Finding 10: `slaBreachAlertSentAt` migration + `getOverdueExpressOrders` / `markSlaBreachAlertSent` + `admin-sla-breach` template + `app/api/cron/sla-breach` route. Unit + integration tests written for Finding 10. Build clean.
 - **Audit Sprint 3 — `architecture-context.md`** — A1: stack table AI row updated Gemini→Groq (Llama 4 Scout). A2/A3: project tree fully rewritten to reflect actual codebase (added lib/operator/, lib/pdf/, lib/og.ts, lib/seo.ts, lib/jsonld.ts, app/auth/, app/api/cron/, app/api/operator/package/, renewal/, references/, feature-specs/; removed types/ dir, about/, api/documents/review/; fixed admin/operator nested route structure). A4: stack versions verified against `package.json` (Next.js 16.2.4, React 19.2.4). A5: Invariant #9 updated to explicitly allow intentional `any` usage in `lib/db/queries.ts` for Drizzle transaction support. A6: `proxy.ts` example in doc synchronized with the actual implementation (including `AUTH_PAGES` and `CUSTOMER_PROTECTED` logic). Build clean.
 - **Audit Sprint 7 — `project-overview.md`**
  — O1: "Gemini API" replaced with "Groq API (Llama 4 Scout)" in two places (AI Document Pre-Check section and Scope list). O2: Renewal email description updated from single "email at 11 months" to the actual 3-cohort sequence (30d / 15d / 0d before expiry). All other claims verified clean (prices, timeout, escalation threshold, scope, regulatory context). Build clean.
@@ -80,4 +83,14 @@ Active development. Features 01–22 complete. Audit sprints 0–5 and 7 complet
 - **Feature 20c — JSON-LD Structured Data** — `components/shared/JsonLd.tsx` created (Server Component only, no `"use client"`, sanitizes `<` → `<` for XSS safety). `lib/jsonld.ts` created with 4 pure builder functions: `buildOrganizationSchema`, `buildWebSiteSchema`, `buildProductSchemas` (derives prices from `lib/pricing.ts` TIERS automatically — 79.00/129.00/179.00 EUR), `buildFaqPageSchema` (5 Q&A entries, hardcoded English, comment to keep in sync with `en.json`). Organization + WebSite injected in root `app/layout.tsx` inside `<head>`. FAQPage injected in homepage after `<FAQSection />`. Three Product schemas (one per tier) injected in pricing page after the `</div>` outer wrapper via fragment. Note: Google deprecated FAQ rich results in May 2026 — schema kept for AI crawlers only. TypeScript fix: `TIER_SCHEMA_COPY` typed as `Record<Tier, ...>` (not `Record<string, ...>`) to avoid possible-undefined error on indexed access. Build clean.
 - **Feature 18b — Renewal Reminder Emails & Dashboard Banner** — `RenewalReminderTarget` type + `getOrdersForRenewalReminders` (3-cohort day-window query: 30/15/0 days, gte/lt range on `fiscalRepExpiresAt`, status=delivered, tier IN standard/express, dismissedAt IS NULL) + `dismissFiscalRepForOrder` DB queries; `renewal-reminder.tsx` email template (4 locales × 3 intervals: `30_days`/`15_days`/`expired` — inline styles, regulatory warning block); `send.ts` extended with `renewal_reminder` union member + switch case; `app/api/cron/renewals/route.ts` (Bearer auth via `CRON_SECRET`, processes 3 cohorts serially, per-cohort DB error = log + continue, fire-and-forget `sendEmail`, returns `{ success, processed }`); `dismissFiscalRep` Server Action in `app/actions/orders.ts` (Zod UUID validation, ownership check via `getUserActiveOrder`, sets `fiscalRepDismissedAt`); `DismissRenewalDialog.tsx` client component (shadcn AlertDialog, destructive confirm, `useTransition`); `RenewalBanner.tsx` server component (skips Essential + no-expiry + dismissed + >30 days; warning/error states via semantic tokens `bg-warning-subtle`/`bg-error-subtle`; `<Link>` from `@/i18n/navigation`); dashboard page wired with `RenewalBanner`; settings page wired with recovery link (shown when dismissed + non-Essential); `renewalBanner.*` + `settings.renewFiscalRep` i18n keys in all 4 locale files; Feature 22 (vercel.json cron schedule) added to feature list as post-launch. Tests: `orders.test.ts` (7), `cron-renewals.test.ts` (9), `templates.test.tsx` appended (12 smoke × intervals/locales), `send.test.ts` appended (2 dispatch). Note: test `ORDER_ID` must be valid UUID v4 (`00000000-0000-4000-8000-000000000001`) — Zod v4 enforces version bits. 423 total unit tests passing, build clean.
 - **Feature 20d — Technical Routing & GEO** — `app/robots.ts` (crawler blocks for CCBot/Bytespider, sitemap link, explicit disallows for auth/dashboard/admin/operator), `app/sitemap.ts` (8 entries: / and /pricing × 4 locales, full hreflang alternates via `getPathname`), `public/llms.txt` (Markdown per llmstxt.org spec, 3 sections + Optional, hardcoded production URLs). Build clean, `robots.txt` and `sitemap.xml` generated as static routes.
+---
+
+## Post-Launch Features
+
+- **Delivered state — "What comes next?" section** — Add a condensed post-NIF guide (bank account, NHR/IFICI, property steps) below the order details in the `delivered` state. Content not yet written; stripped from delivery email during Feature 16 for regulatory/bias reasons. Logged during Audit Sprint 6 (Finding 7).
+- **Submitted state — useful reading section** — Add a content block below the submitted status card with: what to do after receiving NIF, how to open a Portuguese bank account, what NHR/IFICI is. Copy does not yet exist. Logged during Audit Sprint 6 (Finding 4).
+
+---
+
+- **Audit Sprint 6 — `user-flows.md`** — 10 findings reviewed. 5 doc updates applied (Findings 2, 3, 4, 7, 9). 5 code fixes agreed for next session (Findings 1, 5, 6, 8, 10). 2 post-launch features logged. Build clean.
 - **Feature 22a — Checkout Resume: Suspense Fix** — `signin/page.tsx` and `signup/page.tsx` now wrap their form components in `<Suspense fallback={null}>`. This fixes a hydration regression where `useSearchParams()` in `SignInForm`/`SignUpForm` prevented click handlers from attaching. Additionally, the unsafe `as SignInInput['tier']` / `as SignUpInput['tier']` type casts in both form components were replaced with explicit type guards (null-coercion to undefined) — this was a bonus type-safety fix bundled with the session. The checkout tier resume flow (reading `?tier=` from URL post-auth and redirecting to Stripe) was implemented without a formal spec; the de-facto implementation lives in `SignInForm.tsx`, `SignUpForm.tsx`, `app/actions/auth.ts`, and `lib/validations/auth.ts`. Build clean, 436 unit tests passing.

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": [
+    "app/**/page.tsx",
+    "app/**/layout.tsx",
+    "app/api/**/route.ts",
+    "tests/**/*.test.ts",
+    "tests/**/*.test.tsx",
+    "i18n/types.ts"
+  ],
+  "ignorePatterns": [
+    "drizzle.test.config.ts",
+    "lib/supabase/client.ts"
+  ],
+  "rules": {
+    "unused-files": "error",
+    "unused-exports": "warn",
+    "unused-types": "warn"
+  }
+}

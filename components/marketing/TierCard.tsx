@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation'
 import { Check, Minus, Wallet, Star, Zap } from 'lucide-react'
 import type { Tier } from '@/lib/pricing'
 import { CheckoutButton } from './CheckoutButton'
+import { InfoHint } from './InfoHint'
 
 interface FeatureItem {
   label: string
@@ -16,6 +17,7 @@ interface TierCardProps {
   priceEurCents: number
   // ReactNode so callers can inject colored spans without changing the component internals
   subtitle: React.ReactNode
+  infoHint?: string
   features: FeatureItem[]
   cta: string
   href: string
@@ -61,6 +63,7 @@ export function TierCard({
   tierId,
   priceEurCents,
   subtitle,
+  infoHint,
   features,
   cta,
   href,
@@ -132,10 +135,11 @@ export function TierCard({
           </div>
 
           {/* Subtitle — one-line description under the price */}
-          <p className="mt-[length:var(--space-2)] text-[length:var(--text-sm)] text-text-secondary
+          <div className="mt-[length:var(--space-2)] text-[length:var(--text-sm)] text-text-secondary
             leading-[var(--leading-normal)]">
             {subtitle}
-          </p>
+            {infoHint && <InfoHint content={infoHint} />}
+          </div>
 
           {/* CTA — pushed to bottom of left column */}
           <div className="mt-auto pt-[length:var(--space-6)]">
