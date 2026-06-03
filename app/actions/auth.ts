@@ -13,6 +13,7 @@ import {
   updatePasswordSchema,
 } from '@/lib/validations/auth'
 import type { ActionResult } from '@/lib/types'
+import type { Locale } from '@/i18n/routing'
 
 // ---------------------------------------------------------------------------
 // signUp
@@ -159,7 +160,7 @@ export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
   const locale = await getLocale()
-  redirect({ href: '/', locale: locale as any })
+  redirect({ href: '/', locale: locale as Locale })
 }
 
 // ---------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { redirect } from 'next/navigation'
+import { redirect } from '@/i18n/navigation'
 import { z } from 'zod'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
@@ -46,7 +46,7 @@ export default async function RenewalPage({ params, searchParams }: Props) {
 
   // Defensive auth check — proxy should have already redirected, but guard anyway
   const user = await getCurrentUser()
-  if (!user) redirect(`/${locale}/signin`)
+  if (!user) return redirect({ href: '/signin', locale })
 
   // No orderId in the URL → render not-eligible state immediately.
   // Also guard against non-UUID values (e.g. tampered URLs) — Postgres throws if you

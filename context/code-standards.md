@@ -36,6 +36,29 @@
 - **URL-based conditional logic** (e.g. "is this the homepage?") requires `'use client'` and `usePathname()`. There is no Server Component alternative in Next.js 16 — this is intentional by design, not a limitation.
 - **`'use client'` boundary and render-props:** functions cannot be passed from a Server Component to a Client Component across the serialization boundary. If a client component needs a render-prop callback, its parent must also be `'use client'`. Design the client island to wrap the Server Component children, not the other way round.
 
+### Server Actions — return shape
+
+All Server Actions must return a structured result via `ActionResult<T>` from `lib/types.ts`. Never throw to the client:
+
+```typescript
+import type { ActionResult } from '@/lib/types'
+
+export async function myAction(input: unknown): Promise<ActionResult<{ id: string }>> {
+  // validate → auth check → act
+  return { success: true, data: { id: '...' } }
+  // or
+  return { success: false, error: 'errors.generic' }
+}
+```
+
+The `error` field is always a translation key string, not a raw message.
+
+### Caching invalidation
+
+This project uses `revalidatePath()` for cache invalidation after mutations. Do **not** use `revalidateTag()` — the single-argument form `revalidateTag('tag')` is **broken in Next.js 16** (requires a second `{ expire: 0 }` argument). Stick to `revalidatePath`.
+
+`use cache` (stable in Next.js 16) and `cacheComponents: true` are deliberately deferred — do not enable without a feature spec. See `context/references/nextjs-16-2.md`.
+
 > **Keep these rules current.** Next.js ships frequently. Before implementing a pattern that feels like a workaround, check https://nextjs.org/docs for the latest App Router guidance. The project currently runs **Next.js 16.2** — verify any new pattern against that version specifically.
 
 ---
@@ -66,19 +89,10 @@
 
 ---
 
-## Animation (Framer Motion)
-
-- Use Framer Motion only for meaningful UI transitions — page entrances, modal open/close, list item add/remove.
-- Do not animate data-heavy or table-heavy screens.
-- Keep durations short: 150–250ms for most transitions. Nothing above 400ms unless intentional.
-- Prefer `layout` animations over manual position calculations.
-
----
-
 ## Email (Resend)
 
-- All email sending happens in server-side code only (API routes or background tasks) — never in client components.
-- Use React Email templates. Keep templates in `emails/` directory.
+- All email sending happens in server-side code only (Server Actions or API routes) — never in client components.
+- Use React Email templates. Templates live in `lib/email/templates/`. Sending logic is in `lib/email/send.ts`.
 - Always handle Resend API errors explicitly — do not let email failures crash the main request silently.
 
 ---
@@ -96,6 +110,26 @@
 ## Internationalisation (next-intl)
 
 > Verified against **next-intl v4.12.0** (May 2026). If a major version has shipped since then, re-verify the patterns below at https://next-intl.dev/docs before implementing.
+
+### Server-side redirect
+
+Use `redirect` from `@/i18n/navigation` — never from `next/navigation`. Always use `return redirect(...)` so TypeScript narrows correctly after the guard:
+
+```typescript
+import { redirect } from '@/i18n/navigation'
+import { getLocale } from 'next-intl/server'
+import type { Locale } from '@/i18n/routing'
+
+// In pages/layouts with params:
+const { locale } = await params
+if (!user) return redirect({ href: '/signin', locale: locale as Locale })
+
+// In layouts without params (e.g. admin/operator shells):
+const locale = await getLocale() as Locale
+if (!user) return redirect({ href: '/signin', locale })
+```
+
+`redirect` from `@/i18n/navigation` does not return `never` in TypeScript's control-flow analysis — the `return` is required to narrow types correctly after the call.
 
 ### Hook import source
 
@@ -147,11 +181,12 @@ No `useLocale()` needed. No string length tricks. No regex.
 ## File Organization
 
 ```
-lib/             shared infrastructure: DB client, auth helpers, utilities
-hooks/           custom React hooks (client-side stateful logic only)
-types/           shared TypeScript interfaces and types
-components/ui/   shadcn/ui foundation — do not modify
-components/      app-level components grouped by feature
-app/api/         route handlers (thin — validate, auth check, act, respond)
-emails/          React Email templates
+lib/                    shared infrastructure: DB client, auth helpers, utilities
+lib/types.ts            shared TypeScript types (ActionResult<T>, etc.)
+lib/email/templates/    React Email templates
+lib/email/send.ts       email dispatch (typed union — extend when adding templates)
+components/ui/          shadcn/ui foundation — do not modify
+components/             app-level components grouped by feature
+app/actions/            Server Actions (all mutations — never in components or lib/)
+app/api/                route handlers (thin — external webhooks and downloads only)
 ```
