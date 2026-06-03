@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import { AnimateOnScroll } from './AnimateOnScroll'
 
 interface StepCardProps {
   number: string
@@ -13,8 +14,8 @@ interface StepCardProps {
 // Single step card: step number → serif title → serif body → bottom illustration
 function StepCard({ number, title, description, imageSrc, imageAlt }: StepCardProps) {
   return (
-    // Warm surface, no visible border, subtle shadow
-    <div className="flex flex-col bg-surface rounded-[length:var(--radius-xl)] p-[length:var(--space-6)] shadow-[var(--shadow-md)]">
+    // Warm surface, subtle shadow with lift on hover
+    <div className="flex flex-col bg-surface rounded-[length:var(--radius-xl)] p-[length:var(--space-6)] shadow-[var(--shadow-md)] hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] transition-[transform,box-shadow] duration-200">
 
       {/* Small orange step number (01, 02, 03) */}
       <span
@@ -69,45 +70,53 @@ export function HowItWorksSection() {
       <div className="max-w-5xl mx-auto">
 
         {/* Centered section heading */}
-        <div className="text-center mb-[length:var(--space-10)]">
-          <h2 className="font-serif font-[number:var(--font-bold)] text-[length:var(--text-3xl)] text-text-primary leading-[var(--leading-tight)]">
-            {before}
-            {/* "transparent" rendered in brand color with underline when present */}
-            {highlight && (
-              <span className="text-brand-primary underline underline-offset-4 decoration-brand-primary italic">
-                {highlight}
-              </span>
-            )}
-            {after}
-          </h2>
-          <p className="mt-[length:var(--space-2)] font-[number:var(--font-normal)] text-[length:var(--text-sm)] text-text-secondary">
-            {t('subtitle')}
-          </p>
-        </div>
+        <AnimateOnScroll>
+          <div className="text-center mb-[length:var(--space-10)]">
+            <h2 className="font-serif font-[number:var(--font-bold)] text-[length:var(--text-3xl)] text-text-primary leading-[var(--leading-tight)]">
+              {before}
+              {/* "transparent" rendered in brand color with underline when present */}
+              {highlight && (
+                <span className="text-brand-primary underline underline-offset-4 decoration-brand-primary italic">
+                  {highlight}
+                </span>
+              )}
+              {after}
+            </h2>
+            <p className="mt-[length:var(--space-2)] font-[number:var(--font-normal)] text-[length:var(--text-sm)] text-text-secondary">
+              {t('subtitle')}
+            </p>
+          </div>
+        </AnimateOnScroll>
 
         {/* Cards: stacked on mobile, 3-column on md+ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[length:var(--space-6)]">
-          <StepCard
-            number={t('step1Number')}
-            title={t('step1Title')}
-            description={t('step1Description')}
-            imageSrc="/images/card1.png"
-            imageAlt={t('step1Title')}
-          />
-          <StepCard
-            number={t('step2Number')}
-            title={t('step2Title')}
-            description={t('step2Description')}
-            imageSrc="/images/card2.png"
-            imageAlt={t('step2Title')}
-          />
-          <StepCard
-            number={t('step3Number')}
-            title={t('step3Title')}
-            description={t('step3Description')}
-            imageSrc="/images/card3.png"
-            imageAlt={t('step3Title')}
-          />
+          <AnimateOnScroll delay={0}>
+            <StepCard
+              number={t('step1Number')}
+              title={t('step1Title')}
+              description={t('step1Description')}
+              imageSrc="/images/card1.png"
+              imageAlt={t('step1Title')}
+            />
+          </AnimateOnScroll>
+          <AnimateOnScroll delay={100}>
+            <StepCard
+              number={t('step2Number')}
+              title={t('step2Title')}
+              description={t('step2Description')}
+              imageSrc="/images/card2.png"
+              imageAlt={t('step2Title')}
+            />
+          </AnimateOnScroll>
+          <AnimateOnScroll delay={200}>
+            <StepCard
+              number={t('step3Number')}
+              title={t('step3Title')}
+              description={t('step3Description')}
+              imageSrc="/images/card3.png"
+              imageAlt={t('step3Title')}
+            />
+          </AnimateOnScroll>
         </div>
 
       </div>

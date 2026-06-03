@@ -95,16 +95,23 @@ export function HeroSection() {
           <div className="max-w-full @md:max-w-[50%]">
 
             {/* Badge */}
-            <span className="inline-flex items-center
-              bg-glass-badge-bg border border-glass-badge-border rounded-full
-              px-[length:var(--space-4)] py-[length:var(--space-2)]
-              text-[length:var(--text-xs)] font-[number:var(--font-medium)] text-glass-text">
+            <span
+              className="inline-flex items-center
+                bg-glass-badge-bg border border-glass-badge-border rounded-full
+                px-[length:var(--space-4)] py-[length:var(--space-2)]
+                text-[length:var(--text-xs)] font-[number:var(--font-medium)] text-glass-text
+                motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 duration-700"
+            >
               {t('badge')}
             </span>
 
             {/* Headline — upright opening clause + italic closing clause */}
             {/* "NIF" is highlighted in brand-primary; surrounding text stays glass-text */}
-            <h1 className="mt-[length:var(--space-4)] leading-[var(--leading-tight)]">
+            <h1
+              className="mt-[length:var(--space-4)] leading-[var(--leading-tight)]
+                motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 duration-700"
+              style={{ animationDelay: '100ms' }}
+            >
               <span className="font-serif font-[number:var(--font-bold)]
                 text-[length:var(--text-3xl)] @md:text-[length:var(--text-4xl)]
                 text-glass-text">
@@ -125,9 +132,13 @@ export function HeroSection() {
             </h1>
 
             {/* Subtext — dimmed white for hierarchy without introducing a new colour */}
-            <p className="mt-[length:var(--space-6)]
-              text-[length:var(--text-lg)] text-glass-text-dim
-              font-[number:var(--font-normal)] leading-[var(--leading-relaxed)]">
+            <p
+              className="mt-[length:var(--space-6)]
+                text-[length:var(--text-lg)] text-glass-text-dim
+                font-[number:var(--font-normal)] leading-[var(--leading-relaxed)]
+                motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 duration-700"
+              style={{ animationDelay: '200ms' }}
+            >
               {t('subheadline')}
             </p>
 
@@ -139,14 +150,20 @@ export function HeroSection() {
                 bg-white text-brand-primary rounded-full
                 px-[length:var(--space-8)] py-[length:var(--space-3)]
                 font-[number:var(--font-semibold)] text-[length:var(--text-base)]
-                hover:opacity-90 transition-[var(--transition-base)]">
+                hover:opacity-90 transition-[var(--transition-base)]
+                motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 duration-700"
+              style={{ animationDelay: '300ms' }}>
               {t('cta')}
             </Link>
 
             {/* ── Stats row — mobile only (static, below CTA) ──────── */}
             {/* On desktop this row is hidden; the absolute-positioned row below shows instead */}
-            <div className="flex @md:hidden items-end justify-center
-              mt-[length:var(--space-8)] pb-[length:var(--space-8)]">
+            <div
+              className="flex @md:hidden items-end justify-center
+                mt-[length:var(--space-8)] pb-[length:var(--space-8)]
+                motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 duration-700"
+              style={{ animationDelay: '400ms' }}
+            >
               <StatItem value={t('stat1Value')} label={t('stat1Label')} />
               <StatItem value={t('stat2Value')} label={t('stat2Label')} separator />
               <StatItem value={t('stat3Value')} label={t('stat3Label')} separator />
@@ -158,8 +175,12 @@ export function HeroSection() {
 
         {/* ── Stats row — desktop only (absolute, bottom-right) ──────── */}
         {/* hidden on mobile; absolute positioning relative to the section  */}
-        <div className="hidden @md:flex items-end
-          absolute bottom-[length:var(--space-12)] right-[length:var(--space-16)] z-10">
+        <div
+          className="hidden @md:flex items-end
+            absolute bottom-[length:var(--space-12)] right-[length:var(--space-16)] z-10
+            motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 duration-700"
+          style={{ animationDelay: '400ms' }}
+        >
           <StatItem value={t('stat1Value')} label={t('stat1Label')} />
           <StatItem value={t('stat2Value')} label={t('stat2Label')} separator />
           <StatItem value={t('stat3Value')} label={t('stat3Label')} separator />
