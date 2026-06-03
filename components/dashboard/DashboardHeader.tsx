@@ -3,6 +3,7 @@ import { Settings } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher'
 import { DashboardSignOutButton } from './DashboardSignOutButton'
+import Image from 'next/image'
 
 /**
  * Server component — sticky header for the customer dashboard.
@@ -13,14 +14,21 @@ export async function DashboardHeader() {
 
   return (
     /* Glass header — backdrop-blur keeps it readable over any background image */
-    <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-white/30 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-white/30 shadow-sm overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
         {/* Brand — locale-aware link back to marketing home */}
         <Link
           href="/"
-          className="font-semibold text-sm text-text-primary hover:opacity-80 transition-[var(--transition-base)]"
+          className="flex-none hover:opacity-80 transition-[var(--transition-base)]"
         >
-          {t('appName')}
+          <Image
+            src="/images/logo.png"
+            alt={t('appName')}
+            width={480}
+            height={160}
+            className="h-24 w-auto block [mix-blend-mode:multiply]"
+            priority
+          />
         </Link>
 
         {/* Right side: settings link + language switcher + sign out */}
