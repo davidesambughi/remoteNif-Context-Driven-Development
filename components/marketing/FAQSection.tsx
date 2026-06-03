@@ -14,7 +14,7 @@ export function FAQSection() {
   const t = useTranslations('home.faq')
 
   return (
-    <section className="relative overflow-hidden bg-surface px-4 py-12">
+    <section id="faq" className="relative overflow-hidden bg-surface px-4 py-12">
 
       {/* Decorative logo watermark — same treatment as admin/operator panels */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
@@ -24,6 +24,7 @@ export function FAQSection() {
           width={480}
           height={160}
           className="opacity-[0.07] [mix-blend-mode:multiply]"
+          style={{ height: 'auto' }}
         />
       </div>
 
