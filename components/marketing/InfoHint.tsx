@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { HelpCircle, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { HelpCircle } from 'lucide-react'
 
 interface InfoHintProps {
   content: string

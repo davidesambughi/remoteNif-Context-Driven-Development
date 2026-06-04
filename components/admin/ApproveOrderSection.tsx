@@ -15,7 +15,7 @@ interface ApproveOrderSectionProps {
   tier: SelectOrder['tier']
 }
 
-export function ApproveOrderSection({ orderId, orderStatus, allDocsApproved, tier }: ApproveOrderSectionProps) {
+export function ApproveOrderSection({ orderId, orderStatus, allDocsApproved, tier: _tier }: ApproveOrderSectionProps) {
   const t = useTranslations('admin.detail')
   const [isPending, startTransition] = useTransition()
   const [isConfirming, setIsConfirming] = useState(false)

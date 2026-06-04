@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n/routing'
 import { buildAlternates } from '@/lib/seo'
+import { Link } from '@/i18n/navigation'
 
 export async function generateMetadata({
   params,
@@ -84,9 +85,9 @@ export default function TermsPage() {
           </p>
           <p>
             Your documents are processed in accordance with our{' '}
-            <a href="/privacy" className="text-brand-primary hover:underline">
+            <Link href="/privacy" className="text-brand-primary hover:underline">
               Privacy Policy
-            </a>
+            </Link>
             . They are used solely to submit your NIF application and are deleted within 90 days
             of submission.
           </p>
@@ -188,9 +189,9 @@ export default function TermsPage() {
             We may suspend or terminate your account if you breach these Terms, submit fraudulent
             documents, or engage in prohibited conduct. Upon termination, your personal data will
             be handled in accordance with our{' '}
-            <a href="/privacy" className="text-brand-primary hover:underline">
+            <Link href="/privacy" className="text-brand-primary hover:underline">
               Privacy Policy
-            </a>
+            </Link>
             .
           </p>
           <p>

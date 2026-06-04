@@ -20,7 +20,7 @@ interface OrderDetailPageProps {
 export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
   const { id, locale } = await params
 
-  const admin = await requireRole('admin').catch(() => {
+  await requireRole('admin').catch(() => {
     redirect({ href: '/admin/signin', locale: locale as 'en' | 'fr' | 'es' | 'de' })
   })
 

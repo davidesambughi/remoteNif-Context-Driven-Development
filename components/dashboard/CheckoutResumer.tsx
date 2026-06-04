@@ -50,7 +50,7 @@ export function CheckoutResumer() {
             errorKey = errorKey.replace('checkout.', '')
           }
 
-          setError(t(errorKey as any))
+          setError(t(errorKey as Parameters<typeof t>[0]))
           setIsResuming(false)
         }
       } catch (err) {

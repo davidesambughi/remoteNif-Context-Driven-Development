@@ -78,6 +78,11 @@ export type EmailPayload =
   | { template: 'status_update_with_note'; customerName: string; note: string; newStatus: string }
   | { template: 'admin_sla_breach'; orderId: string; customerName: string; hoursOverdue: number }
 
+// Exhaustive check: TypeScript errors here if a new EmailPayload member is added without a case
+function assertNever(value: never): never {
+  throw new Error(`[sendEmail] Unhandled template: ${String(value)}`)
+}
+
 /**
  * Central email sending helper. All outbound emails go through here — never call
  * resendClient directly from actions or route handlers.
@@ -221,10 +226,7 @@ export async function sendEmail(
         break
       }
       default: {
-        // Exhaustive check — TypeScript errors here if a new EmailPayload member is added
-        // without a corresponding case above
-        const _exhaustive: never = payload
-        return
+        return assertNever(payload)
       }
     }
 

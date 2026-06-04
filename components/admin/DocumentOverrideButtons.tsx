@@ -13,7 +13,7 @@ interface DocumentOverrideButtonsProps {
   orderId: string
 }
 
-export function DocumentOverrideButtons({ document, orderId }: DocumentOverrideButtonsProps) {
+export function DocumentOverrideButtons({ document, orderId: _orderId }: DocumentOverrideButtonsProps) {
   const t = useTranslations('admin.detail')
   const [isPending, startTransition] = useTransition()
   const [reason, setReason] = useState('')

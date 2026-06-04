@@ -12,6 +12,13 @@ const eslintConfig = defineConfig([
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
+  // shadcn/ui components follow their own patterns — suppress rules that conflict with generated code
+  {
+    files: ['components/ui/**'],
+    rules: {
+      'react-hooks/set-state-in-effect': 'off',
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

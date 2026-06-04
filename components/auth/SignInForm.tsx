@@ -68,7 +68,7 @@ export default function SignInForm({ redirectTo, initialError }: Props) {
     // Feature 22: If a checkout URL was returned (tier selection pre-signin),
     // redirect to Stripe instead of the dashboard.
     if (checkoutUrl) {
-      window.location.href = checkoutUrl
+      router.push(checkoutUrl)
       return
     }
 

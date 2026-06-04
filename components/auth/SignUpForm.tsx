@@ -65,7 +65,7 @@ export default function SignUpForm({ locale }: Props) {
     // Feature 22: If a checkout URL was returned (tier selection pre-signup),
     // redirect to Stripe instead of the dashboard.
     if (result.data?.checkoutUrl) {
-      window.location.href = result.data.checkoutUrl
+      router.push(result.data.checkoutUrl)
       return
     }
 
