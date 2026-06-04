@@ -33,9 +33,8 @@ export function RenewalCheckoutButton({ orderId, locale, isCanceled }: RenewalCh
   const [state, setState] = useState<ButtonState>(isCanceled ? 'canceled' : 'loading')
 
   // Triggers the server action and handles success/error
+  // setState('loading') must be called by the caller before invoking this
   async function triggerCheckout() {
-    setState('loading')
-
     const result = await createRenewalCheckoutSession({ orderId, locale })
 
     if (!result.success) {
@@ -50,6 +49,8 @@ export function RenewalCheckoutButton({ orderId, locale, isCanceled }: RenewalCh
   // Auto-trigger on mount unless the user arrived via a cancellation redirect
   useEffect(() => {
     if (!isCanceled) {
+      // triggerCheckout only calls setState after awaits — no synchronous setState here
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       void triggerCheckout()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,7 +82,7 @@ export function RenewalCheckoutButton({ orderId, locale, isCanceled }: RenewalCh
       </p>
 
       <Button
-        onClick={() => void triggerCheckout()}
+        onClick={() => { setState('loading'); void triggerCheckout() }}
         className="w-full bg-[var(--brand-primary)] text-[var(--text-on-accent)]"
       >
         {t('retryButton')}

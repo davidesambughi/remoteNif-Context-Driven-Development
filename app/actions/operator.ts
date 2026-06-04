@@ -8,7 +8,6 @@ import {
   markOrderSubmitted,
   insertAuditLog,
   getOrderDataForSubmissionEmail,
-  getOperatorPreferencesOrDefaults,
   upsertOperatorPreferences,
 } from '@/lib/db/queries'
 import { sendEmail } from '@/lib/email/send'

@@ -29,7 +29,8 @@ export function WebhookPoller() {
   const t = useTranslations('dashboard')
 
   const sessionId = searchParams.get('session_id')
-  const [status, setStatus] = useState<PollerStatus>('idle')
+  // Initialise as 'polling' when session_id is present — avoids a synchronous setState in the effect
+  const [status, setStatus] = useState<PollerStatus>(() => (sessionId ? 'polling' : 'idle'))
 
   // Use a ref for the poll counter so the interval callback always sees the
   // current value without needing to be recreated.
@@ -39,7 +40,6 @@ export function WebhookPoller() {
     // Only activate when the Stripe session_id param is present.
     if (!sessionId) return
 
-    setStatus('polling')
     pollCount.current = 0
 
     const interval = setInterval(async () => {

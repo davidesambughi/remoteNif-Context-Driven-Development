@@ -14,8 +14,8 @@ interface StepCardProps {
 // Single step card: step number → serif title → serif body → bottom illustration
 function StepCard({ number, title, description, imageSrc, imageAlt }: StepCardProps) {
   return (
-    // Warm surface, subtle shadow with lift on hover
-    <div className="flex flex-col bg-surface rounded-[length:var(--radius-xl)] p-[length:var(--space-6)] shadow-[var(--shadow-md)] hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] transition-[transform,box-shadow] duration-200">
+    // Warm surface, subtle shadow with lift on hover — h-full fills the AnimateOnScroll wrapper
+    <div className="flex flex-col h-full bg-surface rounded-[length:var(--radius-xl)] p-[length:var(--space-6)] shadow-[var(--shadow-md)] hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] transition-[transform,box-shadow] duration-200">
 
       {/* Small orange step number (01, 02, 03) */}
       <span
@@ -90,7 +90,7 @@ export function HowItWorksSection() {
 
         {/* Cards: stacked on mobile, 3-column on md+ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[length:var(--space-6)]">
-          <AnimateOnScroll delay={0}>
+          <AnimateOnScroll delay={0} className="h-full">
             <StepCard
               number={t('step1Number')}
               title={t('step1Title')}
@@ -99,7 +99,7 @@ export function HowItWorksSection() {
               imageAlt={t('step1Title')}
             />
           </AnimateOnScroll>
-          <AnimateOnScroll delay={100}>
+          <AnimateOnScroll delay={100} className="h-full">
             <StepCard
               number={t('step2Number')}
               title={t('step2Title')}
@@ -108,7 +108,7 @@ export function HowItWorksSection() {
               imageAlt={t('step2Title')}
             />
           </AnimateOnScroll>
-          <AnimateOnScroll delay={200}>
+          <AnimateOnScroll delay={200} className="h-full">
             <StepCard
               number={t('step3Number')}
               title={t('step3Title')}

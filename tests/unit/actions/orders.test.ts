@@ -66,8 +66,8 @@ function makeOrder(overrides: Record<string, unknown> = {}) {
 beforeEach(() => {
   vi.clearAllMocks()
   // Default: authenticated user with a matching order
-  vi.mocked(session.requireAuth).mockResolvedValue(USER as any)
-  vi.mocked(queries.getUserActiveOrder).mockResolvedValue(makeOrder() as any)
+  vi.mocked(session.requireAuth).mockResolvedValue(USER as unknown as Awaited<ReturnType<typeof session.requireAuth>>)
+  vi.mocked(queries.getUserActiveOrder).mockResolvedValue(makeOrder() as unknown as Awaited<ReturnType<typeof queries.getUserActiveOrder>>)
   vi.mocked(queries.dismissFiscalRepForOrder).mockResolvedValue(undefined)
 })
 

@@ -29,10 +29,6 @@ const FlagDocumentSchema = z.object({
   reason: z.string().min(10, 'Reason must be at least 10 characters').max(500),
 })
 
-const ApproveOrderSchema = z.object({
-  orderId: z.string().uuid(),
-})
-
 const UpdateOrderStatusSchema = z.object({
   orderId: z.string().uuid(),
   newStatus: z.enum([

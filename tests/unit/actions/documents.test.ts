@@ -85,12 +85,12 @@ function mockStorage(result: { data: { signedUrl: string; token: string } | null
         createSignedUploadUrl: vi.fn().mockResolvedValue(result),
       }),
     },
-  } as any) // as any: not worth typing the full Supabase client shape in tests
+  } as unknown as ReturnType<typeof supabaseAdmin.createAdminClient>)
 }
 
 beforeEach(() => {
   vi.clearAllMocks()
-  vi.mocked(session.requireAuth).mockResolvedValue(USER as any)
+  vi.mocked(session.requireAuth).mockResolvedValue(USER as unknown as Awaited<ReturnType<typeof session.requireAuth>>)
   vi.mocked(emailSend.sendEmail).mockResolvedValue(undefined)
   vi.mocked(queries.supersedePreviousDocuments).mockResolvedValue(undefined)
   vi.mocked(queries.updateDocumentAiReview).mockResolvedValue(undefined)
@@ -118,7 +118,7 @@ describe('createUploadSignedUrl', () => {
   })
 
   it('returns signed URL and token on success', async () => {
-    vi.mocked(queries.getOrderForUser).mockResolvedValue(makeOrder() as any)
+    vi.mocked(queries.getOrderForUser).mockResolvedValue(makeOrder() as unknown as Awaited<ReturnType<typeof queries.getOrderForUser>>)
     mockStorage({ data: { signedUrl: 'https://storage.example.com/signed', token: 'tok-abc' }, error: null })
 
     const result = await createUploadSignedUrl(VALID_INPUT)
@@ -131,7 +131,7 @@ describe('createUploadSignedUrl', () => {
   })
 
   it('returns error when Supabase storage fails', async () => {
-    vi.mocked(queries.getOrderForUser).mockResolvedValue(makeOrder() as any)
+    vi.mocked(queries.getOrderForUser).mockResolvedValue(makeOrder() as unknown as Awaited<ReturnType<typeof queries.getOrderForUser>>)
     mockStorage({ data: null, error: { message: 'storage unavailable' } })
 
     const result = await createUploadSignedUrl(VALID_INPUT)
@@ -165,8 +165,8 @@ describe('uploadDocument', () => {
   })
 
   it('supersedes previous document of same type and creates a new record', async () => {
-    vi.mocked(queries.getOrderForUser).mockResolvedValue(makeOrder() as any)
-    vi.mocked(queries.createDocumentRecord).mockResolvedValue({ id: 'new-doc-id' } as any)
+    vi.mocked(queries.getOrderForUser).mockResolvedValue(makeOrder() as unknown as Awaited<ReturnType<typeof queries.getOrderForUser>>)
+    vi.mocked(queries.createDocumentRecord).mockResolvedValue({ id: 'new-doc-id' } as unknown as Awaited<ReturnType<typeof queries.createDocumentRecord>>)
 
     const result = await uploadDocument(VALID_INPUT)
 
@@ -183,8 +183,8 @@ describe('uploadDocument', () => {
   })
 
   it('creates signed_poa with aiReviewStatus pending (AI review triggered by client separately)', async () => {
-    vi.mocked(queries.getOrderForUser).mockResolvedValue(makeOrder() as any)
-    vi.mocked(queries.createDocumentRecord).mockResolvedValue({ id: 'poa-doc-id' } as any)
+    vi.mocked(queries.getOrderForUser).mockResolvedValue(makeOrder() as unknown as Awaited<ReturnType<typeof queries.getOrderForUser>>)
+    vi.mocked(queries.createDocumentRecord).mockResolvedValue({ id: 'poa-doc-id' } as unknown as Awaited<ReturnType<typeof queries.createDocumentRecord>>)
 
     await uploadDocument({ ...VALID_INPUT, type: 'signed_poa' })
 
@@ -210,7 +210,7 @@ describe('reviewDocument', () => {
 
   describe('Branch A — AI error → manual_review, attempts NOT incremented', () => {
     it('transitions to manual_review and notifies admin', async () => {
-      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc({ aiReviewAttempts: 0 }) as any)
+      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc({ aiReviewAttempts: 0 }) as unknown as Awaited<ReturnType<typeof queries.getDocumentByIdForUser>>)
       vi.mocked(ai.reviewDocumentWithAI).mockResolvedValue({ status: 'error' })
       vi.mocked(queries.getOrderBasicInfo).mockResolvedValue({ fullName: 'João Silva', tier: 'standard' })
 
@@ -232,12 +232,12 @@ describe('reviewDocument', () => {
 
   describe('Branch B — AI clear, fewer than 3 docs approved → order stays unchanged', () => {
     it('approves the document but does not transition the order', async () => {
-      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc() as any)
+      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc() as unknown as Awaited<ReturnType<typeof queries.getDocumentByIdForUser>>)
       vi.mocked(ai.reviewDocumentWithAI).mockResolvedValue({ status: 'clear' })
       // Only 2 active docs — allThreeApproved will be false
       vi.mocked(queries.getActiveDocumentsForOrder).mockResolvedValue([
-        { approved: true } as any,
-        { approved: false } as any,
+        { approved: true } as unknown as Awaited<ReturnType<typeof queries.getActiveDocumentsForOrder>>[number],
+        { approved: false } as unknown as Awaited<ReturnType<typeof queries.getActiveDocumentsForOrder>>[number],
       ])
 
       const result = await reviewDocument(VALID_DOC_ID)
@@ -254,12 +254,12 @@ describe('reviewDocument', () => {
 
   describe('Branch C — AI clear, all 3 docs approved → order transitions', () => {
     it('approves the document, transitions the order, and notifies admin', async () => {
-      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc() as any)
+      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc() as unknown as Awaited<ReturnType<typeof queries.getDocumentByIdForUser>>)
       vi.mocked(ai.reviewDocumentWithAI).mockResolvedValue({ status: 'clear' })
       vi.mocked(queries.getActiveDocumentsForOrder).mockResolvedValue([
-        { approved: true } as any,
-        { approved: true } as any,
-        { approved: true } as any,
+        { approved: true } as unknown as Awaited<ReturnType<typeof queries.getActiveDocumentsForOrder>>[number],
+        { approved: true } as unknown as Awaited<ReturnType<typeof queries.getActiveDocumentsForOrder>>[number],
+        { approved: true } as unknown as Awaited<ReturnType<typeof queries.getActiveDocumentsForOrder>>[number],
       ])
       vi.mocked(queries.getOrderBasicInfo).mockResolvedValue({ fullName: 'Maria Santos', tier: 'express' })
 
@@ -277,7 +277,7 @@ describe('reviewDocument', () => {
 
   describe('Branch D — AI flagged, first attempt (attempts = 0) → store flag, no escalation', () => {
     it('stores flagged status with the reason key and increments attempts to 1', async () => {
-      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc({ aiReviewAttempts: 0 }) as any)
+      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc({ aiReviewAttempts: 0 }) as unknown as Awaited<ReturnType<typeof queries.getDocumentByIdForUser>>)
       vi.mocked(ai.reviewDocumentWithAI).mockResolvedValue({ status: 'flagged', reasonKey: 'passport_blurry' })
 
       const result = await reviewDocument(VALID_DOC_ID)
@@ -296,7 +296,7 @@ describe('reviewDocument', () => {
 
   describe('Branch E — AI flagged, second attempt (attempts = 1) → escalate to manual_review', () => {
     it('transitions to manual_review and notifies admin with the flag reason', async () => {
-      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc({ aiReviewAttempts: 1 }) as any)
+      vi.mocked(queries.getDocumentByIdForUser).mockResolvedValue(makeDoc({ aiReviewAttempts: 1 }) as unknown as Awaited<ReturnType<typeof queries.getDocumentByIdForUser>>)
       vi.mocked(ai.reviewDocumentWithAI).mockResolvedValue({ status: 'flagged', reasonKey: 'passport_expired' })
       vi.mocked(queries.getOrderBasicInfo).mockResolvedValue({ fullName: 'Ana Costa', tier: 'standard' })
 

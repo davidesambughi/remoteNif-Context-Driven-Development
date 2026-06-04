@@ -40,9 +40,11 @@ export default async function AdminLayout({ children }: Props) {
         <div className="max-w-5xl mx-auto px-4 md:px-6 h-14 flex items-center">
           {/* Brand logo — links back to homepage */}
           <Link href="/" className="flex-none hover:opacity-80 transition-[var(--transition-base)]">
-            <img
+            <Image
               src="/images/logo.png"
               alt="RemoteNIF"
+              height={96}
+              width={288}
               className="h-24 w-auto block [mix-blend-mode:multiply]"
             />
           </Link>
