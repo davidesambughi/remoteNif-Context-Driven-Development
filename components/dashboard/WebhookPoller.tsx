@@ -36,6 +36,13 @@ export function WebhookPoller() {
   // current value without needing to be recreated.
   const pollCount = useRef(0)
 
+  // Sync status back to 'idle' when sessionId is cleared (robustness side effect)
+  useEffect(() => {
+    if (!sessionId && status === 'polling') {
+      setStatus('idle')
+    }
+  }, [sessionId, status])
+
   useEffect(() => {
     // Only activate when the Stripe session_id param is present.
     if (!sessionId) return

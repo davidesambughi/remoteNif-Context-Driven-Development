@@ -2,63 +2,46 @@
 
 ---
 
-Lo sviluppo software sta attraversando una fase di profonda trasformazione. Gli strumenti di intelligenza artificiale sono diventati parte integrante del lavoro quotidiano di molti sviluppatori, riducendo drasticamente il tempo necessario per implementare funzionalità e generare codice.
+## Il Contesto del Prodotto
 
-Questa evoluzione, tuttavia, non elimina la necessità di comprendere i principi fondamentali dell'ingegneria del software. Al contrario, rende ancora più importanti attività come l'analisi dei requisiti, la progettazione architetturale, la definizione di standard, il controllo della qualità e la validazione e comprensione delle soluzioni sviluppate. Inoltre, l’aumento della velocità di produzione del codice può introdurre nuove insidie, come la percezione di produttività basata esclusivamente sulla quantità di codice generato, spesso a scapito della qualità, della coerenza architetturale e della reale comprensione delle soluzioni implementate
+Il Numero di Identificazione Fiscale portoghese (NIF) è lo step zero di qualsiasi percorso in Portogallo. Serve per lavorare, aprire un conto bancario, acquistare un immobile, avviare un'attività, accedere a servizi pubblici. Non è uno dei tanti documenti burocratici — è il prerequisito di tutto il resto. Senza NIF non si inizia.
 
-L'obiettivo di questa tesi è dimostrare la mia applicazione pratica di tali principi attraverso la progettazione e lo sviluppo di un prodotto software reale. In particolare, il lavoro documenta come i concetti studiati durante l'internship a Lisbona siano stati applicati lungo l'intero ciclo di vita del software, dall'analisi iniziale fino al testing e alla validazione finale.
+Per i non residenti, ottenerlo richiede di delegare il processo a un rappresentante legale tramite una Procura — una procedura gestibile interamente a distanza, ma che nel mercato esistente viene tipicamente offerta con scarsa trasparenza: prezzi poco chiari, nessuna visibilità sullo stato della pratica, comunicazione reattiva invece che proattiva.
 
-La tesi ha inoltre un secondo obiettivo: dimostrare la comprensione delle scelte tecniche, architetturali e metodologiche adottate durante lo sviluppo.
+L'idea alla base di RemoteNIF era precisa: entrare in un mercato con domanda consolidata — quella dei non residenti che si avvicinano al Portogallo — e differenziarsi non sul prezzo, ma sulla chiarezza. Prezzi fissi per fascia di urgenza, stato della pratica sempre visibile, comunicazioni automatiche a ogni cambio di stato. Un servizio che si comporta come un prodotto digitale moderno, non come uno studio legale con un form online.
 
-In un periodo storico in cui generare codice è diventato più semplice che mai, il valore di uno sviluppatore non risiede soltanto nella capacità di produrre software, ma soprattutto nella capacità di progettare sistemi, valutarne la qualità, comprenderne i compromessi, garantirne la manutenibilità e giustificare le decisioni che ne hanno determinato l'evoluzione.
+RemoteNIF è quindi un'applicazione web con pagamento integrato, verifica automatica dei documenti tramite AI, e una dashboard che traccia l'intera pratica fino alla consegna del NIF.
 
-Per questo motivo, la tesi non documenta solamente ciò che è stato costruito, ma soprattutto perché è stato costruito in quel modo.
-
-
-Questa tesi affronta tali temi attraverso un caso studio concreto: la progettazione e lo sviluppo di RemoteNIF v2.
+Il prodotto non è l'oggetto di questa tesi. È il veicolo.
 
 ---
 
-## Il caso studio: RemoteNIF v2
+## Il Vero Oggetto: Come è Stato Costruito
 
-RemoteNIF v2 è una piattaforma web per l'ottenimento remoto del NIF portoghese, il codice fiscale necessario per svolgere numerose attività amministrative e finanziarie in Portogallo.
+Questa versione di RemoteNIF non è il prodotto live. È una ricostruzione privata, avviata con uno scopo preciso: sviluppare e testare un metodo sistematico per costruire software reale con l'assistenza dell'intelligenza artificiale.
 
-Il progetto è stato scelto come caso studio perché presenta problematiche reali, requisiti concreti e vincoli tipici di un'applicazione destinata all'utilizzo in produzione. Il sistema gestisce l'intero ciclo di vita di una pratica: dalla selezione del piano alla consegna del NIF, includendo la raccolta e revisione dei documenti, i processi amministrativi interni e la comunicazione con il cliente.
+La domanda alla base del progetto non era *"come si ottiene un NIF?"* ma *"come si costruisce un'applicazione complessa in modo professionale, usando l'AI come strumento di sviluppo?"*
 
-L'applicazione è stata progettata seguendo criteri di qualità, manutenibilità e scalabilità, adottando pratiche normalmente utilizzate nello sviluppo professionale. Questo ha reso il progetto un contesto ideale per applicare e valutare i principi del software engineering studiati durante il percorso formativo.
-
-RemoteNIF non rappresenta il tema principale di questa tesi. Rappresenta il caso studio attraverso cui vengono analizzati il processo di sviluppo, le decisioni progettuali e le pratiche adottate durante la realizzazione del prodotto.
+Rispondere a questa domanda ha richiesto costruire qualcosa abbastanza complesso da rendere il metodo significativo: autenticazione, pagamenti, gestione dei file, ruoli utente distinti, internazionalizzazione in quattro lingue, review automatica dei documenti tramite AI, pipeline CI/CD, oltre 200 test. RemoteNIF ha fornito quel contesto.
 
 ---
 
-## Il processo di sviluppo
+## I Due Binari di Questa Tesi
 
-L'intero progetto è stato sviluppato utilizzando un approccio AI-assisted, integrando strumenti di intelligenza artificiale all'interno del processo di sviluppo.
+Tutta la tesi si muove su due binari paralleli, strettamente connessi tra loro.
 
-L'obiettivo del lavoro non è analizzare l'intelligenza artificiale come tecnologia, né valutare quale modello sia migliore. L'interesse è rivolto al modo in cui i principi del software engineering possono essere applicati efficacemente in un contesto in cui gran parte dell'implementazione viene delegata a sistemi AI.
+**Primo binario — Lo sviluppo assistito da AI come metodo professionale.**
+Al centro del progetto c'è un sistema chiamato `context/`: una cartella con 12 documenti strutturati che definiscono il prodotto, l'architettura, i flussi utente, gli standard di codice, e le regole di lavoro. Ogni sessione di sviluppo inizia leggendo questi documenti in un ordine preciso. Ogni funzionalità viene consegnata all'AI come una specifica autonoma — una *feature spec* — scritta in anticipo, con scope definito e criteri di verifica espliciti. L'AI esegue dentro questi vincoli. Il risultato è un processo tracciabile, ripetibile, e scalabile.
 
-Durante lo sviluppo sono emerse sfide legate alla qualità del codice, alla coerenza architetturale, alla gestione del contesto e alla verifica delle soluzioni prodotte. Per affrontarle è stato necessario definire standard, processi e meccanismi di controllo capaci di mantenere il progetto allineato agli obiettivi iniziali.
+**Secondo binario — Le competenze di ingegneria del software.**
+Usare l'AI bene non è una scorciatoia. Richiede le stesse competenze fondamentali di un ingegnere del software: saper pianificare un sistema, capirne l'architettura, scegliere le tecnologie giuste e sapere perché, scomporre un problema in unità di lavoro coerenti. Scrivere i documenti del `context/` ha richiesto di capire il prodotto in profondità. Scrivere le feature specs ha richiesto di sapere come si decompone un sistema. Ogni scelta tecnologica in questo progetto ha una ragione — e documentarla è parte del lavoro.
 
-L'esperienza ha portato alla definizione di un approccio strutturato basato su documentazione, specifiche, standard condivisi e validazione continua, con l'obiettivo di utilizzare l'AI come strumento operativo senza rinunciare al controllo del sistema e delle decisioni progettuali.
+**Il punto di contatto tra i due binari** è questo: usare l'AI come strumento professionale di sviluppo *è* una competenza di ingegneria del software. Non sostituisce il pensiero architetturale, la pianificazione, e la comprensione del codice — li richiede. Questa tesi lo dimostra in pratica.
 
 ---
 
-## Struttura della tesi
+## Struttura della Tesi
 
-I capitoli 2-5 documentano il caso studio e il prodotto sviluppato. I capitoli successivi approfondiscono il processo utilizzato, le pratiche adottate e le lezioni apprese durante lo sviluppo.
+I capitoli seguono una progressione logica. Si parte da una visione d'insieme del progetto e dell'architettura (Capitolo 2), si entra poi nel dettaglio delle tecnologie adottate (Capitoli 3–8), con un capitolo dedicato interamente al metodo di sviluppo assistito da AI (Capitolo 7). I capitoli finali raccolgono le lezioni apprese, le riflessioni sul percorso, e le conclusioni.
 
-La tesi è organizzata in otto capitoli.
-
-Il **Capitolo 2** analizza il problema da risolvere: il quadro normativo del NIF portoghese, il processo di ottenimento, il mercato esistente e i limiti delle soluzioni attualmente disponibili.
-
-Il **Capitolo 3** descrive le scelte architetturali e tecnologiche del progetto, illustrando le ragioni che hanno guidato l'adozione delle diverse tecnologie e i compromessi valutati durante la progettazione.
-
-Il **Capitolo 4** presenta le principali funzionalità dell'applicazione e il modo in cui esse contribuiscono a risolvere il problema individuato.
-
-Il **Capitolo 5** descrive le pratiche di qualità adottate, tra cui la strategia di testing, le attività di audit del codebase e gli standard utilizzati per garantire affidabilità e manutenibilità del sistema.
-
-Il **Capitolo 6** approfondisce il processo di sviluppo AI-assisted utilizzato durante il progetto, analizzandone vantaggi, limiti e problematiche operative. Vengono inoltre presentati gli strumenti, i documenti e le pratiche introdotte per mantenere coerenza e qualità durante lo sviluppo.
-
-Il **Capitolo 7** raccoglie le lezioni apprese durante il progetto, evidenziando sia gli aspetti che hanno funzionato sia le criticità incontrate e le possibili aree di miglioramento.
-
-Il **Capitolo 8** presenta le conclusioni finali, sintetizzando i risultati ottenuti e le competenze applicate durante la realizzazione del progetto, insieme a possibili sviluppi futuri del prodotto e del processo adottato.
+Per ogni tecnologia, la struttura è sempre la stessa: cos'è, perché è stata scelta, come è applicata in questo progetto specifico. L'obiettivo non è spiegare le tecnologie in astratto — è mostrare le decisioni dietro di esse.

@@ -83,16 +83,19 @@
 1. User lands on the signup screen — sees email and password fields only
 2. User fills in email and password and submits
 3. System creates the account and stores the selected tier against it
-4. System sends a confirmation email in the background (non-blocking)
-5. User is immediately redirected to Stripe checkout — no waiting for email confirmation
+4. System sends a confirmation email with a verification link (blocking — user must confirm before proceeding)
+5. User clicks the confirmation link in the email
+6. User is redirected to Stripe checkout
 
-**Outcome:** Account exists, tier is saved, user proceeds to payment
+**Outcome:** Account exists and email is verified, tier is saved, user proceeds to payment
 
 **Edge cases:**
 - Email already registered → show inline error "An account with this email already exists. Sign in instead?" with a link
 - User submits weak or invalid password → inline validation error, stay on screen
 - User navigates back to pricing after signup → tier selection is preserved, they are not asked to sign up again
-- User never confirms their email → they can still complete the order; a follow-up confirmation email is sent after checkout
+- User never confirms their email → cannot proceed to checkout; confirmation email can be resent
+
+**Note:** Email verification is required before checkout. This ensures every order has a verified contact address for all downstream communications (status updates, document review results, NIF delivery). Previous decision (non-blocking confirmation) was reversed during implementation.
 
 ---
 

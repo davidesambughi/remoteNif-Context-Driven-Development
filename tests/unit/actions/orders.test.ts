@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { dismissFiscalRep } from '@/app/actions/orders'
+import { dismissFiscalRep, checkHasActiveOrder } from '@/app/actions/orders'
 import * as session from '@/lib/auth/session'
 import * as queries from '@/lib/db/queries'
 import * as nextCache from 'next/cache'
@@ -140,5 +140,31 @@ describe('dismissFiscalRep', () => {
   it('calls getUserActiveOrder with the authenticated user ID', async () => {
     await dismissFiscalRep(ORDER_ID)
     expect(queries.getUserActiveOrder).toHaveBeenCalledWith(USER.id)
+  })
+})
+
+describe('checkHasActiveOrder', () => {
+  it('returns hasOrder: true when an active order is found', async () => {
+    const result = await checkHasActiveOrder()
+    expect(result).toEqual({ success: true, data: { hasOrder: true } })
+    expect(queries.getUserActiveOrder).toHaveBeenCalledWith(USER.id)
+  })
+
+  it('returns hasOrder: false when no active order is found', async () => {
+    vi.mocked(queries.getUserActiveOrder).mockResolvedValueOnce(null)
+    const result = await checkHasActiveOrder()
+    expect(result).toEqual({ success: true, data: { hasOrder: false } })
+  })
+
+  it('returns success: false when requireAuth throws', async () => {
+    vi.mocked(session.requireAuth).mockRejectedValueOnce(new Error('Unauthorized'))
+    const result = await checkHasActiveOrder()
+    expect(result).toEqual({ success: false, error: 'dashboard.errors.generic' })
+  })
+
+  it('returns success: false when getUserActiveOrder throws', async () => {
+    vi.mocked(queries.getUserActiveOrder).mockRejectedValueOnce(new Error('DB error'))
+    const result = await checkHasActiveOrder()
+    expect(result).toEqual({ success: false, error: 'dashboard.errors.generic' })
   })
 })

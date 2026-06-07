@@ -12,7 +12,7 @@
 **Current approach:** Inline async operations (no separate queue)
 
 **What runs inline:**
-- AI document review (Gemini API) — ~2-3 seconds
+- AI document review (groq API) — ~2-3 seconds
 - Email sending (Resend) — ~500ms
 - Stripe API calls — ~1-2 seconds
 
@@ -224,7 +224,7 @@ All environment variables from `.env.local` must be set in production:
 - Supabase: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - Resend: `RESEND_API_KEY`
-- Gemini: `GEMINI_API_KEY`
+- Groq: `GROQ_API_KEY`
 - App: `NEXT_PUBLIC_APP_URL`
 
 ### Build Configuration
