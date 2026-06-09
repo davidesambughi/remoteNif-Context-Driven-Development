@@ -4,9 +4,9 @@
 
 ## Il Contesto del Prodotto
 
-Il Numero di Identificazione Fiscale portoghese (NIF) è lo step zero di qualsiasi percorso in Portogallo. Serve per lavorare, aprire un conto bancario, acquistare un immobile, avviare un'attività, accedere a servizi pubblici. Non è uno dei tanti documenti burocratici — è il prerequisito di tutto il resto. Senza NIF non si inizia.
+Il Numero di Identificazione Fiscale (NIF) portoghese rappresenta il prerequisito fondamentale per qualsiasi percorso di trasferimento o investimento in Portogallo. Serve per lavorare, aprire un conto bancario, acquistare un immobile, avviare un'attività, accedere a servizi pubblici. Non è uno dei tanti documenti burocratici — rappresenta il punto di partenza per la maggior parte delle procedure necessarie a vivere e operare nel Paese
 
-Per i non residenti, ottenerlo richiede di delegare il processo a un rappresentante legale tramite una Procura — una procedura gestibile interamente a distanza, ma che nel mercato esistente viene tipicamente offerta con scarsa trasparenza: prezzi poco chiari, nessuna visibilità sullo stato della pratica, comunicazione reattiva invece che proattiva.
+Per i non residenti, ottenerlo richiede di delegare il processo a un rappresentante legale tramite una Procura — una procedura ormai gestibile interamente a distanza, ma che nel mercato esistente viene tipicamente offerta con scarsa trasparenza: prezzi poco chiari, nessuna visibilità sullo stato della pratica, comunicazione reattiva invece che proattiva.
 
 L'idea alla base di RemoteNIF era precisa: entrare in un mercato con domanda consolidata — quella dei non residenti che si avvicinano al Portogallo — e differenziarsi non sul prezzo, ma sulla chiarezza. Prezzi fissi per fascia di urgenza, stato della pratica sempre visibile, comunicazioni automatiche a ogni cambio di stato. Un servizio che si comporta come un prodotto digitale moderno, non come uno studio legale con un form online.
 
@@ -18,25 +18,24 @@ Il prodotto non è l'oggetto di questa tesi. È il veicolo.
 
 ## Il Vero Oggetto: Come è Stato Costruito
 
-Questa versione di RemoteNIF non è il prodotto live. È una ricostruzione privata, avviata con uno scopo preciso: sviluppare e testare un metodo sistematico per costruire software reale con l'assistenza dell'intelligenza artificiale.
+Questa implementazione di RemoteNIF differisce dalla versione consegnata durante il periodo di tirocinio aziendale. È una ricostruzione sviluppata come progetto indipendente con l'obiettivo di applicare e valutare un approccio strutturato allo sviluppo software assistito da AI.
 
-La domanda alla base del progetto non era *"come si ottiene un NIF?"* ma *"come si costruisce un'applicazione complessa in modo professionale, usando l'AI come strumento di sviluppo?"*
+L'interesse del progetto non era limitato al dominio applicativo. Oltre alla realizzazione del servizio stesso, l'obiettivo era comprendere come affrontare in modo professionale e sistematico lo sviluppo di un'applicazione complessa utilizzando l'AI come strumento di supporto all'interno del processo di sviluppo.
 
-Rispondere a questa domanda ha richiesto costruire qualcosa abbastanza complesso da rendere il metodo significativo: autenticazione, pagamenti, gestione dei file, ruoli utente distinti, internazionalizzazione in quattro lingue, review automatica dei documenti tramite AI, pipeline CI/CD, oltre 200 test. RemoteNIF ha fornito quel contesto.
+A tal fine, è stato necessario selezionare un progetto sufficientemente articolato da includere problematiche reali: autenticazione, pagamenti, gestione dei file, ruoli utente distinti, internazionalizzazione in quattro lingue, review automatica dei documenti tramite AI, pipeline CI/CD e oltre 200 test. RemoteNIF ha fornito un contesto adeguato per affrontare questi aspetti all'interno di un'unica applicazione.
+
 
 ---
 
 ## I Due Binari di Questa Tesi
 
-Tutta la tesi si muove su due binari paralleli, strettamente connessi tra loro.
+Tutta la tesi si muove su due aspetti paralleli, strettamente connessi tra loro.
 
-**Primo binario — Lo sviluppo assistito da AI come metodo professionale.**
-Al centro del progetto c'è un sistema chiamato `context/`: una cartella con 12 documenti strutturati che definiscono il prodotto, l'architettura, i flussi utente, gli standard di codice, e le regole di lavoro. Ogni sessione di sviluppo inizia leggendo questi documenti in un ordine preciso. Ogni funzionalità viene consegnata all'AI come una specifica autonoma — una *feature spec* — scritta in anticipo, con scope definito e criteri di verifica espliciti. L'AI esegue dentro questi vincoli. Il risultato è un processo tracciabile, ripetibile, e scalabile.
+Il primo riguarda l'utilizzo dell'intelligenza artificiale come strumento all'interno del processo di sviluppo software. Il secondo riguarda l'applicazione dei principi dell'ingegneria del software necessari per rendere tale processo affidabile, coerente e scalabile.
 
-**Secondo binario — Le competenze di ingegneria del software.**
-Usare l'AI bene non è una scorciatoia. Richiede le stesse competenze fondamentali di un ingegnere del software: saper pianificare un sistema, capirne l'architettura, scegliere le tecnologie giuste e sapere perché, scomporre un problema in unità di lavoro coerenti. Scrivere i documenti del `context/` ha richiesto di capire il prodotto in profondità. Scrivere le feature specs ha richiesto di sapere come si decompone un sistema. Ogni scelta tecnologica in questo progetto ha una ragione — e documentarla è parte del lavoro.
+Nel corso del progetto è emerso che l'AI non riduce la necessità di competenze tecniche. Al contrario, attività come la definizione dell'architettura, la pianificazione del lavoro, la scomposizione dei requisiti, la gestione dei vincoli progettuali e la documentazione delle decisioni rimangono responsabilità dello sviluppatore.
 
-**Il punto di contatto tra i due binari** è questo: usare l'AI come strumento professionale di sviluppo *è* una competenza di ingegneria del software. Non sostituisce il pensiero architetturale, la pianificazione, e la comprensione del codice — li richiede. Questa tesi lo dimostra in pratica.
+I capitoli successivi descrivono quindi sia le scelte tecnologiche e architetturali adottate durante lo sviluppo di RemoteNIF, sia il metodo utilizzato per integrare l'AI all'interno di un processo strutturato. L'obiettivo non è valutare le capacità del modello in sé, ma mostrare come l'uso efficace di questi strumenti dipenda dall'applicazione di principi consolidati di ingegneria del software.
 
 ---
 
@@ -44,4 +43,4 @@ Usare l'AI bene non è una scorciatoia. Richiede le stesse competenze fondamenta
 
 I capitoli seguono una progressione logica. Si parte da una visione d'insieme del progetto e dell'architettura (Capitolo 2), si entra poi nel dettaglio delle tecnologie adottate (Capitoli 3–8), con un capitolo dedicato interamente al metodo di sviluppo assistito da AI (Capitolo 7). I capitoli finali raccolgono le lezioni apprese, le riflessioni sul percorso, e le conclusioni.
 
-Per ogni tecnologia, la struttura è sempre la stessa: cos'è, perché è stata scelta, come è applicata in questo progetto specifico. L'obiettivo non è spiegare le tecnologie in astratto — è mostrare le decisioni dietro di esse.
+Per ogni tecnologia, la struttura è sempre la stessa: definizione della tecnologia, motivazione della scelta architettonica e modalità di implementazione nel progetto specifico. L'obiettivo non è fornire una spiegazione astratta degli strumenti, ma documentare e motivare le decisioni ingegneristiche alla base del loro utilizzo.

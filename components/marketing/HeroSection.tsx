@@ -18,12 +18,12 @@ function StatItem({ value, label, separator = false }: StatItemProps) {
         separator ? 'border-l border-glass-separator' : '',
       ].join(' ')}
     >
-      <span className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-glass-text leading-[var(--leading-tight)]">
+      <dd className="text-[length:var(--text-2xl)] font-[number:var(--font-bold)] text-glass-text leading-[var(--leading-tight)]">
         {value}
-      </span>
-      <span className="text-[length:var(--text-xs)] font-[number:var(--font-normal)] text-glass-text">
+      </dd>
+      <dt className="text-[length:var(--text-xs)] font-[number:var(--font-normal)] text-glass-text">
         {label}
-      </span>
+      </dt>
     </div>
   )
 }
@@ -158,7 +158,7 @@ export function HeroSection() {
 
             {/* ── Stats row — mobile only (static, below CTA) ──────── */}
             {/* On desktop this row is hidden; the absolute-positioned row below shows instead */}
-            <div
+            <dl
               className="flex @md:hidden items-end justify-center
                 mt-[length:var(--space-8)] pb-[length:var(--space-8)]
                 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 duration-700"
@@ -168,14 +168,14 @@ export function HeroSection() {
               <StatItem value={t('stat2Value')} label={t('stat2Label')} separator />
               <StatItem value={t('stat3Value')} label={t('stat3Label')} separator />
               <StatItem value={t('stat4Value')} label={t('stat4Label')} separator />
-            </div>
+            </dl>
 
           </div>
         </div>
 
         {/* ── Stats row — desktop only (absolute, bottom-right) ──────── */}
         {/* hidden on mobile; absolute positioning relative to the section  */}
-        <div
+        <dl
           className="hidden @md:flex items-end
             absolute bottom-[length:var(--space-12)] right-[length:var(--space-16)] z-10
             motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 duration-700"
@@ -185,7 +185,7 @@ export function HeroSection() {
           <StatItem value={t('stat2Value')} label={t('stat2Label')} separator />
           <StatItem value={t('stat3Value')} label={t('stat3Label')} separator />
           <StatItem value={t('stat4Value')} label={t('stat4Label')} separator />
-        </div>
+        </dl>
 
       </div>
     </section>

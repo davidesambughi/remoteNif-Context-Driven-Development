@@ -330,7 +330,7 @@ describe('handleRenewalCheckoutCompleted — row isolation', () => {
       tier: 'standard',
       fiscalRepExpiresAt: new Date('2027-01-01'),
     })
-    const bystander = await insertTestOrder(user.id, {
+    const _bystander = await insertTestOrder(user.id, {
       tier: 'express',
       fiscalRepExpiresAt: new Date('2027-06-01'),
     })

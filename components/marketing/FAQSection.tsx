@@ -56,7 +56,7 @@ export function FAQSection() {
                   '[&>svg]:text-brand-primary [&>svg]:shrink-0',
                 ].join(' ')}
               >
-                {t(`q${key}`)}
+                <h3 className="text-inherit font-inherit">{t(`q${key}`)}</h3>
               </AccordionTrigger>
               <AccordionContent
                 className={[
@@ -64,7 +64,9 @@ export function FAQSection() {
                   'border-l-2 border-brand-primary/40 pl-[length:var(--space-4)] ml-[length:var(--space-1)]',
                 ].join(' ')}
               >
-                {t(`a${key}`)}
+                {t.rich(`a${key}`, {
+                  b: (chunks) => <span className="font-bold text-text-primary">{chunks}</span>
+                })}
               </AccordionContent>
             </AccordionItem>
           ))}

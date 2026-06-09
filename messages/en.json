@@ -126,16 +126,16 @@
     "faq": {
       "title": "Frequently Asked Questions",
       "subtitle": "Everything you need to know about the process.",
-      "q1": "How long does the process take?",
-      "a1": "Standard orders take 5–10 business days from document approval. Express orders are submitted to Finanças within 48 hours of document approval. Finanças processing time after submission is outside our control.",
-      "q2": "Do I need to be in Portugal?",
-      "a2": "No. The entire process is remote. We act as your fiscal representative in Portugal and submit the application to Finanças on your behalf.",
-      "q3": "What documents are required?",
-      "a3": "You need a valid passport and proof of address dated within the last 3 months (utility bill, bank statement, or rental agreement). Phone and TV bills are not accepted.",
-      "q4": "Do I need a fiscal representative?",
-      "a4": "It depends on your situation in Portugal. Under Decree-Law 44/2022, EU/EEA residents are never required to appoint a fiscal representative. Non-EU/EEA residents only need one if they have active Portuguese tax obligations — such as property ownership, rental income, or business activity in Portugal. Our Essential tier is for anyone without fiscal representation needs, regardless of nationality. Standard and Express include 12 months of licensed fiscal representation.",
-      "q5": "I've heard the fiscal representative law changed — what's the current rule?",
-      "a5": "The law already changed in July 2022. Decree-Law 44/2022 removed the blanket requirement for non-EU/EEA residents to appoint a fiscal representative. Today, the requirement applies only to non-EU/EEA residents with active Portuguese tax obligations. If you have no property, income, or business activity in Portugal, you are not legally required to appoint one. Some services still describe it as a universal requirement — that has not been accurate since 2022."
+      "q1": "How long does it take to get a Portuguese NIF?",
+      "a1": "<b>Standard NIF delivery takes 5–10 business days from document approval.</b> Express orders are submitted to Finanças within 48 hours of document approval. Finanças processing time after submission is outside our control.",
+      "q2": "Do I need to be in Portugal to apply for a NIF?",
+      "a2": "<b>No, the entire Portuguese NIF application process is 100% remote.</b> We act as your fiscal representative in Portugal and submit the application to Finanças digitally on your behalf.",
+      "q3": "What documents are required for a Portuguese NIF?",
+      "a3": "<b>You need a valid passport and proof of address dated within the last 3 months.</b> Accepted documents include utility bills (electricity, water, or gas), bank statements, or rental agreements. Phone and TV bills are not accepted.",
+      "q4": "Is a fiscal representative mandatory for a NIF in 2026?",
+      "a4": "<b>Fiscal representation is only mandatory for non-EU/EEA residents with active Portuguese tax obligations.</b> Under Decree-Law 44/2022, EU/EEA residents are never required to appoint a fiscal representative. Others only need one if they own property, earn income, or run a business in Portugal.",
+      "q5": "What is the current Portuguese fiscal representation law (Decree-Law 44/2022)?",
+      "a5": "<b>Decree-Law 44/2022 removed the universal requirement for non-EU/EEA residents to appoint a fiscal representative.</b> The requirement now only applies to those with active Portuguese tax obligations (property, income, or business). If you have none, a representative is not legally required."
     },
     "comingSoon": {
       "titleBefore": "What comes ",

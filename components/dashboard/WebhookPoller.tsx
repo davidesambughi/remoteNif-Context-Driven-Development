@@ -36,12 +36,8 @@ export function WebhookPoller() {
   // current value without needing to be recreated.
   const pollCount = useRef(0)
 
-  // Sync status back to 'idle' when sessionId is cleared (robustness side effect)
-  useEffect(() => {
-    if (!sessionId && status === 'polling') {
-      setStatus('idle')
-    }
-  }, [sessionId, status])
+  // If sessionId disappears while we're still polling, derive idle — avoids setState-in-effect
+  const effectiveStatus: PollerStatus = !sessionId && status === 'polling' ? 'idle' : status
 
   useEffect(() => {
     // Only activate when the Stripe session_id param is present.
@@ -70,11 +66,11 @@ export function WebhookPoller() {
     return () => clearInterval(interval)
   }, [sessionId, router, pathname])
 
-  if (status === 'idle') return null
+  if (effectiveStatus === 'idle') return null
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface/80 backdrop-blur-sm p-4 text-center">
-      {status === 'polling' && (
+      {effectiveStatus === 'polling' && (
         <>
           <Loader2 className="h-10 w-10 animate-spin text-brand-primary mb-4" />
           <h2 className="text-[length:var(--text-xl)] font-[number:var(--font-bold)] text-text-primary">
@@ -86,7 +82,7 @@ export function WebhookPoller() {
         </>
       )}
 
-      {status === 'timeout' && (
+      {effectiveStatus === 'timeout' && (
         <div className="max-w-md bg-surface p-6 rounded-[length:var(--radius-lg)] shadow-[var(--shadow-xl)] border border-error/20 text-left">
           <h2 className="text-[length:var(--text-xl)] font-[number:var(--font-bold)] text-error">
             {t('processing.timeout.title')}

@@ -113,66 +113,72 @@ export default async function PricingPage() {
 
       {/* ── Tier cards ───────────────────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-[length:var(--space-6)] mt-[length:var(--space-10)]">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[length:var(--space-6)]">
+        <ul className="grid grid-cols-1 lg:grid-cols-3 gap-[length:var(--space-6)] list-none p-0 m-0">
 
           {/* Essential */}
-          <TierCard
-            name={t('tiers.essential.name')}
-            tierId="essential"
-            priceEurCents={TIERS.essential.priceEurCents}
-            subtitle={t('tiers.essential.subtitle')}
-            features={[
-              { label: t('tiers.essential.features.delivery'), icon: 'clock' },
-              { label: t('tiers.essential.features.nif'),      icon: 'check' },
-              { label: t('tiers.essential.features.noFiscalRep'), icon: 'disabled' },
-            ]}
-            cta={t('tiers.essential.cta')}
-            href={`${ctaBase}?tier=essential`}
-            isAuthenticated={!!user}
-            badge={t('tiers.essential.badge')}
-            ctaVariant="default"
-          />
+          <li className="h-full flex flex-col">
+            <TierCard
+              name={t('tiers.essential.name')}
+              tierId="essential"
+              priceEurCents={TIERS.essential.priceEurCents}
+              subtitle={t('tiers.essential.subtitle')}
+              features={[
+                { label: t('tiers.essential.features.delivery'), icon: 'clock' },
+                { label: t('tiers.essential.features.nif'),      icon: 'check' },
+                { label: t('tiers.essential.features.noFiscalRep'), icon: 'disabled' },
+              ]}
+              cta={t('tiers.essential.cta')}
+              href={`${ctaBase}?tier=essential`}
+              isAuthenticated={!!user}
+              badge={t('tiers.essential.badge')}
+              ctaVariant="default"
+            />
+          </li>
 
           {/* Standard */}
-          <TierCard
-            name={t('tiers.standard.name')}
-            tierId="standard"
-            priceEurCents={TIERS.standard.priceEurCents}
-            subtitle={t('tiers.standard.subtitle')}
-            features={[
-              { label: t('tiers.standard.features.delivery'),  icon: 'clock' },
-              { label: t('tiers.standard.features.nif'),       icon: 'check' },
-              { label: t('tiers.standard.features.fiscalRep'), icon: 'check' },
-            ]}
-            cta={t('tiers.standard.cta')}
-            href={`${ctaBase}?tier=standard`}
-            isAuthenticated={!!user}
-            isFeatured
-            badge={t('tiers.standard.badge')}
-            ctaVariant="default"
-          />
+          <li className="h-full flex flex-col">
+            <TierCard
+              name={t('tiers.standard.name')}
+              tierId="standard"
+              priceEurCents={TIERS.standard.priceEurCents}
+              subtitle={t('tiers.standard.subtitle')}
+              features={[
+                { label: t('tiers.standard.features.delivery'),  icon: 'clock' },
+                { label: t('tiers.standard.features.nif'),       icon: 'check' },
+                { label: t('tiers.standard.features.fiscalRep'), icon: 'check' },
+              ]}
+              cta={t('tiers.standard.cta')}
+              href={`${ctaBase}?tier=standard`}
+              isAuthenticated={!!user}
+              isFeatured
+              badge={t('tiers.standard.badge')}
+              ctaVariant="default"
+            />
+          </li>
 
           {/* Express — subtitle uses expressSub (pre-built above) to color "48 hours" */}
-          <TierCard
-            name={t('tiers.express.name')}
-            tierId="express"
-            priceEurCents={TIERS.express.priceEurCents}
-            subtitle={expressSub}
-            infoHint={t('tiers.express.help')}
-            features={[
-              { label: t('tiers.express.features.submission'), icon: 'zap' },
-              { label: t('tiers.express.features.nif'),        icon: 'check' },
-              { label: t('tiers.express.features.fiscalRep'),  icon: 'check' },
-              { label: t('tiers.express.features.priority'),   icon: 'check' },
-            ]}
-            cta={t('tiers.express.cta')}
-            href={`${ctaBase}?tier=express`}
-            isAuthenticated={!!user}
-            badge={t('tiers.express.badge')}
-            ctaVariant="default"
-          />
+          <li className="h-full flex flex-col">
+            <TierCard
+              name={t('tiers.express.name')}
+              tierId="express"
+              priceEurCents={TIERS.express.priceEurCents}
+              subtitle={expressSub}
+              infoHint={t('tiers.express.help')}
+              features={[
+                { label: t('tiers.express.features.submission'), icon: 'zap' },
+                { label: t('tiers.express.features.nif'),        icon: 'check' },
+                { label: t('tiers.express.features.fiscalRep'),  icon: 'check' },
+                { label: t('tiers.express.features.priority'),   icon: 'check' },
+              ]}
+              cta={t('tiers.express.cta')}
+              href={`${ctaBase}?tier=express`}
+              isAuthenticated={!!user}
+              badge={t('tiers.express.badge')}
+              ctaVariant="default"
+            />
+          </li>
 
-        </div>
+        </ul>
       </section>
 
 

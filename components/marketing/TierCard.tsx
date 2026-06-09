@@ -116,14 +116,14 @@ export function TierCard({
           </p>
 
           {/* Tier name — serif italic brand-primary, large */}
-          <p className="font-serif italic font-[number:var(--font-bold)]
+          <h2 className="font-serif italic font-[number:var(--font-bold)]
             text-[length:var(--text-2xl)] text-brand-primary
             leading-[var(--leading-tight)]">
             {name}
-          </p>
+          </h2>
 
           {/* Price — euro symbol sits at top-of-number height */}
-          <div className="mt-[length:var(--space-4)] flex items-start gap-[length:var(--space-1)]">
+          <data value={priceEur.toString()} className="mt-[length:var(--space-4)] flex items-start gap-[length:var(--space-1)]">
             <span className="mt-1 text-[length:var(--text-lg)] font-[number:var(--font-bold)]
               text-text-primary leading-none">
               €
@@ -132,7 +132,7 @@ export function TierCard({
               text-text-primary leading-none">
               {priceEur}
             </span>
-          </div>
+          </data>
 
           {/* Subtitle — one-line description under the price */}
           <div className="mt-[length:var(--space-2)] text-[length:var(--text-sm)] text-text-secondary
@@ -160,9 +160,9 @@ export function TierCard({
           my-[length:var(--space-4)]" />
 
         {/* ── RIGHT — feature list ───────────────────────────────────────── */}
-        <div className="flex flex-col flex-1 min-w-0 gap-[length:var(--space-3)] justify-center">
+        <ul className="flex flex-col flex-1 min-w-0 gap-[length:var(--space-3)] justify-center list-none p-0 m-0">
           {features.map((feature) => (
-            <div key={feature.label} className="flex items-start gap-[length:var(--space-2)]">
+            <li key={feature.label} className="flex items-start gap-[length:var(--space-2)]">
               <FeatureIcon icon={feature.icon} />
               <span
                 className={[
@@ -174,9 +174,9 @@ export function TierCard({
               >
                 {feature.label}
               </span>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
 
       </div>
     </Card>

@@ -126,16 +126,16 @@
     "faq": {
       "title": "Foire Aux Questions",
       "subtitle": "Tout ce que vous devez savoir sur le processus.",
-      "q1": "Combien de temps prend le processus ?",
-      "a1": "Les commandes Standard prennent 5 à 10 jours ouvrables à partir de l'approbation des documents. Les commandes Express sont soumises à la Finanças dans les 48 heures suivant l'approbation. Le délai de traitement par la Finanças après soumission est hors de notre contrôle.",
-      "q2": "Dois-je être au Portugal ?",
-      "a2": "Non. L'ensemble du processus est à distance. Nous agissons comme votre représentant fiscal au Portugal et soumettons la demande à la Finanças en votre nom.",
-      "q3": "Quels documents sont requis ?",
-      "a3": "Vous avez besoin d'un passeport valide et d'un justificatif de domicile datant de moins de 3 mois (facture d'énergie, relevé bancaire ou contrat de location). Les factures de téléphone et de télévision ne sont pas acceptées.",
-      "q4": "Ai-je besoin d'un représentant fiscal ?",
-      "a4": "Cela dépend de votre situation au Portugal. En vertu du Décret-Loi 44/2022, les résidents de l'UE/EEE ne sont jamais tenus de nommer un représentant fiscal. Les résidents hors UE/EEE n'en ont besoin que s'ils ont des obligations fiscales portugaises actives — telles que la propriété immobilière, des revenus locatifs ou une activité commerciale au Portugal. Notre forfait Essentiel s'adresse à toute personne sans besoin de représentation fiscale, quelle que soit sa nationalité. Les forfaits Standard et Express incluent 12 mois de représentation fiscale agréée.",
-      "q5": "J'ai entendu dire que la loi sur le représentant fiscal a changé — quelle est la règle actuelle ?",
-      "a5": "La loi a déjà changé en juillet 2022. Le Décret-Loi 44/2022 a supprimé l'obligation générale pour les résidents hors UE/EEE de nommer un représentant fiscal. Aujourd'hui, cette obligation ne s'applique qu'aux résidents hors UE/EEE ayant des obligations fiscales portugaises actives. Si vous n'avez aucune propriété, revenu ou activité commerciale au Portugal, vous n'êtes légalement pas tenu d'en nommer un. Certains services décrivent encore cette obligation comme universelle — ce n'est plus exact depuis 2022."
+      "q1": "Combien de temps faut-il pour obtenir un NIF portugais ?",
+      "a1": "<b>La livraison standard du NIF prend 5 à 10 jours ouvrables après approbation des documents.</b> Les commandes Express sont soumises à la Finanças dans les 48 heures. Le délai de traitement final dépend de l'administration fiscale.",
+      "q2": "Dois-je être au Portugal pour demander un NIF ?",
+      "a2": "<b>Non, tout le processus de demande de NIF portugais se fait 100% à distance.</b> Nous agissons comme votre représentant fiscal au Portugal et soumettons votre demande numériquement en votre nom.",
+      "q3": "Quels documents sont requis pour un NIF portugais ?",
+      "a3": "<b>Vous avez besoin d'un passeport valide et d'un justificatif de domicile de moins de 3 mois.</b> Les factures d'énergie, relevés bancaires ou contrats de location sont acceptés. Les factures de téléphone ne sont pas admises.",
+      "q4": "Le représentant fiscal est-il obligatoire pour un NIF en 2026 ?",
+      "a4": "<b>La représentation fiscale n'est obligatoire que pour les résidents hors UE/EEE ayant des obligations fiscales au Portugal.</b> Selon le Décret-Loi 44/2022, les résidents de l'UE/EEE en sont exemptés. Elle est requise si vous possédez des biens ou des revenus au Portugal.",
+      "q5": "Quelle est la loi actuelle sur la représentation fiscale au Portugal (Décret-Loi 44/2022) ?",
+      "a5": "<b>Le Décret-Loi 44/2022 a supprimé l'obligation universelle pour les résidents hors UE/EEE de nommer un représentant fiscal.</b> Cette obligation ne s'applique désormais qu'en cas d'obligations fiscales actives (immobilier, revenus ou commerce). Sans cela, elle n'est pas légalement requise."
     },
     "comingSoon": {
       "titleBefore": "What comes ",

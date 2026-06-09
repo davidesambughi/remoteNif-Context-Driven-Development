@@ -107,29 +107,29 @@ export function buildProductSchemas(
 // for AI crawlers (Perplexity, ChatGPT, ClaudeBot) that still parse FAQPage.
 const FAQ_ENTRIES: Array<{ question: string; answer: string }> = [
   {
-    question: 'How long does the process take?',
+    question: 'How long does it take to get a Portuguese NIF?',
     answer:
-      'Standard orders take 5–10 business days from document approval. Express orders are submitted to Finanças within 48 hours of document approval. Finanças processing time after submission is outside our control.',
+      'Standard NIF delivery takes 5–10 business days from document approval. Express orders are submitted to Finanças within 48 hours of document approval. Finanças processing time after submission is outside our control.',
   },
   {
-    question: 'Do I need to be in Portugal?',
+    question: 'Do I need to be in Portugal to apply for a NIF?',
     answer:
-      'No. The entire process is remote. We act as your fiscal representative in Portugal and submit the application to Finanças on your behalf.',
+      'No, the entire Portuguese NIF application process is 100% remote. We act as your fiscal representative in Portugal and submit the application to Finanças digitally on your behalf.',
   },
   {
-    question: 'What documents are required?',
+    question: 'What documents are required for a Portuguese NIF?',
     answer:
       'You need a valid passport and proof of address dated within the last 3 months (utility bill, bank statement, or rental agreement). Phone and TV bills are not accepted.',
   },
   {
-    question: 'Do I need a fiscal representative?',
+    question: 'Is a fiscal representative mandatory for a NIF in 2026?',
     answer:
-      'It depends on your situation in Portugal. Under Decree-Law 44/2022, EU/EEA residents are never required to appoint a fiscal representative. Non-EU/EEA residents only need one if they have active Portuguese tax obligations — such as property ownership, rental income, or business activity in Portugal. Our Essential tier is for anyone without fiscal representation needs, regardless of nationality. Standard and Express include 12 months of licensed fiscal representation.',
+      'Fiscal representation is only mandatory for non-EU/EEA residents with active Portuguese tax obligations. Under Decree-Law 44/2022, EU/EEA residents are never required to appoint a fiscal representative. Others only need one if they own property, earn income, or run a business in Portugal.',
   },
   {
-    question: "I've heard the fiscal representative law changed — what's the current rule?",
+    question: 'What is the current Portuguese fiscal representation law (Decree-Law 44/2022)?',
     answer:
-      'The law already changed in July 2022. Decree-Law 44/2022 removed the blanket requirement for non-EU/EEA residents to appoint a fiscal representative. Today, the requirement applies only to non-EU/EEA residents with active Portuguese tax obligations. If you have no property, income, or business activity in Portugal, you are not legally required to appoint one.',
+      'Decree-Law 44/2022 removed the universal requirement for non-EU/EEA residents to appoint a fiscal representative. The requirement now only applies to those with active Portuguese tax obligations (property, income, or business). If you have none, a representative is not legally required.',
   },
 ]
 

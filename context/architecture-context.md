@@ -15,16 +15,16 @@
 | **Language** | TypeScript | 5.x | Type safety across codebase | Compile-time error detection, better DX |
 | **Bundler** | Turbopack | (built-in) | Development and production builds | Default in Next.js 16+, faster than Webpack |
 | **Styling** | Tailwind CSS | 4.x | Utility-first CSS framework | Design token integration, rapid UI development |
-| **UI Components** | shadcn/ui | Latest | Composable component library | Built on Radix UI, fully customizable, no runtime overhead |
-| **Database** | Supabase PostgreSQL | Latest | Relational data persistence | Managed Postgres, real-time subscriptions, row-level security |
-| **ORM** | Drizzle ORM | Latest | Type-safe database access | Lightweight, SQL-like syntax, excellent TypeScript support |
-| **Auth** | Supabase Auth | Latest | User authentication and sessions | Email/password, OAuth providers, JWT-based sessions |
-| **Storage** | Supabase Storage | Latest | Document and file storage | S3-compatible, integrated with Supabase Auth for access control |
-| **Payments** | Stripe | Latest | Payment processing and webhooks | Industry standard, supports EU and international cards, webhook reliability |
-| **Email** | Resend | Latest | Transactional email delivery | React Email templates, excellent deliverability, simple API |
-| **Validation** | Zod | Latest | Runtime schema validation | Type inference, composable schemas, form validation |
-| **i18n** | next-intl | Latest | Internationalization | App Router support, type-safe translations, locale routing |
-| **AI** | Groq (Llama 4 Scout) | Latest | Document review and validation | Fast inference via `groq-sdk`, PDF text extraction via `pdfjs-dist`, cost-effective |
+| **UI Components** | shadcn/ui | n/a | Composable component library | Built on Radix UI, fully customizable, no runtime overhead |
+| **Database** | Supabase PostgreSQL | supabase-js 2.105 | Relational data persistence | Managed Postgres, real-time subscriptions, row-level security |
+| **ORM** | Drizzle ORM | 0.45 | Type-safe database access | Lightweight, SQL-like syntax, excellent TypeScript support |
+| **Auth** | Supabase Auth | supabase-js 2.105 | User authentication and sessions | Email/password, OAuth providers, JWT-based sessions |
+| **Storage** | Supabase Storage | supabase-js 2.105 | Document and file storage | S3-compatible, integrated with Supabase Auth for access control |
+| **Payments** | Stripe | 22.1 | Payment processing and webhooks | Industry standard, supports EU and international cards, webhook reliability |
+| **Email** | Resend | 6.12 | Transactional email delivery | React Email templates, excellent deliverability, simple API |
+| **Validation** | Zod | 4.4 | Runtime schema validation | Type inference, composable schemas, form validation |
+| **i18n** | next-intl | 4.11 | Internationalization | App Router support, type-safe translations, locale routing |
+| **AI** | Groq (Llama 4 Scout) | groq-sdk 1.2 | Document review and validation | Fast inference via `groq-sdk`, PDF text extraction via `pdfjs-dist`, cost-effective |
 
 ---
 
@@ -424,12 +424,3 @@ export const config = {
 ---
 tructured results** — always return `{ success: true, data }` or `{ success: false, error }`, never throw errors to the client.
 
-14. **Email templates are React components** — use React Email for all transactional emails, never string concatenation.
-
-15. **Environment variables are validated at startup** — use Zod to validate all env vars in a single place, fail fast if misconfigured.
-
-16. **shadcn/ui components are the default** — always reach for a shadcn component before writing a custom one. Build custom components only when no shadcn primitive fits; custom components must still use design tokens (no raw colors, no hardcoded spacing).
-
-17. **Mobile-first layout** — all layouts are built for mobile first. Add `md:` / `lg:` breakpoint variants only where the layout actually changes. Never design desktop-first and patch mobile afterward.
-
----

@@ -126,16 +126,16 @@
     "faq": {
       "title": "Häufig Gestellte Fragen",
       "subtitle": "Alles, was Sie über den Prozess wissen müssen.",
-      "q1": "Wie lange dauert der Prozess?",
-      "a1": "Standardbestellungen dauern 5–10 Werktage ab der Dokumentengenehmigung. Express-Bestellungen werden innerhalb von 48 Stunden nach der Genehmigung bei der Finanças eingereicht. Die Bearbeitungszeit der Finanças nach der Einreichung liegt außerhalb unserer Kontrolle.",
-      "q2": "Muss ich in Portugal sein?",
-      "a2": "Nein. Der gesamte Prozess erfolgt aus der Ferne. Wir agieren als Ihr steuerlicher Vertreter in Portugal und reichen den Antrag bei der Finanças in Ihrem Namen ein.",
-      "q3": "Welche Dokumente werden benötigt?",
-      "a3": "Sie benötigen einen gültigen Reisepass und einen Adressnachweis, der nicht älter als 3 Monate ist (Stromrechnung, Kontoauszug oder Mietvertrag). Telefon- und TV-Rechnungen werden nicht akzeptiert.",
-      "q4": "Brauche ich einen steuerlichen Vertreter?",
-      "a4": "Das hängt von Ihrer Situation in Portugal ab. Gemäß Gesetzesdekret 44/2022 sind EU/EWR-Bürger niemals verpflichtet, einen steuerlichen Vertreter zu benennen. Nicht-EU/EWR-Bürger benötigen nur dann einen, wenn sie aktive portugiesische Steuerpflichten haben — wie Immobilieneigentum, Mieteinnahmen oder Geschäftstätigkeit in Portugal. Unser Essential-Paket richtet sich an alle ohne Bedarf an steuerlicher Vertretung, unabhängig von der Nationalität. Standard und Express beinhalten 12 Monate lizenzierte steuerliche Vertretung.",
-      "q5": "Ich habe gehört, dass das Gesetz zur steuerlichen Vertretung geändert wurde — was gilt derzeit?",
-      "a5": "Das Gesetz wurde bereits im Juli 2022 geändert. Gesetzesdekret 44/2022 hat die pauschale Pflicht für Nicht-EU/EWR-Bürger zur Benennung eines steuerlichen Vertreters abgeschafft. Heute gilt die Pflicht nur noch für Nicht-EU/EWR-Bürger mit aktiven portugiesischen Steuerpflichten. Wenn Sie keine Immobilien, Einkünfte oder Geschäftstätigkeiten in Portugal haben, sind Sie gesetzlich nicht verpflichtet, einen zu benennen. Einige Dienste beschreiben dies noch als universelle Anforderung — das ist seit 2022 nicht mehr korrekt."
+      "q1": "Wie lange dauert es, eine portugiesische NIF zu erhalten?",
+      "a1": "<b>Die Standard-NIF-Lieferung dauert 5–10 Werktage nach der Dokumentengenehmigung.</b> Express-Bestellungen werden innerhalb von 48 Stunden bei der Finanças eingereicht. Die finale Bearbeitungszeit hängt von der Steuerbehörde ab.",
+      "q2": "Muss ich in Portugal sein, um eine NIF zu beantragen?",
+      "a2": "<b>Nein, der gesamte Prozess für die portugiesische NIF-Beantragung erfolgt zu 100% aus der Ferne.</b> Wir agieren als Ihr steuerlicher Vertreter in Portugal und reichen Ihren Antrag digital in Ihrem Namen ein.",
+      "q3": "Welche Dokumente werden für eine portugiesische NIF benötigt?",
+      "a3": "<b>Sie benötigen einen gültigen Reisepass und einen Adressnachweis, der nicht älter als 3 Monate ist.</b> Akzeptiert werden Strom-, Wasser- oder Gasrechnungen, Kontoauszüge oder Mietverträge. Telefonrechnungen sind nicht zulässig.",
+      "q4": "Ist ein steuerlicher Vertreter für eine NIF im Jahr 2026 obligatorisch?",
+      "a4": "<b>Eine steuerliche Vertretung ist nur für Nicht-EU/EWR-Bürger mit aktiven Steuerpflichten in Portugal zwingend erforderlich.</b> Gemäß Gesetzesdekret 44/2022 sind EU/EWR-Bürger befreit. Sie wird benötigt, wenn Sie Immobilien oder Einkünfte in Portugal haben.",
+      "q5": "Was ist das aktuelle portugiesische Gesetz zur steuerlichen Vertretung (Gesetzesdekret 44/2022)?",
+      "a5": "<b>Das Gesetzesdekret 44/2022 hat die allgemeine Pflicht für Nicht-EU/EWR-Bürger zur Benennung eines steuerlichen Vertreters abgeschafft.</b> Die Pflicht gilt nur noch bei aktiven Steuerbindungen (Immobilien, Einkommen oder Gewerbe). Ohne diese ist sie rechtlich nicht erforderlich."
     },
     "comingSoon": {
       "titleBefore": "What comes ",
