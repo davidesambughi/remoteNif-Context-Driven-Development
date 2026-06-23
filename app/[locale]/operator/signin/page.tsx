@@ -11,7 +11,9 @@ export const metadata: Metadata = {
 }
 
 // Operator sign-in — URL: /operator/signin
-// No shared auth layout — renders its own full-page shell so operator routes can have their own layout later.
+// This is a dedicated, non-indexed entry point for operations staff.
+// It provides a direct channel for internal task management, isolated from the public-facing 
+// unified login to ensure operational continuity and separate authentication concerns.
 export default async function OperatorSignInPage() {
   const t = await getTranslations('auth.operator.signIn')
 

@@ -167,7 +167,7 @@
   "pricing": {
     "hero": {
       "headline": "When do you need your NIF?",
-      "subheadline": "Transparent, flat-rate pricing for your Portuguese tax identification number. No hidden administrative fees."
+      "subheadline": "Please note that Finanças typically requires 1–3 additional business days to issue the NIF, and these processing times are beyond our control."
     },
     "tiers": {
       "essential": {
@@ -175,7 +175,7 @@
         "badge": "Affordable Basic",
         "subtitle": "Suitable if you have no active tax ties in Portugal.",
         "features": {
-          "delivery": "5 business days delivery",
+          "delivery": "Submitted within 5 business days",
           "nif": "NIF number",
           "noFiscalRep": "No fiscal representation"
         },
@@ -186,7 +186,7 @@
         "badge": "Best Value",
         "subtitle": "NIF + 12 months fiscal representation",
         "features": {
-          "delivery": "5 business days delivery",
+          "delivery": "Submitted within 5 business days",
           "nif": "NIF number",
           "fiscalRep": "12 months fiscal rep"
         },

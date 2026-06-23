@@ -79,7 +79,7 @@ export function TierCard({
     // backdrop-blur-sm requires a visible background behind the card (the page gradient)
     <Card
       className={[
-        'relative flex flex-col bg-[var(--pricing-card-bg)] backdrop-blur-sm',
+        'relative flex flex-col h-full bg-[var(--pricing-card-bg)] backdrop-blur-sm',
         'border-[var(--pricing-card-border)] overflow-visible',
         isFeatured ? 'shadow-[var(--pricing-glow)]' : 'shadow-[var(--shadow-md)]',
       ]

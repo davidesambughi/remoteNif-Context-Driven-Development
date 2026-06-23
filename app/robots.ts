@@ -5,7 +5,7 @@ import { env } from '@/lib/env'
  * Generates the robots.txt file for the application.
  *
  * Rules:
- * 1. Allow public marketing pages (/, /pricing) in all 4 locales.
+ * 1. Allow public marketing pages (/, /pricing) and GEO manifest (/llms.txt) in all 4 locales.
  * 2. Disallow sensitive/authenticated routes (dashboard, admin, operator, etc.).
  * 3. Explicitly block CCBot and Bytespider due to documented non-compliance with standard crawling practices.
  */
@@ -19,6 +19,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: [
           '/',
           '/pricing',
+          '/llms.txt',
           '/fr/',
           '/fr/pricing',
           '/es/',

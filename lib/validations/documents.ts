@@ -37,7 +37,7 @@ export const DOCUMENT_FLAG_REASON_KEYS = [
 
 export type DocumentFlagReasonKey = typeof DOCUMENT_FLAG_REASON_KEYS[number]
 
-// Schema for Gemini's JSON response. Use safeParse — never trust LLM output directly.
+// Schema for Groq's JSON response. Use safeParse — never trust LLM output directly.
 export const AiReviewResponseSchema = z.object({
   status: z.enum(['clear', 'flagged', 'error']),
   reasonKey: z.enum(DOCUMENT_FLAG_REASON_KEYS).optional(),

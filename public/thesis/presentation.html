@@ -1,0 +1,826 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:oklch(97% 0.006 70);
+    --panel:oklch(94.2% 0.008 70);
+    --ink:oklch(24% 0.012 55);
+    --ink-soft:oklch(46% 0.014 58);
+    --ink-faint:oklch(63% 0.012 62);
+    --line:oklch(86% 0.009 68);
+    --orange:oklch(62% 0.18 42);
+    --orange-deep:oklch(53% 0.17 40);
+    --orange-tint:oklch(62% 0.18 42 / 0.10);
+    --dark:oklch(22% 0.014 52);
+    --dark-2:oklch(27% 0.015 54);
+    --dark-line:oklch(40% 0.016 56);
+    --dark-ink:oklch(93% 0.008 75);
+    --dark-soft:oklch(72% 0.013 66);
+    --t-display:90px; --t-title:58px; --t-sub:40px; --t-lead:31px; --t-body:26px; --t-label:24px;
+    --pad-x:108px; --pad-y:80px;
+  }
+  *{box-sizing:border-box;}
+  @keyframes dashflow{to{background-position:18px 0;}}
+  @keyframes dashflowV{to{background-position:0 18px;}}
+  @keyframes nodepulse{0%,100%{box-shadow:0 0 0 0 var(--orange-tint);}50%{box-shadow:0 0 0 10px transparent;}}
+  @keyframes softblink{0%,100%{opacity:1;}50%{opacity:.45;}}
+  @keyframes drift{0%{transform:translateX(0);}100%{transform:translateX(18px);}}
+  @keyframes revealUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes drawX{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+  @keyframes popIn{0%{opacity:0;transform:scale(.55);}60%{transform:scale(1.12);}100%{opacity:1;transform:scale(1);}}
+  /* Entrance choreography — base style is the visible end-state; animations
+     play only on the active slide, so print / reduced-motion show full content. */
+  @media (prefers-reduced-motion:no-preference){
+    [data-deck-active] > *{animation:revealUp .5s both;}
+    [data-deck-active] > *:nth-child(1){animation-delay:.03s;}
+    [data-deck-active] > *:nth-child(2){animation-delay:.12s;}
+    [data-deck-active] > *:nth-child(3){animation-delay:.21s;}
+    [data-deck-active] > *:nth-child(4){animation-delay:.30s;}
+    [data-deck-active] > *:nth-child(5){animation-delay:.39s;}
+    [data-deck-active] > *:nth-child(6){animation-delay:.48s;}
+    [data-deck-active] > *:nth-child(7){animation-delay:.57s;}
+    [data-deck-active] [data-draw]{animation:drawX .75s cubic-bezier(.2,.85,.25,1) both;transform-origin:left center;animation-delay:.42s;}
+    [data-deck-active] [data-pop]{animation:popIn .5s both;animation-delay:var(--d,.45s);}
+  }
+  /* Continuity anchor — a persistent trace that grows one station per slide.
+     The base line stays put (the anchor); only the orange progress + node animate. */
+  .__thread{position:absolute;left:var(--pad-x);right:var(--pad-x);bottom:36px;height:2px;pointer-events:none;z-index:5;}
+  .__thread-base{position:absolute;left:0;right:0;top:0;height:2px;background:var(--line);}
+  .__thread--dark .__thread-base{background:var(--dark-line);}
+  .__thread-built{position:absolute;left:0;top:0;height:2px;background:var(--orange);width:calc(100% * var(--idx) / var(--total));transform-origin:left center;}
+  .__thread-tick{position:absolute;top:50%;width:6px;height:6px;border-radius:50%;transform:translate(-50%,-50%);background:var(--line);transition:none;}
+  .__thread--dark .__thread-tick{background:var(--dark-line);}
+  .__thread-tick[data-on]{background:var(--orange);}
+  .__thread-node{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--orange);transform:translate(-50%,-50%);left:calc(100% * var(--idx) / var(--total));box-shadow:0 0 0 5px var(--orange-tint);}
+  @media (prefers-reduced-motion:no-preference){
+    [data-deck-active] > .__thread{animation:none;}
+    [data-deck-active] .__thread-built{animation:drawX .9s cubic-bezier(.2,.85,.25,1) both;animation-delay:.2s;}
+    [data-deck-active] .__thread-node{animation:popIn .55s both;animation-delay:.95s;}
+  }
+  /* Circuit decoration — side "etching" with a travelling current pulse; sits behind content. */
+  @keyframes crtFlow{from{stroke-dashoffset:0;}to{stroke-dashoffset:-486;}}
+  .crt{position:absolute;top:0;right:0;height:100%;width:440px;z-index:-1;pointer-events:none;}
+  .crt svg{display:block;}
+  .crt-base{fill:none;stroke:var(--orange);stroke-width:1.4;opacity:.15;}
+  .crt-node{fill:var(--orange);opacity:.22;}
+  .crt-flow{fill:none;stroke:var(--orange);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:24 462;opacity:0;}
+  [data-deck-active] .crt-flow{opacity:.9;animation:crtFlow 3.4s linear infinite;}
+  [data-deck-active] .crt-flow.f2{animation-duration:4.4s;animation-delay:-1.6s;}
+  [data-deck-active] .crt-flow.f3{animation-duration:5.2s;animation-delay:-3.1s;}
+  [data-deck-active] > .crt{animation:none;}
+  .crt--dark .crt-base{opacity:.26;}
+  .crt--dark .crt-node{opacity:.34;}
+  [data-deck-active] .crt--dark .crt-flow{opacity:1;}
+</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%" data-uneditable="">
+
+<!-- 01 — COVER -->
+<section data-label="Copertina" data-screen-label="01" data-speaker-notes="Apertura. Presentati. Anticipa che la tesi non parla del prodotto ma del metodo con cui è stato costruito." style="background:var(--dark);color:var(--dark-ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative;">
+  <div style="position:absolute;left:0;right:0;top:46%;height:2px;background:var(--dark-line);"></div>
+  <div style="position:absolute;left:0;right:0;top:calc(46% + 26px);height:2px;background:repeating-linear-gradient(90deg,var(--orange) 0 9px,transparent 9px 18px);background-size:18px 100%;animation:drift 1.4s linear infinite;opacity:.9;"></div>
+  <div style="display:flex;align-items:center;gap:14px;z-index:1;">
+    <span style="width:13px;height:13px;background:var(--orange);display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--dark-soft);">Tesi di diploma · ITS Full Stack Developer</span>
+  </div>
+  
+  <div style="z-index:1;max-width:30ch;">
+    <h1 style="font-size: var(--t-display); font-weight: 600; line-height: 1.02; letter-spacing: -.025em; margin: 0; width: 363px; height: 143px">Remote<span style="color: var(--orange);">NIF</span></h1><p style="font-size: var(--t-sub); font-weight: 300; line-height: 1.2; margin: 30px 0 0; color: var(--dark-soft); max-width: 24ch; width: 535px; height: 131px">Sviluppo Full-Stack e Ingegneria del Software nell'era degli agenti AI</p>
+    
+  </div><div style="z-index:1;font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);letter-spacing:.04em;">Davide Sambughi&nbsp; ·&nbsp; ITS “Full Stack Developer &amp; Cloud Specialist” &nbsp;·&nbsp; [data della discussione]</div>
+</section>
+
+<!-- 02 — IL CONTESTO -->
+<section data-label="Il contesto" data-screen-label="02" data-speaker-notes="1. COSA E' IL NIF - 
+2.  PER I NON RESIDENTI - per i non residenti, ottenerlo richiede di delegare il processo a un rappresentante legale tramite una Procura. Sebbene la procedura possa essere completata interamente da remoto, le soluzioni presenti sul mercato risultano spesso caratterizzate da frammentazione nelle comunicazioni, opacità nei costi e assenza di tracciamento in tempo reale della pratica.
+3. INTERNSHIP - Il contesto di partenza è quello del tirocinio: la startup opera nel settore real estate portoghese. Offrire il servizio NIF in quel contesto non è casuale — il NIF è il primo passo obbligatorio per chiunque voglia acquistare un immobile o trasferirsi in Portogallo. È un punto di intercettazione naturale: chi richiede il NIF è già un potenziale cliente per tutto ciò che viene dopo. Il prodotto pero' non è l'oggetto di questa tesi, ma il veicolo.
+4 - IL CONTESTO - Questa implementazione di RemoteNIF è distinta dalla versione consegnata durante il tirocinio. È stata sviluppata come progetto indipendente con l'obiettivo di applicare un metodo chiamato context-driven (o specification-driven) development: un approccio allo sviluppo software assistito da AI in cui la definizione dell'architettura e delle specifiche di funzionalità precede e guida la generazione del codice.L'applicazione di questo metodo evidenzia come l'efficacia dell'AI dipenda dalla solidità delle competenze ingegneristiche di base: la scomposizione del sistema, le scelte architetturali e la gestione dei vincoli, anche se assistite dal modello di intelligenza artificiale, rimangono a carico dello sviluppatore" style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:44px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Apertura</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">02 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 40px;">Il contesto</h2>
+  <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:64px;flex:1;align-items:start;">
+    <div>
+      <p style="font-size: var(--t-lead); line-height: 1.4; margin: 0 0 26px; max-width: 34ch; color: #000000">Il <strong>NIF</strong>&nbsp;(Número de Identificação Fiscal)&nbsp;ovvero il numero di identificazione fiscale portoghese, rappresenta il prerequisito tecnico e legale fondamentale per qualsiasi percorso di trasferimento o investimento in Portogallo.<br></p>
+      <p style="font-size:var(--t-body);line-height:1.45;color:var(--ink-soft);margin:0;max-width:34ch;">Per i non residenti si ottiene delegando un rappresentante legale tramite <strong style="color: var(--ink);">Procura</strong>.<br>Una procedura che si completa da remoto ma non sempre trasparente.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:30px;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">Il mercato oggi</span>
+        <p style="font-size:var(--t-body);line-height:1.45;margin:12px 0 0;">Soluzioni frammentate: comunicazioni disperse, costi opachi, nessun tracciamento in tempo reale.</p>
+      </div>
+      <div style="border-top:2px solid var(--orange);padding-top:22px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--orange-deep);">La risposta — RemoteNIF</span>
+        <ul style="list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;">
+          <li style="display:flex;gap:12px;font-size:var(--t-body);line-height:1.35;"><span style="color:var(--orange);font-weight:600;">→</span><span>Pagamento integrato</span></li>
+          <li style="display:flex;gap:12px;font-size:var(--t-body);line-height:1.35;"><span style="color:var(--orange);font-weight:600;">→</span><span>Verifica automatica dei documenti con AI</span></li>
+          <li style="display:flex;gap:12px;font-size:var(--t-body);line-height:1.35;"><span style="color:var(--orange);font-weight:600;">→</span><span>Tre aree di accesso separate — cliente, admin, operatore</span></li>
+          <li style="display:flex;gap:12px;font-size:var(--t-body);line-height:1.35;"><span style="color:var(--orange);font-weight:600;">→</span><span>Interfaccia in quattro lingue: EN · FR · ES · DE</span></li>
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 — IL VERO OGGETTO DELLA TESI -->
+<section data-label="Oggetto della tesi" data-screen-label="03" data-speaker-notes="Momento chiave: il prodotto è il veicolo. L'oggetto sono i due binari. Pronuncia l'insight: usare bene l'AI è una competenza di ingegneria." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:40px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Apertura</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">03 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 6px;">Non il prodotto. <span style="color:var(--orange);">Come è stato costruito.</span></h2>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:30px;max-width:1500px;">
+    <div style="display:flex;align-items:center;gap:28px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);width:140px;flex:none;">Binario 1</span>
+      <div data-draw="" style="flex:1;height:4px;background:var(--orange);position:relative;border-radius:2px;"></div>
+      <span style="font-size:var(--t-lead);font-weight:500;width:560px;flex:none;">Metodo <strong style="color: var(--orange-deep);">context-driven</strong>&nbsp;development ( o specification-driven): architettura e specifiche precedono la generazione del codice</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:28px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);width:140px;flex:none;">Binario 2</span>
+      <div data-draw="" style="flex:1;height:4px;background:var(--ink);position:relative;border-radius:2px;"></div>
+      <span style="font-size:var(--t-lead);font-weight:500;width:560px;flex:none;">Principi e Best Practices di Ingegneria del Software : la base che rende il metodo possibile.&nbsp;</span>
+    </div>
+    <p style="font-size:var(--t-sub);font-weight:300;line-height:1.25;margin:24px 0 0;max-width:32ch;">L'automazione del codice non sostituisce la disciplina di ingegneria : la sposta.<br>L'LLM esegue, l'ingegnere modella il dominio, scrive le specifiche, governa l architettura</p>
+  </div>
+</section>
+
+<!-- 04 — REMOTENIF IN BREVE -->
+<section data-label="RemoteNIF in breve" data-screen-label="04" data-speaker-notes="Contesto rapido del prodotto: cosa fa, i tre attori, i tre piani. Non dilungarti: è il veicolo." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:36px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Il prodotto</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">04 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 10px;">RemoteNIF in breve</h2>
+  <p style="font-size:var(--t-lead);line-height:1.35;color:var(--ink-soft);margin:0 0 34px;max-width:52ch;">Applicazione web full-stack che gestisce l’intera richiesta di NIF: dalla scelta del piano al pagamento, dall’upload dei documenti alla consegna del numero.</p>
+  <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:60px;flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:30px;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">Tre ruoli, accessi separati</span>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:16px;">
+          <div style="display:flex;align-items:baseline;gap:14px;"><span style="width:15px;height:15px;border-radius:50%;background:var(--orange);flex:none;"></span><span style="font-size:var(--t-body);"><strong>Cliente</strong> — acquista, carica documenti, segue lo stato</span></div>
+          <div style="display:flex;align-items:baseline;gap:14px;"><span style="width:15px;height:15px;background:var(--ink);flex:none;"></span><span style="font-size:var(--t-body);"><strong>Admin</strong> — rivede documenti, sovrascrive l’AI, gestisce ordini</span></div>
+          <div style="display:flex;align-items:baseline;gap:14px;"><span style="width:13px;height:13px;border:2px solid var(--ink);transform:rotate(45deg);flex:none;"></span><span style="font-size:var(--t-body);"><strong>Operatore</strong> — rappresentante fiscale, sottomette al portale governativo</span></div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--line);padding-top:24px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">Tre piani</span>
+        <div style="display:flex;gap:14px;margin-top:16px;">
+          <div style="flex:1;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--orange-deep);font-weight:500;">€79</div><div style="font-size:var(--t-label);color:var(--ink-soft);margin-top:4px;">Essential<br>solo NIF</div></div>
+          <div style="flex:1;border-left:1px solid var(--line);padding-left:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--orange-deep);font-weight:500;">€129</div><div style="font-size:var(--t-label);color:var(--ink-soft);margin-top:4px;">Standard<br>+ rappr. 12 mesi</div></div>
+          <div style="flex:1;border-left:1px solid var(--line);padding-left:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--orange-deep);font-weight:500;">€179</div><div style="font-size:var(--t-label);color:var(--ink-soft);margin-top:4px;">Express<br>+ entro 48h</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:1.5px dashed var(--line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--panel) 14px 15px);min-height:0;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep);">[ Visual ]</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-soft);text-align:center;line-height:1.4;max-width:30ch;">Screenshot dashboard cliente</span>
+    </div>
+  </div>
+</section>
+
+<!-- 05 — IL FLUSSO END-TO-END -->
+<section data-label="Flusso end-to-end" data-screen-label="05" data-speaker-notes="Il diagramma a 9 passi è il centro. Spiega i 5 stati che avanzano sempre in avanti e i 3 documenti richiesti." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Il prodotto</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">05 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 8px;">Il flusso end-to-end</h2>
+  <p style="font-size:var(--t-body);line-height:1.4;color:var(--ink-soft);margin:0 0 24px;max-width:62ch;"><strong style="color:var(--ink);">9 fasi</strong> che attraversano i tre attori. Tre documenti richiesti: passaporto, prova di residenza, Procura firmata.</p>
+  <!-- state rail -->
+  <div style="display:flex;align-items:flex-start;margin-bottom:26px;">
+    <span style="display:flex;flex-direction:column;align-items:center;flex:none;width:150px;"><span style="width:16px;height:16px;border-radius:50%;background:var(--orange);"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);margin-top:10px;text-align:center;line-height:1.2;">documents<br>_pending</span></span>
+    <span style="flex:1;height:3px;margin-top:7px;background:repeating-linear-gradient(90deg,var(--orange) 0 9px,transparent 9px 18px);background-size:18px 100%;animation:drift 1.4s linear infinite;"></span>
+    <span style="display:flex;flex-direction:column;align-items:center;flex:none;width:150px;"><span style="width:16px;height:16px;border-radius:50%;background:var(--ink);"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);margin-top:10px;text-align:center;line-height:1.2;">under<br>_review</span></span>
+    <span style="flex:1;height:3px;margin-top:7px;background:var(--line);"></span>
+    <span style="display:flex;flex-direction:column;align-items:center;flex:none;width:150px;"><span style="width:16px;height:16px;border-radius:50%;background:var(--ink);"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);margin-top:10px;text-align:center;line-height:1.2;">documents<br>_approved</span></span>
+    <span style="flex:1;height:3px;margin-top:7px;background:var(--line);"></span>
+    <span style="display:flex;flex-direction:column;align-items:center;flex:none;width:150px;"><span style="width:16px;height:16px;border-radius:50%;background:var(--ink);"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);margin-top:10px;text-align:center;line-height:1.2;">submitted</span></span>
+    <span style="flex:1;height:3px;margin-top:7px;background:var(--line);"></span>
+    <span style="display:flex;flex-direction:column;align-items:center;flex:none;width:150px;"><span style="width:16px;height:16px;border-radius:50%;border:3px solid var(--orange);box-sizing:border-box;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);margin-top:10px;text-align:center;line-height:1.2;font-weight:500;">delivered</span></span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:1.5px dashed var(--line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--panel) 14px 15px);min-height:0;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep);">[ Visual ]</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-soft);text-align:center;line-height:1.4;max-width:54ch;">Diagramma del flusso a 9 passi — i 5 stati dell’ordine e i tre attori (cliente · admin · operatore)</span>
+  </div>
+</section>
+
+<!-- 06 — ARCHITETTURA AD ALTO LIVELLO -->
+<section data-label="Architettura alto livello" data-screen-label="06" data-speaker-notes="Una sola codebase Next.js, niente server separato. Dati su Supabase, tre servizi esterni. La mappa è il centro." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:36px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Il prodotto</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">06 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 28px;">Architettura ad alto livello</h2>
+  <div style="display:grid;grid-template-columns:1fr 1.25fr;gap:60px;flex:1;min-height:0;align-items:center;">
+    <div style="display:flex;flex-direction:column;gap:26px;">
+      <p style="font-size:var(--t-lead);line-height:1.4;margin:0;max-width:30ch;">Un’unica codebase <strong>Next.js</strong> gestisce frontend e backend. Nessun server separato.</p>
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">Dati</span>
+        <p style="font-size:var(--t-body);line-height:1.4;margin:10px 0 0;"><strong>Supabase</strong> — Auth + PostgreSQL + Storage</p>
+      </div>
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">Tre servizi esterni</span>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);border:1px solid var(--line);padding:8px 14px;border-radius:2px;">Stripe · pagamenti</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);border:1px solid var(--line);padding:8px 14px;border-radius:2px;">Resend · email</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);border:1px solid var(--line);padding:8px 14px;border-radius:2px;">Groq · verifica AI</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:1.5px dashed var(--line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--panel) 14px 15px);height:100%;min-height:0;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep);">[ Visual ]</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-soft);text-align:center;line-height:1.4;max-width:36ch;">Mappa dell’architettura<br>browser → Next.js → Supabase + Stripe + Resend + Groq</span>
+    </div>
+  </div>
+</section>
+
+<!-- 07 — NEXT.JS APP ROUTER -->
+<section data-label="Next.js App Router" data-screen-label="07" data-speaker-notes="Server-first: i dati si leggono al render, niente API interne. Client solo nelle foglie. Auth guard scritto una volta nei layout annidati." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;isolation:isolate;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:34px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.03 · App Next.js</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">07 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 8px;">App Router, server-first</h2>
+  <p style="font-size:var(--t-lead);line-height:1.35;color:var(--ink-soft);margin:0 0 40px;max-width:54ch;">Frontend e backend nella stessa codebase; per default i componenti girano sul server.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:34px 56px;flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:10px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">01 — Server Components</span><p style="font-size:var(--t-body);line-height:1.42;margin:0;">I dati si leggono al render, direttamente dal database. Niente chiamate API interne, niente <code style="font-family:'IBM Plex Mono',monospace;">useEffect</code>, niente loading manuali.</p></div>
+    <div style="display:flex;flex-direction:column;gap:10px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">02 — Client Components</span><p style="font-size:var(--t-body);line-height:1.42;margin:0;">Solo per le foglie interattive (upload, form). <code style="font-family:'IBM Plex Mono',monospace;">"use client"</code> spinto il più in fondo possibile nell’albero.</p></div>
+    <div style="display:flex;flex-direction:column;gap:10px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">03 — Layout annidati</span><p style="font-size:var(--t-body);line-height:1.42;margin:0;">La protezione delle route è centralizzata: l’auth guard è scritto <strong>una volta sola</strong> e ogni pagina figlia lo eredita.</p></div>
+    <div style="display:flex;flex-direction:column;gap:10px;justify-content:center;border-left:2px solid var(--orange);padding-left:24px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);">Conseguenza</span><p style="font-size:var(--t-lead);line-height:1.3;margin:0;font-weight:500;">Impossibile dimenticare la guard aggiungendo una nuova route.</p></div>
+  </div>
+  <div class="crt" aria-hidden="true">
+    <svg width="100%" height="100%" viewBox="0 0 440 1080" preserveAspectRatio="xMidYMid meet" fill="none">
+      <defs><filter id="crtGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs>
+      <path class="crt-base" d="M440 150 H330 V340 H392 V520"></path>
+      <path class="crt-base" d="M440 230 H392 V600 H320"></path>
+      <path class="crt-base" d="M440 360 H300 V660 H388 V840"></path>
+      <path class="crt-base" d="M440 470 H250 V760"></path>
+      <path class="crt-base" d="M440 560 H352 V900 H300"></path>
+      <path class="crt-base" d="M300 120 V980"></path>
+      <path class="crt-base" d="M392 200 V880"></path>
+      <circle class="crt-node" cx="330" cy="340" r="4.5"></circle>
+      <circle class="crt-node" cx="392" cy="520" r="4.5"></circle>
+      <circle class="crt-node" cx="320" cy="600" r="4.5"></circle>
+      <circle class="crt-node" cx="388" cy="840" r="4.5"></circle>
+      <circle class="crt-node" cx="250" cy="760" r="4.5"></circle>
+      <circle class="crt-node" cx="300" cy="900" r="4.5"></circle>
+      <circle class="crt-node" cx="300" cy="120" r="4.5"></circle>
+      <rect class="crt-node" x="430" y="146" width="10" height="8"></rect>
+      <rect class="crt-node" x="430" y="226" width="10" height="8"></rect>
+      <rect class="crt-node" x="430" y="356" width="10" height="8"></rect>
+      <path class="crt-flow" filter="url(#crtGlow)" d="M440 150 H330 V340 H392 V520"></path>
+      <path class="crt-flow f2" filter="url(#crtGlow)" d="M440 360 H300 V660 H388 V840"></path>
+      <path class="crt-flow f3" filter="url(#crtGlow)" d="M300 120 V980"></path>
+    </svg>
+  </div>
+</section>
+
+<!-- 08 — SERVER ACTIONS + PROXY -->
+<section data-label="Server Actions e proxy" data-screen-label="08" data-speaker-notes="Tutte le mutazioni passano da un unico layer con 5 passi fissi. La pipeline è il centro. proxy.ts sostituisce middleware.ts in Next.js 16." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.03 · App Next.js</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">08 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 22px;">Server Actions e <code style="font-family:'IBM Plex Mono',monospace;font-size:.82em;">proxy.ts</code></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-bottom:26px;">
+    <p style="font-size:var(--t-body);line-height:1.42;margin:0;">Tutte le mutazioni passano da un unico layer (<code style="font-family:'IBM Plex Mono',monospace;">app/actions/</code>). Le API route esistono solo per i servizi esterni che chiamano l’app via HTTP — webhook Stripe, cron Vercel.</p>
+    <p style="font-size:var(--t-body);line-height:1.42;margin:0;"><code style="font-family:'IBM Plex Mono',monospace;">proxy.ts</code> (sostituisce <code style="font-family:'IBM Plex Mono',monospace;">middleware.ts</code> in Next.js 16): intercetta ogni richiesta, valida la sessione e applica il routing multilingua, in un unico punto.</p>
+  </div>
+  <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px;">Ogni Server Action — 5 passi fissi</span>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:1.5px dashed var(--line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--panel) 14px 15px);min-height:0;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep);">[ Visual ]</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-soft);text-align:center;line-height:1.5;max-width:64ch;">Pipeline a 5 step:&nbsp; Validazione Zod → Autenticazione → Ownership → Mutazione DB → revalidatePath</span>
+  </div>
+</section>
+
+<!-- 09 — TYPESCRIPT STRICT + SHADCN -->
+<section data-label="TypeScript strict · shadcn" data-screen-label="09" data-speaker-notes="Stati impossibili irrappresentabili. Il principio: la solidità viene dai vincoli del sistema, non dall'attenzione del programmatore. shadcn = codice nel repo." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:34px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.03 · App Next.js</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">09 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 34px;">TypeScript strict e shadcn/ui</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;flex:1;min-height:0;align-items:start;">
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">TypeScript — modalità strict</span>
+      <p style="font-size:var(--t-body);line-height:1.42;margin:0;">Gli stati impossibili diventano <strong>irrappresentabili</strong> (unioni discriminate). Tutte le azioni hanno la stessa forma di ritorno: <code style="font-family:'IBM Plex Mono',monospace;background:var(--panel);padding:2px 7px;border-radius:3px;">ActionResult&lt;T&gt;</code>.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:11px;height:11px;background:var(--orange);display:inline-block;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--orange-deep);">Principio</span></div>
+        <p style="margin:0;font-size:var(--t-lead);line-height:1.32;font-weight:500;max-width:30ch;">La solidità non dipende dall’attenzione del programmatore, ma dai vincoli del sistema. Il compilatore intercetta gli errori strutturali.</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;border-left:1px solid var(--line);padding-left:56px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">shadcn/ui</span>
+      <p style="font-size:var(--t-body);line-height:1.45;margin:0;">I componenti UI sono <strong>codice copiato nel repository</strong>, non una dipendenza npm. Modificabili, senza version lock-in.</p>
+      <p style="font-size:var(--t-body);line-height:1.45;margin:0;color:var(--ink-soft);">Il brand è applicato tramite <strong style="color:var(--ink);">design token in CSS</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 — SUPABASE -->
+<section data-label="Supabase" data-screen-label="10" data-speaker-notes="Una piattaforma, tre servizi su PostgreSQL. Tre client per contesto. getClaims verifica il JWT, getSession si fida del cookie." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:34px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.04 · Dati &amp; backend</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">10 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 8px;">Supabase</h2>
+  <p style="font-size:var(--t-lead);line-height:1.35;color:var(--ink-soft);margin:0 0 34px;max-width:56ch;">Un’unica piattaforma per tre servizi su PostgreSQL.</p>
+  <div style="display:flex;gap:16px;margin-bottom:30px;">
+    <div style="flex:1;border-top:2px solid var(--orange);padding-top:18px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);font-weight:500;">Auth</div><p style="font-size:var(--t-label);line-height:1.4;color:var(--ink-soft);margin:8px 0 0;">Sessioni JWT in cookie HTTP-only</p></div>
+    <div style="flex:1;border-top:2px solid var(--orange);padding-top:18px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);font-weight:500;">Database</div><p style="font-size:var(--t-label);line-height:1.4;color:var(--ink-soft);margin:8px 0 0;">PostgreSQL</p></div>
+    <div style="flex:1;border-top:2px solid var(--orange);padding-top:18px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);font-weight:500;">Storage</div><p style="font-size:var(--t-label);line-height:1.4;color:var(--ink-soft);margin:8px 0 0;">Documenti — mai nel DB</p></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:56px;flex:1;min-height:0;align-items:start;">
+    <div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">Tre client distinti per contesto</span>
+      <p style="font-size:var(--t-body);line-height:1.45;margin:14px 0 0;">browser · server · <strong>admin</strong> — quest’ultimo con service key, <strong>bypassa RLS</strong>: usato solo lato server, mai esposto al browser.</p>
+    </div>
+    <div style="border-left:1px solid var(--line);padding-left:56px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">Autenticazione verificata</span>
+      <p style="font-size:var(--t-body);line-height:1.45;margin:14px 0 0;"><code style="font-family:'IBM Plex Mono',monospace;color:var(--orange-deep);">getClaims()</code> — verifica crittografica del JWT.<br>Non <code style="font-family:'IBM Plex Mono',monospace;">getSession()</code>, che si fida del cookie senza verificarlo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 — SICUREZZA NELL'INFRASTRUTTURA -->
+<section data-label="Sicurezza infrastruttura" data-screen-label="11" data-speaker-notes="Slide chiave del principio. RLS nel DB, trigger garantito, signed URL, gerarchia di accesso. Un bug app non può far trapelare dati altrui." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.04 · Dati &amp; backend</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">11 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 30px;">Sicurezza nell’infrastruttura</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px 56px;flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:9px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Row Level Security</span><p style="font-size:var(--t-body);line-height:1.4;margin:0;">Le policy di accesso vivono nel <strong>database</strong>, non nel codice. Un bug applicativo non può far trapelare dati di altri utenti.</p></div>
+    <div style="display:flex;flex-direction:column;gap:9px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Trigger handle_new_user</span><p style="font-size:var(--t-body);line-height:1.4;margin:0;">Garantisce a livello di DB che ogni utente di Auth abbia la riga corrispondente, qualunque sia il percorso di creazione.</p></div>
+    <div style="display:flex;flex-direction:column;gap:9px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Storage — Signed URL (1h)</span><p style="font-size:var(--t-body);line-height:1.4;margin:0;">L’upload va direttamente dal browser a Supabase, senza passare dal server.</p></div>
+    <div style="display:flex;flex-direction:column;gap:9px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Gerarchia applicativa</span><p style="font-size:var(--t-body);line-height:1.4;margin:0;"><code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">getCurrentUser → requireAuth → requireRole</code>. Chi arriva su <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">/admin</code> senza permessi viene rediretto, senza che la route venga confermata.</p></div>
+  </div>
+</section>
+
+<!-- 12 — DRIZZLE ORM -->
+<section data-label="Drizzle ORM" data-screen-label="12" data-speaker-notes="Lo schema TS è una sola fonte di verità. Drizzle scelto per ragioni misurabili (280KB vs 40MB). Transazioni per la coerenza. Il principio trasversale chiude." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.04 · Dati &amp; backend</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">12 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 22px;">Drizzle ORM</h2>
+  <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:52px;flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <p style="font-size:var(--t-body);line-height:1.4;margin:0;">Lo schema in TypeScript è <strong>simultaneamente</strong> la definizione del database e i tipi dell’applicazione — una sola fonte di verità. Aggiungi una colonna, e il compilatore segnala ogni punto da aggiornare.</p>
+      <div style="display:flex;gap:24px;align-items:baseline;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;">
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:40px;font-weight:500;color:var(--orange-deep);line-height:1;">~280 KB</div><div style="font-size:var(--t-label);color:var(--ink-soft);margin-top:6px;">Drizzle</div></div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-faint);">vs</span>
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:40px;font-weight:500;color:var(--ink-faint);line-height:1;">~40 MB</div><div style="font-size:var(--t-label);color:var(--ink-soft);margin-top:6px;">Prisma</div></div>
+        <p style="font-size:var(--t-label);line-height:1.35;color:var(--ink-soft);margin:0 0 0 6px;align-self:center;">Bundle e cold start migliori — corretto per ambiente serverless.</p>
+      </div>
+      <p style="font-size:var(--t-body);line-height:1.4;margin:0;"><strong>Transazioni</strong> per la coerenza: alla conferma del pagamento, ordine e audit si creano in un’unica transazione — o entrambi, o rollback automatico.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;min-height:0;">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;border:1.5px dashed var(--line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--panel) 14px 15px);min-height:0;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep);">[ Visual ]</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-soft);text-align:center;line-height:1.4;max-width:32ch;">Diagramma ER — 7 tabelle</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);text-align:center;line-height:1.5;max-width:40ch;">users · orders · documents · payments · operatorNotifications · operatorPreferences · auditLog</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px;"><div style="display:flex;align-items:center;gap:10px;"><span style="width:11px;height:11px;background:var(--orange);display:inline-block;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--orange-deep);">Principio trasversale</span></div><p style="margin:0;font-size:var(--t-body);line-height:1.35;font-weight:500;">La correttezza è affidata all’infrastruttura — RLS, trigger, enum PostgreSQL, type safety — non alla correttezza di ogni singola riga di codice.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 — STRIPE -->
+<section data-label="Stripe" data-screen-label="13" data-speaker-notes="Il punto: la conferma del pagamento arriva SOLO dal webhook, mai dal redirect. Idempotenza a doppio livello. Il diagramma a 6 fasi è il centro." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.05 · Pagamenti &amp; comunicazioni</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">13 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 22px;">Stripe</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px 52px;margin-bottom:24px;">
+    <p style="font-size:var(--t-body);line-height:1.4;margin:0;"><strong>Checkout Sessions</strong>: l’utente paga su pagina ospitata da Stripe. I dati della carta non toccano mai l’app (PCI, 3D Secure a carico di Stripe).</p>
+    <p style="font-size:var(--t-body);line-height:1.4;margin:0;"><strong>Idempotenza a doppio livello</strong>: controllo applicativo + vincolo UNIQUE nel database. Un evento duplicato crea un solo ordine.</p>
+    <p style="font-size:var(--t-lead);line-height:1.35;margin:0;font-weight:500;grid-column:1 / 2;">La conferma del pagamento arriva <span style="color:var(--orange-deep);">solo dal webhook</span>, mai dal redirect del browser — raggiungibile anche senza pagare.</p>
+    <p style="font-size:var(--t-body);line-height:1.4;margin:0;color:var(--ink-soft);"><strong style="color:var(--ink);">WebhookPoller</strong>: overlay di attesa dopo il redirect, interroga il DB ogni 2,5s finché l’ordine appare — scelta UX per la race condition.</p>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;border:1.5px dashed var(--line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--panel) 14px 15px);min-height:0;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep);">[ Visual ]</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-soft);text-align:center;line-height:1.45;max-width:62ch;">Flusso Stripe a 6 fasi — al passo 6 le due frecce (redirect browser vs. webhook POST). Solo il webhook è la conferma valida.</span>
+  </div>
+</section>
+
+<!-- 14 — ZOD -->
+<section data-label="Zod" data-screen-label="14" data-speaker-notes="Validazione runtime ai confini. Il tipo TS è inferito dallo schema. env.ts fa fail fast. L'output AI è input non fidato — collega alla slide AI." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:34px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.05 · Pagamenti &amp; comunicazioni</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">14 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 10px;">Zod — validazione ai confini</h2>
+  <p style="font-size:var(--t-lead);line-height:1.35;color:var(--ink-soft);margin:0 0 36px;max-width:58ch;">Validazione a runtime dove TypeScript non arriva. Il tipo è inferito dallo stesso schema, non scritto a parte.</p>
+  <div style="display:flex;align-items:center;gap:30px;flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:12px;flex:none;width:300px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);">I confini</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);border:1px solid var(--line);padding:12px 18px;border-radius:2px;">form</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);border:1px solid var(--line);padding:12px 18px;border-radius:2px;">webhook</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);border:1px solid var(--line);padding:12px 18px;border-radius:2px;">variabili d’ambiente</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);border:1px solid var(--line);padding:12px 18px;border-radius:2px;">risposta AI</span>
+    </div>
+    <span style="flex:none;width:80px;height:3px;background:repeating-linear-gradient(90deg,var(--orange) 0 9px,transparent 9px 18px);background-size:18px 100%;animation:drift 1.4s linear infinite;"></span>
+    <div style="flex:none;width:150px;height:150px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:var(--t-sub);font-weight:500;">Zod</div>
+    <span style="flex:none;width:80px;height:3px;background:var(--ink);"></span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:22px;">
+      <p style="font-size:var(--t-body);line-height:1.4;margin:0;"><code style="font-family:'IBM Plex Mono',monospace;color:var(--orange-deep);">env.ts</code> — se una variabile manca o ha formato errato, l’app non parte. <strong>Fail fast.</strong></p>
+      <p style="font-size:var(--t-lead);line-height:1.32;margin:0;font-weight:500;">L’output del modello AI è trattato come <strong>input non fidato</strong>: validato con vocabolario chiuso prima di toccare il database.</p>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);margin:0;">“never trust LLM output directly”</p>
+    </div>
+  </div>
+</section>
+
+<!-- 15 — RESEND -->
+<section data-label="Resend" data-screen-label="15" data-speaker-notes="11 template, un solo punto di ingresso sendEmail(). Dispatch type-safe con exhaustiveness check. Email localizzate, invio fire and forget." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:34px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.05 · Pagamenti &amp; comunicazioni</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">15 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 36px;">Resend — un solo punto d’ingresso</h2>
+  <div style="display:grid;grid-template-columns:0.9fr 1.1fr;gap:60px;flex:1;min-height:0;align-items:center;">
+    <div style="display:flex;align-items:center;gap:24px;">
+      <div style="display:flex;flex-direction:column;gap:7px;flex:none;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);margin-bottom:4px;">11 template React</span>
+        <span style="width:120px;height:13px;background:var(--line);border-radius:2px;"></span>
+        <span style="width:120px;height:13px;background:var(--line);border-radius:2px;"></span>
+        <span style="width:120px;height:13px;background:var(--line);border-radius:2px;"></span>
+        <span style="width:120px;height:13px;background:var(--line);border-radius:2px;"></span>
+        <span style="width:120px;height:13px;background:var(--line);border-radius:2px;"></span>
+      </div>
+      <span style="flex:none;width:64px;height:3px;background:repeating-linear-gradient(90deg,var(--orange) 0 9px,transparent 9px 18px);background-size:18px 100%;animation:drift 1.4s linear infinite;"></span>
+      <div style="flex:none;font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);font-weight:500;color:#fff;background:var(--orange);padding:18px 22px;border-radius:3px;">sendEmail()</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:24px;">
+      <p style="font-size:var(--t-body);line-height:1.42;margin:0;">Nessun altro modulo importa il client Resend direttamente.</p>
+      <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Dispatch type-safe</span><p style="font-size:var(--t-body);line-height:1.42;margin:8px 0 0;">Unione discriminata + exhaustiveness check: aggiungere un template senza il <code style="font-family:'IBM Plex Mono',monospace;">case</code> corrispondente è un errore di <strong>compilazione</strong>, non un bug a runtime.</p></div>
+      <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Localizzazione &amp; resilienza</span><p style="font-size:var(--t-body);line-height:1.42;margin:8px 0 0;">Email in 4 lingue (copy nel template — nessun contesto HTTP nei cron). Invio <strong>fire and forget</strong>: un’email fallita non blocca l’ordine.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 — VERIFICA DOCUMENTI CON AI -->
+<section data-label="Verifica documenti AI" data-screen-label="16" data-speaker-notes="Groq + Llama 4 Scout. Tre stati: clear / flagged / error con budget tentativi. Output validato Zod. Il flowchart di escalation è il centro." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.06 · AI · i18n · SEO</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">16 / 28</span>
+  </div>
+  <div style="display:flex;align-items:baseline;gap:18px;margin-bottom:18px;flex-wrap:wrap;">
+    <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0;">Verifica documenti con AI</h2>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);border:1px solid var(--line);padding:6px 12px;border-radius:2px;">Groq · Llama 4 Scout</span>
+  </div>
+  <p style="font-size:var(--t-body);line-height:1.4;color:var(--ink-soft);margin:0 0 22px;max-width:72ch;">Il documento va da browser a Supabase Storage senza passare dal server; poi parte la review AI. Immagini → base64 + visione multimodale; PDF → estrazione testo (<code style="font-family:'IBM Plex Mono',monospace;">pdfjs-dist</code>); PDF scansionato senza testo → <code style="font-family:'IBM Plex Mono',monospace;">error</code> immediato.</p>
+  <div style="display:flex;gap:14px;margin-bottom:22px;">
+    <div style="flex:1;border-top:3px solid var(--orange);padding-top:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--orange-deep);font-weight:500;">clear</div><p style="font-size:var(--t-label);line-height:1.4;margin:8px 0 0;color:var(--ink-soft);">Approvato. Se tutti e 3 sono clear, l’ordine avanza.</p></div>
+    <div style="flex:1;border-top:3px solid var(--ink);padding-top:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);font-weight:500;">flagged</div><p style="font-size:var(--t-label);line-height:1.4;margin:8px 0 0;color:var(--ink-soft);">Motivo specifico, l’utente ricarica. Al 2° tentativo → manual_review.</p></div>
+    <div style="flex:1;border-top:3px solid var(--ink-faint);padding-top:14px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);font-weight:500;color:var(--ink-soft);">error</div><p style="font-size:var(--t-label);line-height:1.4;margin:8px 0 0;color:var(--ink-soft);">Illeggibile → revisione manuale, senza consumare i tentativi.</p></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:1.5px dashed var(--line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--panel) 14px 15px);min-height:0;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep);">[ Visual ]</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-soft);text-align:center;line-height:1.4;max-width:56ch;">Flowchart della logica di escalation AI — clear / flagged / error + budget tentativi</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);text-align:center;">Output validato con Zod su vocabolario chiuso — DOCUMENT_FLAG_REASON_KEYS</span>
+  </div>
+</section>
+
+<!-- 17 — INTERNAZIONALIZZAZIONE -->
+<section data-label="Internazionalizzazione" data-screen-label="17" data-speaker-notes="4 lingue, URL puliti per EN. Una sola fonte di verità per i locali. setRequestLocale abilita il pre-render statico. getTranslations in parallelo alle query." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.06 · AI · i18n · SEO</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">17 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 22px;">Internazionalizzazione <span style="font-family:'IBM Plex Mono',monospace;font-size:.46em;color:var(--ink-soft);font-weight:400;">next-intl</span></h2>
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:28px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);font-weight:500;background:var(--orange);color:#fff;padding:8px 16px;border-radius:2px;">EN</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);border:1px solid var(--line);padding:8px 16px;border-radius:2px;">FR</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);border:1px solid var(--line);padding:8px 16px;border-radius:2px;">ES</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);border:1px solid var(--line);padding:8px 16px;border-radius:2px;">DE</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);margin-left:18px;">/pricing&nbsp;&nbsp;·&nbsp;&nbsp;/fr/pricing — <span style="color:var(--ink);">localePrefix: as-needed</span></span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:44px;flex:1;min-height:0;align-items:start;">
+    <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Una fonte di verità</span><p style="font-size:var(--t-body);line-height:1.42;margin:12px 0 0;">I locali vivono in <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">i18n/routing.ts</code>. Ogni richiesta carica solo il file della lingua richiesta (dynamic import).</p></div>
+    <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Pre-render statico</span><p style="font-size:var(--t-body);line-height:1.42;margin:12px 0 0;"><code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">setRequestLocale()</code> abilita il pre-rendering di tutte le varianti al build, non dinamico per ogni richiesta.</p></div>
+    <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">In parallelo</span><p style="font-size:var(--t-body);line-height:1.42;margin:12px 0 0;"><code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">getTranslations()</code> in <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">Promise.all()</code> con le query DB — traduzioni e dati recuperati insieme.</p></div>
+  </div>
+</section>
+
+<!-- 18 — SEO E GEO -->
+<section data-label="SEO e GEO" data-screen-label="18" data-speaker-notes="SEO via framework. JSON-LD con prezzi dalla stessa sorgente di Stripe. GEO: FAQPage mantenuto per i crawler AI dopo la deprecazione Google di maggio 2026." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.06 · AI · i18n · SEO</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">18 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 30px;">SEO e GEO</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;flex:1;min-height:0;align-items:start;">
+    <div style="display:flex;flex-direction:column;gap:22px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">SEO — gestito dal framework</span>
+      <p style="font-size:var(--t-body);line-height:1.4;margin:0;">Metadata server-rendered, sitemap e <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">robots.txt</code> tipizzati, immagini Open Graph generate al build (Satori).</p>
+      <p style="font-size:var(--t-body);line-height:1.4;margin:0;"><strong>JSON-LD</strong>: Organization, WebSite, Product ×3, FAQPage. I prezzi nei <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">Product</code> derivano da <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">lib/pricing.ts</code> — <strong>la stessa sorgente di Stripe</strong>. Cambia un prezzo, lo schema si aggiorna da solo.</p>
+      <p style="font-size:var(--t-label);line-height:1.4;margin:0;color:var(--ink-soft);"><code style="font-family:'IBM Plex Mono',monospace;">JsonLd.tsx</code> è un Server Component con protezione XSS — un Client Component duplicherebbe il tag <code style="font-family:'IBM Plex Mono',monospace;">&lt;script&gt;</code> nel DOM.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px;border-left:2px solid var(--orange);padding-left:48px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--orange-deep);">GEO — per i crawler AI</span>
+      <p style="font-size:var(--t-lead);line-height:1.34;margin:0;font-weight:500;"><code style="font-family:'IBM Plex Mono',monospace;font-size:.85em;">FAQPage</code> mantenuto dopo la deprecazione dei rich result Google (maggio 2026).</p>
+      <p style="font-size:var(--t-body);line-height:1.42;margin:0;color:var(--ink-soft);">I crawler AI lo consumano ancora:</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);border:1px solid var(--line);padding:8px 14px;border-radius:2px;">Perplexity</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);border:1px solid var(--line);padding:8px 14px;border-radius:2px;">ChatGPT</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);border:1px solid var(--line);padding:8px 14px;border-radius:2px;">ClaudeBot</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 — CI/CD -->
+<section data-label="CI/CD" data-screen-label="19" data-speaker-notes="Due job paralleli, entrambi devono passare. La migration con trigger su auth.users è saltata di proposito in CI. Due problemi reali risolti: Node 22, npm install." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.07 · Qualità &amp; testing</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">19 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 30px;">CI/CD: pipeline e decisioni</h2>
+  <div style="display:grid;grid-template-columns:0.85fr 1.15fr;gap:56px;flex:1;min-height:0;align-items:center;">
+    <div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">GitHub Actions — due job paralleli</span>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:18px;">
+        <div style="display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-left:4px solid var(--orange);padding:16px 20px;border-radius:2px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);">test unitari</span></div>
+        <div style="display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-left:4px solid var(--orange);padding:16px 20px;border-radius:2px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);">test di integrazione</span></div>
+      </div>
+      <p style="font-size:var(--t-label);line-height:1.4;color:var(--ink-soft);margin:16px 0 0;">Entrambi devono passare prima che una pull request venga integrata.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:24px;border-left:1px solid var(--line);padding-left:56px;">
+      <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Una migration saltata di proposito</span><p style="font-size:var(--t-body);line-height:1.42;margin:8px 0 0;"><code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">0001_handle_new_user.sql</code> contiene un trigger su <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">auth.users</code> — esiste in Supabase, non in un Postgres standard. Il commento nel workflow lo spiega.</p></div>
+      <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Due problemi reali risolti in corso d’opera</span><p style="font-size:var(--t-body);line-height:1.42;margin:8px 0 0;">Node 22 imposto da <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">pdfjs-dist</code>. <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">npm ci</code> → <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">npm install</code> per incompatibilità del lock file tra Windows e runner Linux.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 — LA SUITE DI TEST -->
+<section data-label="La suite di test" data-screen-label="20" data-speaker-notes="600 unit + 167 integration contro DB reale. Sequenziali per evitare collisioni FK. Stato pulito a ogni test. Tre aree ad alto rischio coperte." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.07 · Qualità &amp; testing</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">20 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 28px;">La suite di test</h2>
+  <div style="display:flex;gap:48px;align-items:baseline;margin-bottom:30px;">
+    <div><span style="font-family:'IBM Plex Mono',monospace;font-size:84px;font-weight:500;color:var(--orange-deep);line-height:.9;">600</span><div style="font-size:var(--t-body);color:var(--ink-soft);margin-top:8px;">test unitari</div></div>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-sub);color:var(--ink-faint);">+</span>
+    <div><span style="font-family:'IBM Plex Mono',monospace;font-size:84px;font-weight:500;color:var(--ink);line-height:.9;">167</span><div style="font-size:var(--t-body);color:var(--ink-soft);margin-top:8px;">test di integrazione — contro un database reale</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:56px;flex:1;min-height:0;align-items:start;">
+    <div style="display:flex;flex-direction:column;gap:18px;">
+      <p style="font-size:var(--t-body);line-height:1.42;margin:0;">I file di integrazione girano in <strong>sequenza</strong> (<code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">fileParallelism: false</code>): l’esecuzione parallela causerebbe collisioni sulle foreign key tra file diversi.</p>
+      <p style="font-size:var(--t-body);line-height:1.42;margin:0;color:var(--ink-soft);">Ogni test parte da uno <strong style="color:var(--ink);">stato pulito</strong>: un <code style="font-family:'IBM Plex Mono',monospace;font-size:.96em;">beforeEach</code> globale cancella tutte le tabelle nell’ordine corretto.</p>
+    </div>
+    <div style="border-left:1px solid var(--line);padding-left:56px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);">Aree coperte</span>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:14px;">
+        <div style="display:flex;gap:12px;"><span style="color:var(--orange);font-weight:600;font-size:var(--t-body);">→</span><span style="font-size:var(--t-body);line-height:1.35;">Sicurezza cross-user</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--orange);font-weight:600;font-size:var(--t-body);">→</span><span style="font-size:var(--t-body);line-height:1.35;">Idempotenza dei webhook Stripe — stesso evento 2× = un solo ordine</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--orange);font-weight:600;font-size:var(--t-body);">→</span><span style="font-size:var(--t-body);line-height:1.35;">Correttezza dei prezzi in centesimi — TS non rileva un decimale fuori posto, il test sì</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 — COSA NON È TESTATO -->
+<section data-label="Cosa non è testato" data-screen-label="21" data-speaker-notes="Slide di tradeoff onesta. Niente E2E: richiederebbe infrastruttura separata. La scelta consapevole: investire negli integration test dove stanno i bug ad alto rischio." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.07 · Qualità &amp; testing</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">21 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 28px;">Cosa non è testato — e perché</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:26px;">
+      <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Nessun test E2E</span><p style="font-size:var(--t-body);line-height:1.42;margin:10px 0 0;">Playwright / Cypress richiederebbero autenticazione con Supabase Auth e Stripe in test mode — un’infrastruttura separata non implementata.</p></div>
+      <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">La scelta</span><p style="font-size:var(--t-lead);line-height:1.34;margin:10px 0 0;font-weight:500;">Investire quel tempo nei test di integrazione, dove i bug ad alto rischio si trovano: le Server Action e le query al database.</p></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:1.5px dashed var(--line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--panel) 14px 15px);min-height:0;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep);">[ Visual ]</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--ink-soft);text-align:center;line-height:1.4;max-width:32ch;">Output della CI — i due job (unit + integration) in verde</span>
+    </div>
+  </div>
+</section>
+
+<!-- 22 — IL SISTEMA CONTEXT/ (CLIMAX) -->
+<section data-label="Il sistema context/" data-screen-label="22" data-speaker-notes="Inizia il cuore della tesi. Ogni sessione AI è stateless. context/ risponde a questo limite: 9 documenti, 50+ feature-specs, 17 invarianti. Lo screenshot è il centro." style="background:var(--dark);color:var(--dark-ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--dark-line);padding-bottom:18px;margin-bottom:26px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange);">Cap.08 · Il metodo — il cuore della tesi</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);">22 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 14px;">Il sistema <code style="font-family:'IBM Plex Mono',monospace;font-size:.84em;color:var(--orange);">context/</code></h2>
+  <p style="font-size:var(--t-lead);line-height:1.34;margin:0 0 28px;max-width:64ch;color:var(--dark-soft);">Ogni sessione AI ricomincia da zero — <strong style="color:var(--dark-ink);">stateless by design</strong>. Il sistema <code style="font-family:'IBM Plex Mono',monospace;">context/</code> esiste per rispondere a questo limite, non per aggirarlo.</p>
+  <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:52px;flex:1;min-height:0;align-items:stretch;">
+    <div style="display:flex;flex-direction:column;justify-content:center;gap:26px;">
+      <div style="display:flex;align-items:baseline;gap:20px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:64px;font-weight:500;color:var(--orange);line-height:.9;">9</span><span style="font-size:var(--t-body);line-height:1.35;color:var(--dark-ink);">documenti che descrivono il progetto da angolazioni complementari — prodotto, flussi, design system, architettura, data layer, standard di codice, workflow, stato corrente</span></div>
+      <div style="display:flex;align-items:baseline;gap:20px;border-top:1px solid var(--dark-line);padding-top:24px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:64px;font-weight:500;color:var(--orange);line-height:.9;">50+</span><span style="font-size:var(--t-body);line-height:1.35;color:var(--dark-ink);">feature-specs in <code style="font-family:'IBM Plex Mono',monospace;">feature-specs/</code> — una per file, <strong>numerate</strong> per codificare le dipendenze</span></div>
+      <div style="display:flex;align-items:baseline;gap:20px;border-top:1px solid var(--dark-line);padding-top:24px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:64px;font-weight:500;color:var(--orange);line-height:.9;">17</span><span style="font-size:var(--t-body);line-height:1.35;color:var(--dark-ink);">invarianti architetturali — regole che l’agente non viola, anche quando una scorciatoia è tecnicamente possibile</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:1.5px dashed var(--dark-line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--dark-2) 14px 15px);min-height:0;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange);">[ Visual ]</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--dark-soft);text-align:center;line-height:1.4;max-width:34ch;">Screenshot della cartella <code style="font-family:'IBM Plex Mono',monospace;">context/</code> e/o una feature spec reale aperta</span>
+    </div>
+  </div>
+</section>
+
+<!-- 23 — COME FUNZIONAVA UNA SESSIONE (CLIMAX) -->
+<section data-label="Come funzionava una sessione" data-screen-label="23" data-speaker-notes="Una sessione parte da un solo messaggio. Sequenza fissa di 7 passi. La sessione successiva eredita lo stato. Il diagramma del ciclo è il centro." style="background:var(--dark);color:var(--dark-ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--dark-line);padding-bottom:18px;margin-bottom:24px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange);">Cap.08 · Il metodo — il cuore della tesi</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);">23 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 18px;">Come funzionava una sessione</h2>
+  <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:14px;border:1px solid var(--dark-line);border-left:4px solid var(--orange);padding:14px 22px;border-radius:2px;margin-bottom:24px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);">messaggio iniziale →</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--dark-ink);">“Leggi AGENTS.md e segui le istruzioni”</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:52px;flex:1;min-height:0;align-items:stretch;">
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:11px 16px;align-content:center;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange);">1</span><span style="font-size:var(--t-body);line-height:1.3;">Legge il contesto in ordine</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange);">2</span><span style="font-size:var(--t-body);line-height:1.3;">Scrive la feature spec</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange);">3</span><span style="font-size:var(--t-body);line-height:1.3;">Implementa solo ciò che la spec definisce</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange);">4</span><span style="font-size:var(--t-body);line-height:1.3;">Test</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange);">5</span><span style="font-size:var(--t-body);line-height:1.3;">Aggiorna il progress tracker</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange);">6</span><span style="font-size:var(--t-body);line-height:1.3;">Branch + CI/CD</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange);">7</span><span style="font-size:var(--t-body);line-height:1.3;">Chiude — la sessione successiva eredita lo stato</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:1.5px dashed var(--dark-line);border-radius:3px;background:repeating-linear-gradient(135deg,transparent 0 14px,var(--dark-2) 14px 15px);min-height:0;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--orange);">[ Visual ]</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--dark-soft);text-align:center;line-height:1.4;max-width:32ch;">Diagramma del ciclo della sessione AI a 7 passi</span>
+    </div>
+  </div>
+</section>
+
+<!-- 24 — COSA DIMOSTRA IL METODO (CLIMAX) -->
+<section data-label="Cosa dimostra il metodo" data-screen-label="24" data-speaker-notes="Il payoff intellettuale. Le fasi del metodo mappano il ciclo classico di sviluppo software. L'automazione non sostituisce la disciplina: la sposta." style="background:var(--dark);color:var(--dark-ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--dark-line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange);">Cap.08 · Il metodo — il cuore della tesi</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);">24 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 28px;">Cosa dimostra il metodo</h2>
+  <div style="display:flex;flex-direction:column;gap:0;margin-bottom:34px;">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;padding:14px 0;border-bottom:1px solid var(--dark-line);"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--orange);">documenti context/</span><span style="color:var(--dark-soft);font-size:var(--t-body);">→</span><span style="font-size:var(--t-body);">requirements engineering</span></div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;padding:14px 0;border-bottom:1px solid var(--dark-line);"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--orange);">feature-specs numerate</span><span style="color:var(--dark-soft);font-size:var(--t-body);">→</span><span style="font-size:var(--t-body);">Work Breakdown Structure</span></div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;padding:14px 0;border-bottom:1px solid var(--dark-line);"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--orange);">17 invarianti</span><span style="color:var(--dark-soft);font-size:var(--t-body);">→</span><span style="font-size:var(--t-body);">constraint-based design</span></div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;padding:14px 0;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-body);color:var(--orange);">Audit Sprint</span><span style="color:var(--dark-soft);font-size:var(--t-body);">→</span><span style="font-size:var(--t-body);">quality assurance documentale</span></div>
+  </div>
+  <p style="font-size:var(--t-sub);font-weight:300;line-height:1.25;margin:0;max-width:40ch;">L’automazione della scrittura del codice non sostituisce la disciplina di ingegneria: <strong style="font-weight:600;color:var(--orange);">la sposta.</strong> L’LLM esegue; l’umano modella il dominio, scrive le specifiche, controlla l’architettura.</p>
+</section>
+
+<!-- 25 — MANUTENZIONE DEL SISTEMA DI CONTESTO (CLIMAX) -->
+<section data-label="Manutenzione del contesto" data-screen-label="25" data-speaker-notes="Il problema del context drift: un agente su doc obsolete non sa di sbagliare. Soluzione: Audit Sprint. Esempio concreto: il polling dichiarato ma assente." style="background:var(--dark);color:var(--dark-ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--dark-line);padding-bottom:18px;margin-bottom:28px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange);">Cap.08 · Il metodo — il cuore della tesi</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);">25 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 22px;">Manutenzione del sistema di contesto</h2>
+  <p style="font-size:var(--t-lead);line-height:1.34;margin:0 0 30px;max-width:62ch;">Un agente che lavora su documentazione obsoleta <strong style="color:var(--orange);">non sa di stare sbagliando</strong>: il suo output è coerente con le premesse date.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:52px;flex:1;min-height:0;align-items:start;">
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange);">La soluzione — Audit Sprint</span><p style="font-size:var(--t-body);line-height:1.42;margin:10px 0 0;color:var(--dark-ink);">Sessioni dedicate esclusivamente a verificare la corrispondenza tra documentazione e codebase.</p></div>
+      <div style="display:flex;align-items:baseline;gap:18px;border-top:1px solid var(--dark-line);padding-top:20px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:56px;font-weight:500;color:var(--orange);line-height:.9;">10</span><span style="font-size:var(--t-body);line-height:1.35;color:var(--dark-ink);">divergenze trovate nell’<strong>Audit Sprint 6</strong> — ciascuna categorizzata e risolta in modo tracciabile</span></div>
+    </div>
+    <div style="border-left:2px solid var(--orange);padding-left:44px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--dark-soft);">Esempio concreto</span>
+      <p style="font-size:var(--t-body);line-height:1.45;margin:14px 0 0;">La documentazione dichiarava polling per 30s sul checkout. <strong style="color:var(--orange);">Il codice non faceva polling.</strong></p>
+      <p style="font-size:var(--t-body);line-height:1.45;margin:16px 0 0;color:var(--dark-soft);">La discrepanza è stata documentata e risolta esplicitamente — non silenziosamente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 26 — SVILUPPI FUTURI -->
+<section data-label="Sviluppi futuri" data-screen-label="26" data-speaker-notes="La discesa dopo il climax. Obiettivo: non ridurre il rigore ma usare la velocità per problemi più complessi. Tre fasi di maturazione del metodo." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.09 · Conclusioni</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">26 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 12px;">Sviluppi futuri</h2>
+  <p style="font-size:var(--t-lead);line-height:1.34;color:var(--ink-soft);margin:0 0 38px;max-width:62ch;">Non ridurre il rigore architetturale, ma usare la velocità per affrontare problemi più complessi.</p>
+  <div style="display:flex;align-items:stretch;gap:0;flex:1;min-height:0;">
+    <div style="flex:1;display:flex;flex-direction:column;gap:18px;padding-right:36px;">
+      <div style="display:flex;align-items:center;gap:14px;"><span style="width:18px;height:18px;border-radius:50%;background:var(--orange);flex:none;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Fase 1</span></div>
+      <div><div style="font-size:var(--t-lead);font-weight:600;margin-bottom:10px;">Agent Skills</div><p style="font-size:var(--t-body);line-height:1.42;margin:0;color:var(--ink-soft);">Astrarre i pattern ricorrenti del progetto in set di istruzioni modulari e riutilizzabili, invece di riscrivere prompt ogni volta.</p></div>
+    </div>
+    <div style="width:1px;background:var(--line);"></div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:18px;padding:0 36px;">
+      <div style="display:flex;align-items:center;gap:14px;"><span style="width:18px;height:18px;border-radius:50%;background:var(--ink);flex:none;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);">Fase 2</span></div>
+      <div><div style="font-size:var(--t-lead);font-weight:600;margin-bottom:10px;">Gestione delle eccezioni</div><p style="font-size:var(--t-body);line-height:1.42;margin:0;color:var(--ink-soft);">Un workflow standard per come il sistema reagisce, documenta e si riprende dai fallimenti delle chiamate esterne o dalle allucinazioni dell’agente.</p></div>
+    </div>
+    <div style="width:1px;background:var(--line);"></div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:18px;padding-left:36px;">
+      <div style="display:flex;align-items:center;gap:14px;"><span style="width:18px;height:18px;border-radius:50%;border:3px solid var(--ink);box-sizing:border-box;flex:none;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-soft);">Fase 3</span></div>
+      <div><div style="font-size:var(--t-lead);font-weight:600;margin-bottom:10px;">Esecuzione asincrona e autonoma</div><p style="font-size:var(--t-body);line-height:1.42;margin:0;color:var(--ink-soft);">Test e documentazione così solidi da lanciare task complessi in cicli notturni non supervisionati, validati da build e test.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 27 — LEZIONI APPRESE DALL'ATTRITO -->
+<section data-label="Lezioni dall'attrito" data-screen-label="27" data-speaker-notes="Retrospettiva onesta. Tre punti di attrito reali: design system, context drift, E2E assente. Ognuno è una lezione di metodo." style="background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:30px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);">Cap.09 · Conclusioni</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--ink-faint);">27 / 28</span>
+  </div>
+  <h2 style="font-size:var(--t-title);font-weight:600;line-height:1.04;letter-spacing:-.02em;margin:0 0 34px;">Lezioni apprese dall’attrito</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:44px;flex:1;min-height:0;align-items:start;">
+    <div style="display:flex;flex-direction:column;gap:14px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Design System predefiniti</span><p style="font-size:var(--t-body);line-height:1.42;margin:0;">Senza mockup rigorosi, l’agente genera interfacce incoerenti e i cicli di riscrittura si moltiplicano.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--line);padding-left:44px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Context drift</span><p style="font-size:var(--t-body);line-height:1.42;margin:0;">Aggiornare i file di contesto “dopo” porta il modello a lavorare su premesse obsolete. La documentazione deve essere <strong>sincrona</strong> con il codice.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--line);padding-left:44px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--orange-deep);">Testing E2E assente</span><p style="font-size:var(--t-body);line-height:1.42;margin:0;">Unit e integration test proteggono la logica, non i flussi di navigazione. In un ambiente ad alta rigenerazione UI, l’E2E è <strong>infrastruttura, non opzione</strong>.</p></div>
+  </div>
+</section>
+
+<!-- 28 — CONCLUSIONE -->
+<section data-label="Conclusione" data-screen-label="28" data-speaker-notes="Chiusura. Richiudi i due binari del binario 03. L'AI espone le lacune, non le colma. Lo sviluppatore governa la complessità. Costruire software resta un lavoro umano." style="background:var(--dark);color:var(--dark-ink);font-family:'IBM Plex Sans',sans-serif;padding:var(--pad-y) var(--pad-x);display:flex;flex-direction:column;overflow:hidden;position:relative;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--dark-line);padding-bottom:18px;margin-bottom:36px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--orange);">Cap.09 · Conclusione</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);">28 / 28</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:36px;max-width:1480px;">
+    <p style="font-size:var(--t-sub);font-weight:300;line-height:1.24;margin:0;max-width:30ch;">L’AI non colma le lacune di competenza: <strong style="font-weight:600;color:var(--orange);">le espone.</strong> Delegare l’implementazione richiede una padronanza più solida dei fondamenti, non minore.</p>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;align-items:center;gap:24px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);width:140px;flex:none;">Binario 1</span><div data-draw="" style="flex:1;height:4px;background:var(--orange);border-radius:2px;"></div><span style="font-size:var(--t-body);width:420px;flex:none;color:var(--dark-ink);">un metodo per sviluppare con l’AI</span></div>
+      <div style="display:flex;align-items:center;gap:24px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:var(--t-label);color:var(--dark-soft);width:140px;flex:none;">Binario 2</span><div data-draw="" style="flex:1;height:4px;background:var(--dark-ink);border-radius:2px;"></div><span style="font-size:var(--t-body);width:420px;flex:none;color:var(--dark-ink);">le competenze che lo rendono possibile</span></div>
+    </div>
+    <p style="font-size:var(--t-lead);line-height:1.34;margin:0;max-width:46ch;color:var(--dark-soft);">Lo sviluppatore non è più solo chi scrive il codice, ma chi <strong style="color:var(--dark-ink);">definisce i vincoli, progetta il contesto e governa la complessità</strong>.</p>
+    <p style="font-size:var(--t-title);font-weight:600;line-height:1.08;letter-spacing:-.02em;margin:0;max-width:24ch;">Costruire software vero, con metodo, resta un lavoro <span style="color:var(--orange);">umano</span>.</p>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount(){ this._tries = 0; this._initThread(); }
+  _initThread(){
+    const sections = Array.from(document.querySelectorAll('section[data-screen-label]'));
+    if (sections.length === 0 && this._tries < 40){ this._tries++; setTimeout(() => this._initThread(), 60); return; }
+    const total = sections.length;
+    const denom = (total - 1) || 1;
+    sections.forEach((sec, i) => {
+      const dark = (sec.getAttribute('style') || '').includes('--dark');
+      sec.style.isolation = 'isolate';
+      sec.style.setProperty('--idx', i);
+      sec.style.setProperty('--total', denom);
+      if (!sec.querySelector(':scope > .crt')) sec.appendChild(this._circuit(dark));
+      if (!sec.querySelector(':scope > .__thread')) {
+        const wrap = document.createElement('div');
+        wrap.className = '__thread' + (dark ? ' __thread--dark' : '');
+        const base = document.createElement('div'); base.className = '__thread-base'; wrap.appendChild(base);
+        const built = document.createElement('div'); built.className = '__thread-built'; wrap.appendChild(built);
+        for (let j = 0; j < total; j++){
+          const t = document.createElement('div');
+          t.className = '__thread-tick';
+          t.style.left = 'calc(100% * ' + j + ' / ' + denom + ')';
+          if (j <= i) t.setAttribute('data-on', '');
+          wrap.appendChild(t);
+        }
+        const node = document.createElement('div'); node.className = '__thread-node'; wrap.appendChild(node);
+        sec.appendChild(wrap);
+      }
+    });
+  }
+  _circuit(dark){
+    const d = document.createElement('div');
+    d.className = 'crt' + (dark ? ' crt--dark' : '');
+    d.setAttribute('aria-hidden', 'true');
+    d.innerHTML =
+      '<svg width="100%" height="100%" viewBox="0 0 440 1080" preserveAspectRatio="xMidYMid meet" fill="none">'
+      + '<defs><filter id="crtGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      + '<path class="crt-base" d="M440 150 H330 V340 H392 V520"/>'
+      + '<path class="crt-base" d="M440 230 H392 V600 H320"/>'
+      + '<path class="crt-base" d="M440 360 H300 V660 H388 V840"/>'
+      + '<path class="crt-base" d="M440 470 H250 V760"/>'
+      + '<path class="crt-base" d="M440 560 H352 V900 H300"/>'
+      + '<path class="crt-base" d="M300 120 V980"/>'
+      + '<path class="crt-base" d="M392 200 V880"/>'
+      + '<circle class="crt-node" cx="330" cy="340" r="4.5"/>'
+      + '<circle class="crt-node" cx="392" cy="520" r="4.5"/>'
+      + '<circle class="crt-node" cx="320" cy="600" r="4.5"/>'
+      + '<circle class="crt-node" cx="388" cy="840" r="4.5"/>'
+      + '<circle class="crt-node" cx="250" cy="760" r="4.5"/>'
+      + '<circle class="crt-node" cx="300" cy="900" r="4.5"/>'
+      + '<circle class="crt-node" cx="300" cy="120" r="4.5"/>'
+      + '<rect class="crt-node" x="430" y="146" width="10" height="8"/>'
+      + '<rect class="crt-node" x="430" y="226" width="10" height="8"/>'
+      + '<rect class="crt-node" x="430" y="356" width="10" height="8"/>'
+      + '<path class="crt-flow" filter="url(#crtGlow)" d="M440 150 H330 V340 H392 V520"/>'
+      + '<path class="crt-flow f2" filter="url(#crtGlow)" d="M440 360 H300 V660 H388 V840"/>'
+      + '<path class="crt-flow f3" filter="url(#crtGlow)" d="M300 120 V980"/>'
+      + '</svg>';
+    return d;
+  }
+}
+</script>
+</body>
+</html>

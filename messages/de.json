@@ -167,7 +167,7 @@
   "pricing": {
     "hero": {
       "headline": "Wann benötigen Sie Ihre NIF?",
-      "subheadline": "Transparente Festpreise für Ihre portugiesische Steueridentifikationsnummer. Keine versteckten Verwaltungsgebühren."
+      "subheadline": "Bitte beachten Sie, dass die Finanças in der Regel 1–3 zusätzliche Werktage benötigt, um die NIF auszustellen, und diese Bearbeitungszeiten außerhalb unserer Kontrolle liegen."
     },
     "tiers": {
       "essential": {
@@ -175,7 +175,7 @@
         "badge": "Günstig & Einfach",
         "subtitle": "Geeignet, wenn Sie keine aktiven steuerlichen Bindungen in Portugal haben.",
         "features": {
-          "delivery": "Lieferung in 5 Werktagen",
+          "delivery": "Eingereicht in 5 Werktagen",
           "nif": "NIF-Nummer",
           "noFiscalRep": "Keine Steuervertretung"
         },
@@ -186,7 +186,7 @@
         "badge": "Bestes Angebot",
         "subtitle": "NIF + 12 Monate Steuervertretung",
         "features": {
-          "delivery": "Lieferung in 5 Werktagen",
+          "delivery": "Eingereicht in 5 Werktagen",
           "nif": "NIF-Nummer",
           "fiscalRep": "12 Monate Steuervertretung"
         },

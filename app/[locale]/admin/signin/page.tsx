@@ -11,7 +11,9 @@ export const metadata: Metadata = {
 }
 
 // Admin sign-in — URL: /admin/signin
-// No shared auth layout — renders its own full-page shell so admin routes can have their own layout later.
+// This is a dedicated, non-indexed entry point for administrative staff. 
+// It provides a direct channel for internal management, isolated from the public-facing 
+// unified login to ensure operational continuity and separate authentication concerns.
 export default async function AdminSignInPage() {
   const t = await getTranslations('auth.admin.signIn')
 

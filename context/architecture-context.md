@@ -35,11 +35,15 @@ nif3/
 ├── app/                          # Next.js 16 App Router
 │   ├── [locale]/                 # Internationalized routes (en, fr, es, de)
 │   │   ├── (marketing)/          # Public pages (no auth required)
+│   │   │   ├── layout.tsx        # Marketing layout
+│   │   │   ├── opengraph-image.tsx # Dynamic OG image for homepage
 │   │   │   ├── page.tsx          # Homepage
 │   │   │   ├── pricing/          # Tier selection
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── opengraph-image.tsx # Dynamic OG image for pricing
 │   │   │   ├── privacy/          # Privacy policy
 │   │   │   └── terms/            # Terms of service
-│   │   ├── (auth)/               # Authentication flows
+│   │   ├── (auth)/               # Authentication flows (customer)
 │   │   │   ├── signin/           # Sign in
 │   │   │   ├── signup/           # Account creation
 │   │   │   ├── reset-password/   # Request password reset
@@ -55,13 +59,14 @@ nif3/
 │   │   │       ├── layout.tsx    # Admin shell
 │   │   │       ├── page.tsx      # Order list
 │   │   │       └── orders/[id]/  # Order detail
-│   │   └── (operator)/           # Guarded operator panel (operator role required)
-│   │       └── operator/
-│   │           ├── layout.tsx    # Operator shell
-│   │           ├── page.tsx      # Submission queue
-│   │           ├── signin/       # Public operator sign-in (no role guard)
-│   │           ├── submitted/    # Submitted orders archive
-│   │           └── preferences/  # Notification settings
+│   │   ├── (operator)/           # Guarded operator area (operator role required)
+│   │   │   └── operator/
+│   │   │       ├── layout.tsx    # Operator shell
+│   │   │       ├── page.tsx      # Submission queue
+│   │   │       ├── submitted/    # Submitted orders archive
+│   │   │       └── preferences/  # Notification settings
+│   │   └── operator/             # Public operator routes
+│   │       └── signin/           # Public operator sign-in (no role guard)
 │   ├── auth/                     # Non-locale auth handlers
 │   │   ├── callback/             # OAuth code exchange (Google OAuth)
 │   │   └── confirm/              # Email confirmation (magic links)
@@ -80,7 +85,10 @@ nif3/
 │   │   └── settings.ts           # Account settings (email, password, delete)
 │   ├── globals.css               # Design tokens and base styles
 │   ├── layout.tsx                # Root layout
-│   └── not-found.tsx             # 404 page
+│   ├── error.tsx                 # Global error boundary (English only)
+│   ├── sitemap.ts                # Dynamic sitemap generation
+│   ├── robots.ts                 # Search engine crawler rules
+│   └── favicon.ico               # App icon
 ├── components/                   # React components
 │   ├── ui/                       # shadcn/ui primitives (DO NOT MODIFY)
 │   ├── auth/                     # Auth form components
@@ -126,6 +134,7 @@ nif3/
 │   │   ├── countries.ts          # ISO country list + resolveCountry
 │   │   └── dates.ts              # formatSubmissionDate
 │   ├── types.ts                  # Shared TypeScript types (ActionResult<T>, etc.)
+│   ├── utils.ts                  # Generic helper functions
 │   ├── og.ts                     # Open Graph image design constants
 │   ├── seo.ts                    # buildAlternates utility for hreflang
 │   ├── jsonld.ts                 # JSON-LD schema builders (Organization, Product, FAQ)

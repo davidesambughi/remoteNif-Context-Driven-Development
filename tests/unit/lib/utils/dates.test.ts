@@ -37,6 +37,7 @@ describe('formatSubmissionDate', () => {
 
   it('handles end-of-year date correctly', () => {
     const endOfYear = new Date('2026-12-31T23:59:00.000Z')
-    expect(formatSubmissionDate(endOfYear)).toContain('2026')
+    const localYear = endOfYear.getFullYear().toString()
+    expect(formatSubmissionDate(endOfYear)).toContain(localYear)
   })
 })
